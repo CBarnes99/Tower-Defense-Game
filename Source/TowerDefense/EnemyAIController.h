@@ -7,7 +7,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "EnemyAIController.generated.h"
 
-class UBehaviorTree;
+//class UBehaviorTree;
 /**
  * 
  */
@@ -21,9 +21,6 @@ protected:
 
 	virtual void OnPossess(APawn* InPawn) override;
 
-	FString NameOfBase = "Target";
-
-
-	UPROPERTY(EditAnywhere, Category = "AI")
-	class UBehaviorTree* EnemyBehaviourTree;
+	//UPROPERTY(EditAnywhere, Category = "AI")
+	//class UBehaviorTree* EnemyBehaviourTree;
 };

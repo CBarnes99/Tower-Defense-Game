@@ -2,18 +2,27 @@
 
 
 #include "EnemyAIController.h"
-#include "BehaviorTree/BlackboardComponent.h"
-
+#include "EnemyCharacterBase.h"
 
 void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-
-	RunBehaviorTree(EnemyBehaviourTree);
 	
-	UBlackboardComponent* BlackboardComp = GetBlackboardComponent();
-	if (BlackboardComp)
+	
+	if (AEnemyCharacterBase* const Enemy = Cast<AEnemyCharacterBase>(InPawn))
 	{
-		BlackboardComp->SetValueAsObject((NameOfBase),
+		if (UBehaviorTree* const Tree = Enemy->GetBehaviourTree())
+		{
+			UBlackboardComponent* b;
+			UseBlackboard(Tree->BlackboardAsset, b);
+			Blackboard = b;
+			RunBehaviorTree(Tree);
+
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("BLACKBOARD WORKING IN ENEMY AI CONTROLLER"));
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 100.f, FColor::Red, TEXT("BLACKBOARD NULL IN ENEMY AI CONTROLLER"));
+		}
 	}
 }

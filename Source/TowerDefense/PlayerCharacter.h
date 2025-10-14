@@ -34,7 +34,7 @@ protected:
 
 	//Player Input Mapping Variables which are editable in BP to select the button inputs for each action
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputMappingContext* DefualtMappingContext;
+	class UInputMappingContext* DefualtMappingContext;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputAction* MoveAction;
