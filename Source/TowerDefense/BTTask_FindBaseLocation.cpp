@@ -20,7 +20,7 @@ EBTNodeResult::Type UBTTask_FindBaseLocation::ExecuteTask(UBehaviorTreeComponent
 	
 	if (Base)
 	{
-		//Get Base Location
+		//Get Base Location and sets Blackboard key Vector to the Base Location
 		auto const BaseLocation = Base->GetActorLocation();
 		OwnerComp.GetBlackboardComponent()->SetValueAsVector(GetSelectedBlackboardKey(), BaseLocation);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

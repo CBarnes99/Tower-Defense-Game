@@ -40,7 +40,7 @@ void APlayerCharacter::BeginPlay()
 	
 }
 
-// Called every frame
+// Called every frames
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
