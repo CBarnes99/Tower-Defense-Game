@@ -11,16 +11,18 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 
 }
 
-UBehaviorTree* AEnemyCharacterBase::GetBehaviourTree() const
-{
-	return EnemyBehaviorTree;
-}
-
 // Called when the game starts or when spawned
 void AEnemyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+UBehaviorTree* AEnemyCharacterBase::GetBehaviourTree() const
+{
+	return EnemyBehaviorTree;
+}
+
+
 
 // Called every frame
 void AEnemyCharacterBase::Tick(float DeltaTime)

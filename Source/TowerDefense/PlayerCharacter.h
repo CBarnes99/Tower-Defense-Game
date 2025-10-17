@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "InputActionValue.h"
+#include "DA_CharacterStats.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -56,7 +57,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "PlayerStats")
 	int JumpHeight;
 
-
+	//Player Stats, Edit in Blueprints Data Asset
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerStats")
+	TObjectPtr<UDA_CharacterStats> PlayerInfo;
 
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* Camera;

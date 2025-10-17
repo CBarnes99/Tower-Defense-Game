@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "GameFramework/Character.h"
+#include "DA_CharacterStats.h"
 #include "EnemyCharacterBase.generated.h"
 
 UCLASS()
@@ -33,4 +34,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* EnemyBehaviorTree;
+
+	//Assign a Data Asset in Blueprints for each of the enemys information
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	TObjectPtr<UDA_CharacterStats> EnemyInfo;
+
 };

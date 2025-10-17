@@ -16,7 +16,9 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	spawnAmount = EnemyCharacters.Num();
+	currentWave = 1;
+	//spawnAmount = waveAndEnemys.Contains(currentWave);
+	spawnAmount = 5;
 
 	for (int i = 0; i < spawnAmount; i++)
 	{

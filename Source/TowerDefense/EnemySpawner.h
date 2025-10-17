@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Containers/Map.h"
 #include "EnemyCharacterBase.h"
+#include "AmountOfEnemysSpawning.h"
 #include "EnemySpawner.generated.h"
 
 UCLASS()
@@ -27,7 +29,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Spawner")
 	TArray<TSubclassOf<AEnemyCharacterBase>> EnemyCharacters;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Spawner")
+	TMap<int, FAmountOfEnemysSpawning> waveAndEnemys;
+
 	int spawnAmount;
+	int currentWave;
 	
 	AActor* spawnEnemy();
 };
