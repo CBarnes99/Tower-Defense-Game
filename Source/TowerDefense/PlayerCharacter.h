@@ -17,21 +17,20 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//A Pointer to the enemy spawner so that I can call a function from an input action
+	UPROPERTY(EditAnywhere, Category = "References")
+	class AEnemySpawner* EnemySpawner;
+
 
 protected:
-
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 	//Player Input Mapping Variables which are editable in BP to select the button inputs for each action
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -48,6 +47,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputAction* RunAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	class UInputAction* StartEnemyWaveAction;
+
 
 
 	//Editable Vars for the players Movement Speed and Jump Height
@@ -72,6 +75,6 @@ protected:
 	void MouseLookAction(const FInputActionValue& Value);
 	void RunningAction();
 	void RunningActionStop();
-	
+	void HandleSpawnEnemyFromSpawner();
 
 };

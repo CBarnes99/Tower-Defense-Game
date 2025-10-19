@@ -6,6 +6,9 @@
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
+#include "EnemySpawner.h"
+#include "EngineUtils.h" 
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -72,6 +75,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		Input->BindAction(RunAction, ETriggerEvent::Triggered, this, &APlayerCharacter::RunningAction);
 		Input->BindAction(RunAction, ETriggerEvent::Completed, this, &APlayerCharacter::RunningActionStop);
 
+		Input->BindAction(StartEnemyWaveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::HandleSpawnEnemyFromSpawner);
+
 	}
 
 }
@@ -110,4 +115,22 @@ void APlayerCharacter::RunningActionStop()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
 	GetCharacterMovement()->MaxWalkSpeed = MaxSpeed;
+}
+
+void APlayerCharacter::HandleSpawnEnemyFromSpawner()
+{
+	if (!EnemySpawner)
+	{
+		for (TActorIterator<AEnemySpawner> i(GetWorld()); i; ++i)
+		{
+			EnemySpawner = *i;
+			if (EnemySpawner)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Reference to Spawner Found"));
+				break; // Stop after first found
+			}
+		}
+	}
+
+	EnemySpawner->StartSpawning();
 }

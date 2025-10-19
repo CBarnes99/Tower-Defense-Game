@@ -18,7 +18,7 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 			Blackboard = b;
 			RunBehaviorTree(Tree);
 
-			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("BLACKBOARD WORKING IN ENEMY AI CONTROLLER"));
+			//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("BLACKBOARD WORKING IN ENEMY AI CONTROLLER"));
 		}
 		else
 		{

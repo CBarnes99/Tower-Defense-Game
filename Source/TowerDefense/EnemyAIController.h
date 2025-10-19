@@ -20,7 +20,4 @@ class TOWERDEFENSE_API AEnemyAIController : public AAIController
 protected:
 
 	virtual void OnPossess(APawn* InPawn) override;
-
-	//UPROPERTY(EditAnywhere, Category = "AI")
-	//class UBehaviorTree* EnemyBehaviourTree;
 };

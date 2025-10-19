@@ -24,7 +24,7 @@ void AEnemySpawner::BeginPlay()
 	Super::BeginPlay();
 	
 	//Start periodic check and spawn timer
-	GetWorld()->GetTimerManager().SetTimer(SpawnCheckTimerHandle, this, &AEnemySpawner::Spawning, checkInterval, true);
+	
 
 
 
@@ -46,6 +46,12 @@ void AEnemySpawner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void AEnemySpawner::StartSpawning()
+{
+	GetWorld()->GetTimerManager().SetTimer(SpawnCheckTimerHandle, this, &AEnemySpawner::Spawning, checkInterval, true);
+}
+
 
 void AEnemySpawner::Spawning()
 {

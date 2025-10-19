@@ -24,6 +24,8 @@ public:
 
 	FTimerHandle SpawnCheckTimerHandle;
 
+	void StartSpawning();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,7 +52,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Spawner")
 	float checkInterval;
 
-
+	
 
 	void Spawning();
 
