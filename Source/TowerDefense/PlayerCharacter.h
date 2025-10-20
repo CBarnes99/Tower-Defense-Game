@@ -27,37 +27,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "References")
 	class AEnemySpawner* EnemySpawner;
 
-
+	UPROPERTY(EditAnywhere, Category = "PlayerStats")
+	int MaxSpeed;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	//Player Input Mapping Variables which are editable in BP to select the button inputs for each action
-	UPROPERTY(EditAnywhere, Category = "Input")
-	class UInputMappingContext* DefualtMappingContext;
-
-	UPROPERTY(EditAnywhere, Category = "Input")
-	class UInputAction* MoveAction;
-
-	UPROPERTY(EditAnywhere, Category = "Input")
-	class UInputAction* LookAction;
-
-	UPROPERTY(EditAnywhere, Category = "Input")
-	class UInputAction* JumpAction;
-
-	UPROPERTY(EditAnywhere, Category = "Input")
-	class UInputAction* RunAction;
-
-	UPROPERTY(EditAnywhere, Category = "Input")
-	class UInputAction* StartEnemyWaveAction;
-
-
-
-	//Editable Vars for the players Movement Speed and Jump Height
-	UPROPERTY(EditAnywhere, Category = "PlayerStats")
-	int MaxSpeed;
-
+	
 	UPROPERTY(EditAnywhere, Category = "PlayerStats")
 	int JumpHeight;
 
@@ -65,17 +41,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerStats")
 	TObjectPtr<UDA_CharacterStats> PlayerInfo;
 
+
+	//Components added
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere)
 	class USpringArmComponent* SpringArm;
-
-
-	void MovementAction(const FInputActionValue& Value);
-	void MouseLookAction(const FInputActionValue& Value);
-	void RunningAction();
-	void RunningActionStop();
-	void HandleSpawnEnemyFromSpawner();
-
 };

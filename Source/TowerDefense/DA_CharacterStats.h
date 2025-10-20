@@ -24,5 +24,10 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float DamageDelt;
 
+	UPROPERTY(EditDefaultsOnly)
+	float MovementSpeed;
 
+	UPROPERTY(EditDefaultsOnly)
+	float JumpHeight;
+	
 };

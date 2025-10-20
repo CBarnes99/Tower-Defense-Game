@@ -7,7 +7,8 @@
 #include "Containers/Map.h"
 #include "EnemyCharacterBase.h"
 #include "AmountOfEnemysSpawning.h"
-#include "Components/SphereComponent.h"
+//#include "Components/SphereComponent.h"
+#include "Engine/DataTable.h"
 #include "EnemySpawner.generated.h"
 
 UCLASS()
@@ -23,47 +24,35 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	FTimerHandle SpawnCheckTimerHandle;
-
-	
 	
 	bool isSpawning;
 
+	UFUNCTION(BlueprintCallable)
 	void StartSpawning();
+
+	UFUNCTION(BlueprintCallable)
 	void StopSpawning();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
 	UPROPERTY(EditDefaultsOnly, Category = "Spawner")
 	TArray<TSubclassOf<AEnemyCharacterBase>> enemyCharacters;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawner")
-	TMap<int, FAmountOfEnemysSpawning> waveAndEnemys;
+	TMap<int, FAmountOfEnemysSpawning> waveAndEnemyQueue;
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawner")
 	TArray<AEnemyCharacterBase*> enemyQueue;
 
-	UPROPERTY(EditAnywhere)
-	class USphereComponent* SpawningCollision;
-
-	
-
-	
-
-
-	
 	int spawnAmount;
 	int currentWave;
 	
 	UPROPERTY(EditAnywhere, Category = "Spawner")
-	float checkInterval;
+	float spawnInterval;
 
-	
-
-	
 	void Spawning();
 	AActor* SpawnEnemyActor();
 };
