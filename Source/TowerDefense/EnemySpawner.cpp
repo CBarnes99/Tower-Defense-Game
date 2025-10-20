@@ -24,15 +24,6 @@ void AEnemySpawner::BeginPlay()
 	Super::BeginPlay();
 
 	isSpawning = false;
-
-	currentWave = 0;
-	//spawnAmount = waveAndEnemys.Contains(currentWave);
-	//spawnAmount = 5;
-
-	/*for (int i = 0; i < spawnAmount; i++)
-	{
-		SpawnEnemyActor();
-	}*/
 }
 
 // Called every frame
@@ -56,47 +47,58 @@ void AEnemySpawner::StopSpawning()
 	GetWorld()->GetTimerManager().ClearTimer(SpawnCheckTimerHandle);
 }
 
-
 void AEnemySpawner::Spawning()
 {
 	SpawnEnemyActor();
 }
 
+int AEnemySpawner::amountOfEnemiesInWave()
+{
+	// CHANGE THIS 1 TO THE CURRENT WAVE NUMBER LOCATED IN THE GAME MODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if (FAmountOfEnemysSpawning* enemyStruct = waveAndEnemyQueue.Find(1))
+	{
+		int amount = 0;
+		for (TSubclassOf<AEnemyCharacterBase> enemys : enemyStruct->enemyTypeArray)
+		{
+			amount++;
+		}
+		return amount;
+	}
+	else 
+	{
+		return 0;
+	}
+}
+
 //Spawns the Enemy Actors from the Array of characters that are assigned in the BP Editor
 AActor* AEnemySpawner::SpawnEnemyActor()
 {
-	if (enemyCharacters.IsValidIndex(0))
+	// CHANGE THIS 1 TO THE CURRENT WAVE NUMBER LOCATED IN THE GAME MODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if (FAmountOfEnemysSpawning* enemyStruct = waveAndEnemyQueue.Find(1))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Valid Index In Spawner"));
+		if (enemyStruct->enemyTypeArray.IsValidIndex(0)) {
 
-		FActorSpawnParameters spawnParams;
-		AActor* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyCharacters[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
-		//enemyQueue.RemoveAt(0);
-		return spawnedEnemy;
-
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Valid Index In Spawner "));
+			FActorSpawnParameters spawnParams;
+			AActor* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
+			enemyStruct->enemyTypeArray.RemoveAt(0);
+			return spawnedEnemy;
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("NO Valid Index In Spawner"));
+			StopSpawning();
+			isSpawning = false;
+			return NULL;
+		}
 	}
+
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("NO Valid Index In Spawner"));
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("NO Valid Index In waveAndEnemyQueue"));
+		StopSpawning();
 		isSpawning = false;
 		return NULL;
 	}
-
-	//if (waveAndEnemyQueue.Find(wave)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Valid Index In Spawner"));
-
-	//	FActorSpawnParameters spawnParams;
-	//	AActor* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyCharacters[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
-	//	//enemyQueue.RemoveAt(0);
-	//	return spawnedEnemy;
-
-	//}
-	//else
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("NO Valid Index In Spawner"));
-	//	isSpawning = false;
-	//	return NULL;
-	//}
 }
 

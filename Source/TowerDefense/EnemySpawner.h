@@ -32,21 +32,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StopSpawning();
 
-	UPROPERTY(EditAnywhere, Category = "Spawner")
-	TArray<TSubclassOf<AEnemyCharacterBase>> enemyCharacters;
+	UFUNCTION(BlueprintCallable)
+	int amountOfEnemiesInWave();
 
 	UPROPERTY(EditAnywhere, Category = "Spawner")
 	TMap<int, FAmountOfEnemysSpawning> waveAndEnemyQueue;
 
-	UPROPERTY(EditAnywhere, Category = "Spawner")
-	TArray<AEnemyCharacterBase*> enemyQueue;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	int spawnAmount;
-	int currentWave;
 	
 	UPROPERTY(EditAnywhere, Category = "Spawner")
 	float spawnInterval;

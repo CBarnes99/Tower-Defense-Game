@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void startSpawningEnemies();
 
+	UPROPERTY(VisibleAnywhere)
+	bool waveActive;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,4 +33,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void setAllSpawners();
+
+	UPROPERTY(VisibleAnywhere)
+	int amountOfEnemysInRound;
 };
