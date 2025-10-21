@@ -19,9 +19,6 @@ APlayerCharacter::APlayerCharacter()
 	Camera->SetupAttachment(this->SpringArm, USpringArmComponent::SocketName);
 	Camera->bUsePawnControlRotation = false;
 	
-	
-	MaxSpeed = GetCharacterMovement()->MaxWalkSpeed = 500.f;
-	JumpHeight = GetCharacterMovement()->JumpZVelocity = 500.f;
 
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
@@ -34,6 +31,18 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Name = DA_PlayerInfo->Name;
+	Health = DA_PlayerInfo->Health;
+	Mana = DA_PlayerInfo->Mana;
+	DamageDelt = DA_PlayerInfo->DamageDelt;
+	MovementSpeed = DA_PlayerInfo->MovementSpeed;
+	RunSpeed = DA_PlayerInfo->RunSpeed;
+	JumpHeight = DA_PlayerInfo->JumpHeight;
+
+	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
+	GetCharacterMovement()->JumpZVelocity = JumpHeight;
+	UE_LOG(LogTemp, Warning, TEXT("Name: %s, Health: %f, Mana: %f, Damage Delt: %f, Movement Speed: %f, Run Speed: %f, Jump Height: %f"), *Name, Health, Mana, DamageDelt, MovementSpeed, RunSpeed, JumpHeight)
 	
 }
 

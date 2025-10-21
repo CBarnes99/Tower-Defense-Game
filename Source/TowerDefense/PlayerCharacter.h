@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "DA_CharacterStats.h"
+#include "DA_PlayerCharacterStats.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -22,14 +22,14 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//Player Stats, Edit in Blueprints Data Asset
-	UPROPERTY(EditDefaultsOnly, Category = "PlayerStats")
-	TObjectPtr<UDA_CharacterStats> PlayerInfo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
+	TObjectPtr<UDA_PlayerCharacterStats> DA_PlayerInfo;
 
-	UPROPERTY(EditAnywhere, Category = "PlayerStats")
-	int MaxSpeed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	float MovementSpeed;
 
-	UPROPERTY(EditAnywhere, Category = "PlayerStats")
-	int JumpHeight;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	float RunSpeed;
 
 protected:
 	// Called when the game starts or when spawned
@@ -41,4 +41,20 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	class USpringArmComponent* SpringArm;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	FString Name;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	float Health;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	float Mana;
+
+	//probably be in the weapon?
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	float DamageDelt;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	float JumpHeight;
 };

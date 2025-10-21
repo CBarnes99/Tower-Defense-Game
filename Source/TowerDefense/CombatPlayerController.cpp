@@ -9,7 +9,6 @@
 #include "EngineUtils.h" 
 #include "EnemySpawner.h"
 #include "CombatGameMode.h"
-//#include <Kismet/GameplayStatics.h>
 
 void ACombatPlayerController::BeginPlay()
 {
@@ -86,21 +85,22 @@ void ACombatPlayerController::MouseLookAction(const FInputActionValue& Value)
 
 void ACombatPlayerController::RunningAction()
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
+
 	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
-		MyCharacter->GetCharacterMovement()->MaxWalkSpeed = MyCharacter->MaxSpeed * 3;
+		MyCharacter->GetCharacterMovement()->MaxWalkSpeed = MyCharacter->RunSpeed;
 	}
 	
 }
 
 void ACombatPlayerController::RunningActionStop()
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
 
 	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
-		MyCharacter->GetCharacterMovement()->MaxWalkSpeed = MyCharacter->MaxSpeed;
+		MyCharacter->GetCharacterMovement()->MaxWalkSpeed = MyCharacter->MovementSpeed;
 	}
 }
 
