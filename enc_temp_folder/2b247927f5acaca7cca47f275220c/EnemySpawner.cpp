@@ -33,14 +33,14 @@ void AEnemySpawner::Tick(float DeltaTime)
 
 }
 
-//When Enter is pressed in combat player controller, this function starts
+//When Enter is pressed in player character, this function starts
 void AEnemySpawner::StartSpawning()
 {
 	isSpawning = true;
 	GetWorld()->GetTimerManager().SetTimer(SpawnCheckTimerHandle, this, &AEnemySpawner::Spawning, spawnInterval, true);
 }
 
-//When all enemies have spawned, stop spawning
+//When Enter is pressed when wave has started, it will stop spawning. Will eventually change to when all the enemies have spawned, stop spawning.
 void AEnemySpawner::StopSpawning()
 {
 	isSpawning = false;

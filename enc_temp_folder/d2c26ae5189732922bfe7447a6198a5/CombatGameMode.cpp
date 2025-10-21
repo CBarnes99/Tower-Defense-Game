@@ -30,8 +30,6 @@ ACombatGameMode::ACombatGameMode()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to find player controller Blueprint at /Game/BP_CombatPlayerController"));
 	}*/
-
-	currentWave = 0;
 }
 
 
@@ -42,22 +40,11 @@ void ACombatGameMode::BeginPlay()
 
 void ACombatGameMode::startEnemyWave()
 {
-	//Check to see if there is a valid spawner manager
 	if (!spawnerManager)
 	{
 		AActor* actor = UGameplayStatics::GetActorOfClass(GetWorld(), ASpawnerManager::StaticClass());
 		spawnerManager = Cast<ASpawnerManager>(actor);
 	}
-
-	//Check to see if the spawner manager has all the spawners refereneced
-	if (!spawnerManager->enemySpawners.IsValidIndex(0))
-	{
-		spawnerManager->setAllSpawners();
-	}
-
-	lastWave = spawnerManager->calculateLastWave();
-
-	UE_LOG(LogTemp, Warning, TEXT("The last wave of this level is: %d"), lastWave);
 
 	spawnerManager->startSpawningEnemies();
 }

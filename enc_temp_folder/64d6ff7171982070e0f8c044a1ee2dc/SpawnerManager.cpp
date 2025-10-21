@@ -82,22 +82,4 @@ void ASpawnerManager::setAllSpawners()
 	UE_LOG(LogTemp, Warning, TEXT("Found %d actors from class AEnemySpawner"), enemySpawners.Num());
 }
 
-int ASpawnerManager::calculateLastWave()
-{
-	int maxWave = 0;
-	for (AActor* actor : enemySpawners)
-	{
-		AEnemySpawner* spawner = Cast<AEnemySpawner>(actor);
 
-		for (auto element : spawner->waveAndEnemyQueue)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Key/Wave is %d"), element.Key);
-			if (element.Key > maxWave)
-			{
-				maxWave = element.Key;
-				UE_LOG(LogTemp, Warning, TEXT("Max Wave = % d"), maxWave);
-			}
-		}
-	}
-	return maxWave;
-}

@@ -56,7 +56,7 @@ void ACombatPlayerController::OnPossess(APawn* InPawn)
 
 void ACombatPlayerController::MovementAction(const FInputActionValue& Value)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("WSAD"));
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("WSAD"));
 
 	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
@@ -73,7 +73,7 @@ void ACombatPlayerController::MovementAction(const FInputActionValue& Value)
 
 void ACombatPlayerController::MouseLookAction(const FInputActionValue& Value)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Mouse"));
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Mouse"));
 
 	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{

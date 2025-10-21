@@ -26,10 +26,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void startEnemyWave();
-
-	UPROPERTY(VisibleAnywhere)
-	int currentWave;
-
-	UPROPERTY(VisibleAnywhere)
-	int lastWave;
 };
