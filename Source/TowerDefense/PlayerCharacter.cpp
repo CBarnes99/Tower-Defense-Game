@@ -10,15 +10,24 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
+	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f ));
+
 	springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Camera Spring Arm"));
 	springArm->SetupAttachment(RootComponent.Get());
 	springArm->TargetArmLength = 300.0f;
 	springArm->bUsePawnControlRotation = true;
+	springArm->SetRelativeLocation(FVector(0.0f, 70.0f, 50.0f));
 
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
 	camera->SetupAttachment(this->springArm, USpringArmComponent::SocketName);
 	camera->bUsePawnControlRotation = false;
-	
+
+	weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon"));
+	weapon->SetupAttachment(RootComponent.Get());
+
+	weapon->SetRelativeLocation(FVector::ZeroVector);
+	weapon->SetRelativeRotation(FRotator::ZeroRotator);
 
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;

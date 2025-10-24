@@ -5,10 +5,10 @@
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
-#include "PlayerCharacter.h"
 #include "EngineUtils.h" 
 #include "EnemySpawner.h"
 #include "CombatGameMode.h"
+#include "ProjectileBase.h"
 
 void ACombatPlayerController::BeginPlay()
 {
@@ -46,6 +46,8 @@ void ACombatPlayerController::SetupInputComponent()
 
 		Input->BindAction(startEnemyWaveActionInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::CallGameModeToStartSpawningEnemies);
 
+		Input->BindAction(attackActionInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::AttackAction);
+
 	}
 }
 
@@ -58,15 +60,15 @@ void ACombatPlayerController::MovementAction(const FInputActionValue& Value)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("WSAD"));
 
-	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
+	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
 		const FVector2D MovementVector = Value.Get<FVector2D>();
 
-		const FVector Forward = MyCharacter->GetActorForwardVector();
-		const FVector Right = MyCharacter->GetActorRightVector();
+		const FVector Forward = myCharacter->GetActorForwardVector();
+		const FVector Right = myCharacter->GetActorRightVector();
 
-		MyCharacter->AddMovementInput(Forward, MovementVector.Y);
-		MyCharacter->AddMovementInput(Right, MovementVector.X);
+		myCharacter->AddMovementInput(Forward, MovementVector.Y);
+		myCharacter->AddMovementInput(Right, MovementVector.X);
 	}
 
 }
@@ -75,12 +77,12 @@ void ACombatPlayerController::MouseLookAction(const FInputActionValue& Value)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Mouse"));
 
-	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
+	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
 		const FVector2D LookAxisVector = Value.Get<FVector2D>();
 
-		MyCharacter->AddControllerPitchInput(LookAxisVector.Y);
-		MyCharacter->AddControllerYawInput(LookAxisVector.X);
+		myCharacter->AddControllerPitchInput(LookAxisVector.Y);
+		myCharacter->AddControllerYawInput(LookAxisVector.X);
 	}
 }
 
@@ -88,9 +90,9 @@ void ACombatPlayerController::RunningAction()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
 
-	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
+	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
-		MyCharacter->GetCharacterMovement()->MaxWalkSpeed = MyCharacter->runSpeed;
+		myCharacter->GetCharacterMovement()->MaxWalkSpeed = myCharacter->runSpeed;
 	}
 	
 }
@@ -99,25 +101,58 @@ void ACombatPlayerController::RunningActionStop()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
 
-	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
+	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
-		MyCharacter->GetCharacterMovement()->MaxWalkSpeed = MyCharacter->movementSpeed;
+		myCharacter->GetCharacterMovement()->MaxWalkSpeed = myCharacter->movementSpeed;
 	}
 }
 
 void ACombatPlayerController::JumpAction()
 {
-	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
+	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
-		MyCharacter->Jump();
+		myCharacter->Jump();
 	}
 }
 
 void ACombatPlayerController::StopJumpingAction()
 {
-	if (APlayerCharacter* MyCharacter = Cast<APlayerCharacter>(GetPawn()))
+	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
-		MyCharacter->StopJumping();
+		myCharacter->StopJumping();
+	}
+}
+
+void ACombatPlayerController::AttackAction()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Left Mouse Click"));
+
+	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
+	{
+		if (!myCharacter->projectile)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Projectile class is not set on player character!"));
+			return;
+		}
+
+		FVector spawnLocation = myCharacter->GetActorLocation() + myCharacter->GetActorForwardVector() * 100.f;
+		FRotator spawnRotation = myCharacter->GetActorRotation();
+
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = myCharacter;
+		spawnParams.Instigator = myCharacter;
+
+		AProjectileBase* projectile = GetWorld()->SpawnActor<AProjectileBase>(myCharacter->projectile, spawnLocation, spawnRotation, spawnParams);
+
+		if (projectile)
+		{
+			projectile->FireInDirection(myCharacter->GetActorForwardVector());
+			//UE_LOG(LogTemp, Warning, TEXT("Projectile spawned at %s"), *spawnLocation.ToString());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to spawn projectile."));
+		}
 	}
 }
 

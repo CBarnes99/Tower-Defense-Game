@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include <EnhancedInputLibrary.h>
+#include "PlayerCharacter.h"
 #include "InputActionValue.h"
 #include "CombatPlayerController.generated.h"
 
@@ -27,7 +28,6 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
-
 	//Player Input Mapping Variables which are editable in BP to select the button inputs for each action
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputMappingContext* defualtMappingContext;
@@ -46,6 +46,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputAction* startEnemyWaveActionInput;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	class UInputAction* attackActionInput;
 
 
 	UFUNCTION(BlueprintCallable)
@@ -68,4 +71,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void StopJumpingAction();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackAction();
 };

@@ -74,10 +74,7 @@ AActor* AEnemySpawner::SpawnEnemyActor()
 
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Valid Index In Spawner "));
 			FActorSpawnParameters spawnParams;
-			AActor* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(),
-																							this->GetActorLocation(), 
-																							this->GetActorRotation(), 
-																							spawnParams);
+			AActor* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
 			enemyStruct->enemyTypeArray.RemoveAt(0);
 			return spawnedEnemy;
 		}

@@ -38,5 +38,4 @@ protected:
 	//Assign a Data Asset in Blueprints for each of the enemys information
 	UPROPERTY(EditDefaultsOnly, Category = "Stats")
 	TObjectPtr<UDA_EnemyCharacterStats> enemyInfo;
-
 };
