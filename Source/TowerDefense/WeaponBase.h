@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "DA_WeaponStats.h"
 #include "ProjectileBase.h"
+#include "Camera/CameraComponent.h"
 #include "WeaponBase.generated.h"
 
 UCLASS()
@@ -21,7 +22,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void spawnProjectile(const FRotator& cameraRotation);
+	void spawnProjectile(const UCameraComponent* playerCamera);
+
+	//void spawnProjectile(const FRotator& cameraRotation, const FVector& cameraForwardVector);
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,6 +40,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDA_WeaponStats* weaponStats;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName weaponMuzzleName;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float damageDelt;
 
@@ -46,5 +52,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int maxAmmo;
 
-	
+	UFUNCTION (BlueprintCallable)
+	FVector GetTraceTargetLocation(const UCameraComponent* playerCamera);
 };

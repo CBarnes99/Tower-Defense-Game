@@ -2,6 +2,7 @@
 
 
 #include "WeaponBase.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -11,6 +12,8 @@ AWeaponBase::AWeaponBase()
 
 	weaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon Mesh"));
 	RootComponent = weaponMesh;
+
+	weaponMuzzleName = "Muzzle";
 }
 
 // Called when the game starts or when spawned
@@ -30,24 +33,45 @@ void AWeaponBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AWeaponBase::spawnProjectile(const FRotator& cameraRotation)
+
+void AWeaponBase::spawnProjectile(const UCameraComponent* playerCamera)
 {
 	if (!projectile)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Projectile class is not set on Weapon Base!"));
-			return;
-		}
+	{
+		UE_LOG(LogTemp, Error, TEXT("Projectile class is not set on Weapon Base!"));
+		return;
+	}
 
-	FVector muzzleLocation = weaponMesh->GetSocketLocation(FName("Muzzle"));
-	FRotator spawnRotation = cameraRotation;
-	FVector shootDirection = cameraRotation.Vector();
-	FVector spawnLocation = muzzleLocation + shootDirection * 10.0f;
+	FVector muzzleLocation = weaponMesh->GetSocketLocation(weaponMuzzleName);
+
+	FVector targetLocation = GetTraceTargetLocation(playerCamera);
+
+	FVector shootDirection = (targetLocation - muzzleLocation).GetSafeNormal();
+
+	FRotator spawnRotation = shootDirection.Rotation();
+
+	FVector spawnLocation = muzzleLocation + shootDirection * 100.0f;
 
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = this;
 	spawnParams.Instigator = GetInstigator();
 
-	AProjectileBase* spawnedProjectile = GetWorld()->SpawnActor<AProjectileBase>(projectile, spawnLocation, cameraRotation, spawnParams);
+	AProjectileBase* spawnedProjectile = GetWorld()->SpawnActor<AProjectileBase>(projectile, spawnLocation, spawnRotation, spawnParams);
 	spawnedProjectile->FireInDirection(shootDirection);
 }
 
+FVector AWeaponBase::GetTraceTargetLocation(const UCameraComponent* playerCamera)
+{
+	FVector targetPos = FVector::ZeroVector;
+	FHitResult hit;
+	FVector traceStart = playerCamera->GetComponentLocation();
+	FVector traceEnd = traceStart + playerCamera->GetForwardVector() * 100000.f;
+
+	GetWorld()->LineTraceSingleByChannel(hit, traceStart, traceEnd, ECC_Visibility);
+
+	DrawDebugLine(GetWorld(), traceStart, traceEnd, FColor::Red, false, 2.f, 1.f);
+
+	targetPos = hit.bBlockingHit ? hit.ImpactPoint : traceEnd;
+
+	return targetPos;
+}

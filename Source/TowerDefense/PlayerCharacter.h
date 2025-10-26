@@ -39,6 +39,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FRotator GetCameraRotation() const;
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetCameraForwardVector() const;
+
+	UFUNCTION(BlueprintCallable)
+	UCameraComponent* GetPlayerCamera() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

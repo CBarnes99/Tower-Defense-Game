@@ -112,6 +112,18 @@ FRotator APlayerCharacter::GetCameraRotation() const
 	return camera->GetComponentRotation();
 }
 
+FVector APlayerCharacter::GetCameraForwardVector() const
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Camera Location from PlayerCharacter = %s"), *camera->GetComponentLocation().ToString());
+
+	return camera->GetForwardVector();
+}
+
+UCameraComponent* APlayerCharacter::GetPlayerCamera() const
+{
+	return camera;
+}
+
 float& APlayerCharacter::GetMovementSpeed()
 {
 	return movementSpeed;

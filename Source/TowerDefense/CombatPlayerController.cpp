@@ -130,7 +130,8 @@ void ACombatPlayerController::AttackAction()
 
 	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
 	{
-		myCharacter->equippedWeapon->spawnProjectile(myCharacter->GetCameraRotation());
+		//myCharacter->equippedWeapon->spawnProjectile(myCharacter->GetCameraRotation(), myCharacter->GetCameraForwardVector());
+		myCharacter->equippedWeapon->spawnProjectile(myCharacter->GetPlayerCamera());
 	}
 }
 
