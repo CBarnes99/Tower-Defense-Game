@@ -21,15 +21,27 @@ public:
 
 	virtual void BeginPlay() override;
 
+	/**
+	* The spawner manager in the level
+	*/
 	UPROPERTY(VisibleAnywhere)
 	ASpawnerManager* spawnerManager;
 
+	/**
+	* The current wave the level is on, starts at 0 on begin play
+	*/
 	UPROPERTY(VisibleAnywhere)
 	int currentWave;
 
+	/**
+	* The final wave in the level, is set in StartEnemyWave()
+	*/
 	UPROPERTY(VisibleAnywhere)
 	int lastWave;
 
+	/**
+	* This is called when the player calls to start the next wave
+	*/
 	UFUNCTION(BlueprintCallable)
 	void StartEnemyWave();
 };

@@ -16,9 +16,12 @@ class TOWERDEFENSE_API UBTTask_FindBaseLocation : public UBTTask_BlackboardBase
 
 
 public:
-
+	
 	explicit UBTTask_FindBaseLocation(FObjectInitializer const& ObjectInitializer);
 
+	/**
+	* A created task to find the players base location so the enemy can move towards it
+	*/
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 };

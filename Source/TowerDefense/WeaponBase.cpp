@@ -12,8 +12,6 @@ AWeaponBase::AWeaponBase()
 
 	weaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon Mesh"));
 	RootComponent = weaponMesh;
-
-	weaponMuzzleName = "Muzzle";
 }
 
 // Called when the game starts or when spawned
@@ -24,7 +22,7 @@ void AWeaponBase::BeginPlay()
 	damageDelt = weaponStats->damageDelt;
 	currentAmmo = weaponStats->ammoMax;
 	maxAmmo = weaponStats->ammoMax;
-
+	weaponMuzzleName = weaponStats->muzzleName;
 }
 
 // Called every frame
@@ -57,7 +55,10 @@ void AWeaponBase::spawnProjectile(const UCameraComponent* playerCamera)
 	spawnParams.Instigator = GetInstigator();
 
 	AProjectileBase* spawnedProjectile = GetWorld()->SpawnActor<AProjectileBase>(projectile, spawnLocation, spawnRotation, spawnParams);
+	spawnedProjectile->SetDamage(damageDelt);
+	spawnedProjectile->SetProjectileSpeed(weaponStats->projectileSpeed);
 	spawnedProjectile->FireInDirection(shootDirection);
+
 }
 
 FVector AWeaponBase::GetTraceTargetLocation(const UCameraComponent* playerCamera)

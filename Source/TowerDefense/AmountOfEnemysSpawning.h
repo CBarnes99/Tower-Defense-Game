@@ -13,6 +13,9 @@ struct FAmountOfEnemysSpawning
 		
 public:
 
+	/**
+	* An array of enemy characters that'll spawn one by one from index 0 to the end
+	*/
 	UPROPERTY(EditAnywhere, Category = "Enemy Information")
 	TArray<TSubclassOf<AEnemyCharacterBase>> enemyTypeArray;
 };

@@ -17,12 +17,24 @@ class TOWERDEFENSE_API UDA_WeaponStats : public UDataAsset
 	
 public:
 
+	/**
+	* The amout of damage you want your weapon do deal
+	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float damageDelt;
 
+	/**
+	* The max ammo your weapon can hold 
+	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	int ammoMax;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
-	AProjectileBase* projectile;
+	float projectileSpeed;
+
+	/** 
+	* Ensure this is the name of the socket that is attached to the mesh of your weapon and that it is where you want the projectile to spawn
+	*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	FName muzzleName;
 };

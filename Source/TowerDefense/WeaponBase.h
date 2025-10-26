@@ -24,8 +24,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void spawnProjectile(const UCameraComponent* playerCamera);
 
-	//void spawnProjectile(const FRotator& cameraRotation, const FVector& cameraForwardVector);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,6 +50,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int maxAmmo;
 
+	//Gets the target location to where the projectile will be aimed towards
 	UFUNCTION (BlueprintCallable)
 	FVector GetTraceTargetLocation(const UCameraComponent* playerCamera);
 };

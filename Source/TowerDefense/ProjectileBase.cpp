@@ -18,21 +18,17 @@ AProjectileBase::AProjectileBase()
 	collisionComponent->SetEnableGravity(false);
 
 	RootComponent = collisionComponent;
-
-
 	collisionComponent->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 
 	projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component"));
 	projectileMovementComponent->SetUpdatedComponent(collisionComponent);
-	projectileMovementComponent->InitialSpeed = 2000.f;
-	projectileMovementComponent->MaxSpeed = 2000.f;
 	projectileMovementComponent->bRotationFollowsVelocity = true;
 	projectileMovementComponent->ProjectileGravityScale = 0.f;
-
 
 	projectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
 	projectileMesh->SetupAttachment(RootComponent.Get());
 	projectileMesh->SetSimulatePhysics(false);
+
 
 	lifeTime = 5.f;
 
@@ -51,6 +47,17 @@ void AProjectileBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AProjectileBase::SetDamage(float damageAmount)
+{
+	damageDelt = damageAmount;
+}
+
+void AProjectileBase::SetProjectileSpeed(float speed)
+{
+	projectileMovementComponent->InitialSpeed = speed;
+	projectileMovementComponent->MaxSpeed = speed;
 }
 
 void AProjectileBase::destoryProjectileActor()

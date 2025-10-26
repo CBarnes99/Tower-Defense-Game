@@ -24,6 +24,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	void FireInDirection(const FVector& shootDir);
 
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	void SetDamage(float damageAmount);
+
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	void SetProjectileSpeed(float speed);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -41,6 +47,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	float lifeTime;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float damageDelt;
 
 	UFUNCTION(BlueprintCallable)
 	void destoryProjectileActor();
