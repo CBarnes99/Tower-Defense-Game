@@ -2,6 +2,7 @@
 
 
 #include "ProjectileBase.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -40,6 +41,8 @@ void AProjectileBase::BeginPlay()
 	Super::BeginPlay();	
 
 	GetWorld()->GetTimerManager().SetTimer(lifeTimeTimerHandle, this, &AProjectileBase::destoryProjectileActor, lifeTime, false);
+	//UE_LOG(LogTemp, Error, TEXT("In Projectile Base!! Owner = %s, Instigator - %s"), *GetOwner()->GetName(), *GetInstigator()->GetName());
+
 }
 
 // Called every frame
@@ -49,9 +52,13 @@ void AProjectileBase::Tick(float DeltaTime)
 
 }
 
+
+//These two fucntions are called when the weapon class spawns the projectile and sets the damage and speed values from the weapon data asset
 void AProjectileBase::SetDamage(float damageAmount)
 {
 	damageDelt = damageAmount;
+	UE_LOG(LogTemp, Error, TEXT("Damage Amount = %f"), damageDelt);
+
 }
 
 void AProjectileBase::SetProjectileSpeed(float speed)
@@ -59,6 +66,8 @@ void AProjectileBase::SetProjectileSpeed(float speed)
 	projectileMovementComponent->InitialSpeed = speed;
 	projectileMovementComponent->MaxSpeed = speed;
 }
+
+
 
 void AProjectileBase::destoryProjectileActor()
 {
@@ -80,10 +89,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* hitComponent, AActor* OtherActo
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("OtherActor is %s"), *OtherActor->GetName())
-	if (targetClassToDestroy && OtherActor->IsA(targetClassToDestroy))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s has been destroyed"), *OtherActor->GetName())
-		OtherActor->Destroy();
-	}
+	UGameplayStatics::ApplyDamage(OtherActor, damageDelt, GetInstigator()->GetController(), this, NULL /*CHANGE THIS TO A DAMAGE TYPE LATER ON*/);
+
 	destoryProjectileActor();
 }

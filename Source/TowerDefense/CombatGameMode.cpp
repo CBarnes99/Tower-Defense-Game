@@ -64,7 +64,7 @@ void ACombatGameMode::StartEnemyWave()
 		UE_LOG(LogTemp, Warning, TEXT("The last wave of this level is: %i"), lastWave);		
 	}
 
-	//Check to see if a wave is already active
+	//Check to see if a wave is already active, if not, start spawning enemies
 	if (!spawnerManager->IsWaveActive())
 	{
 		currentWave++;

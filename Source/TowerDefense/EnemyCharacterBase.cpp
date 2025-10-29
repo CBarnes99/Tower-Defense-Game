@@ -14,6 +14,14 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 void AEnemyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	name = enemyInfo->name;
+	health = enemyInfo->health;
+	movementSpeed = enemyInfo->movementSpeed;
+	damageDelt = enemyInfo->damageDelt;
+
+	GetCharacterMovement()->MaxWalkSpeed = movementSpeed;
+
 }
 
 // Called every frame
@@ -32,3 +40,31 @@ void AEnemyCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+float AEnemyCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	/*
+	UE_LOG(LogTemp, Warning, TEXT("Damage Amount = %f"), DamageAmount);
+	UE_LOG(LogTemp, Warning, TEXT("EventInstigator = %s"), *EventInstigator->GetName())
+	UE_LOG(LogTemp, Warning, TEXT("DamageCauser = %s"), *DamageCauser->GetName());
+	*/
+
+	health -= DamageAmount;	
+	if (health <= 0)
+	{
+		OnDeath();
+	}
+	return DamageAmount;
+}
+
+void AEnemyCharacterBase::OnDeath()
+{
+	/*
+	play death animation (ragdoll?)
+	tell spawner manager that it has died
+	spawner manager - 1 to enemy count
+	if 0 end round and can start the next	
+	*/
+
+
+	Destroy();
+}

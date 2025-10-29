@@ -133,3 +133,16 @@ float& APlayerCharacter::GetRunSpeed()
 {
 	return runSpeed;
 }
+
+float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	health -= DamageAmount;
+
+	UE_LOG(LogTemp, Warning, TEXT("Player Health = %f"), health);
+
+	if (health <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player Health is less than 0! Player Dead!"))
+	}
+	return DamageAmount;
+}

@@ -36,6 +36,24 @@ protected:
 	UBehaviorTree* enemyBehaviorTree;
 
 	//Assign a Data Asset in Blueprints for each of the enemys information
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
 	TObjectPtr<UDA_EnemyCharacterStats> enemyInfo;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	FString name;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	float health;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	float damageDelt;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	float movementSpeed;
+
+	UFUNCTION(BlueprintCallable)
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	UFUNCTION(BlueprintCallable)
+	void OnDeath();
 };

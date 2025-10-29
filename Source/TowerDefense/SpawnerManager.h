@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SpawnerManager.generated.h"
 
+DECLARE_DELEGATE(FOnEnemyUnitsDeath);
+
 UCLASS()
 class TOWERDEFENSE_API ASpawnerManager : public AActor
 {
@@ -24,8 +26,6 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TArray<AActor*> enemySpawners;
 
-
-
 	UFUNCTION(BlueprintCallable)
 	void StartSpawningEnemies(int currentWave);
 
@@ -37,6 +37,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsWaveActive();
+
+	FOnEnemyUnitsDeath DelegateEnemyDied;
 
 protected:
 	// Called when the game starts or when spawned

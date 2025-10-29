@@ -23,6 +23,8 @@ void AWeaponBase::BeginPlay()
 	currentAmmo = weaponStats->ammoMax;
 	maxAmmo = weaponStats->ammoMax;
 	weaponMuzzleName = weaponStats->muzzleName;
+
+	//UE_LOG(LogTemp, Error, TEXT("In Weapon Base!! Owner = %s, Instigator - %s"), *GetOwner()->GetName(), *GetInstigator()->GetName());
 }
 
 // Called every frame
@@ -68,7 +70,7 @@ FVector AWeaponBase::GetTraceTargetLocation(const UCameraComponent* playerCamera
 	FVector traceStart = playerCamera->GetComponentLocation();
 	FVector traceEnd = traceStart + playerCamera->GetForwardVector() * 100000.f;
 
-	GetWorld()->LineTraceSingleByChannel(hit, traceStart, traceEnd, ECC_Visibility);
+	GetWorld()->LineTraceSingleByChannel(hit, traceStart, traceEnd, ECC_Pawn);
 
 	DrawDebugLine(GetWorld(), traceStart, traceEnd, FColor::Red, false, 2.f, 1.f);
 

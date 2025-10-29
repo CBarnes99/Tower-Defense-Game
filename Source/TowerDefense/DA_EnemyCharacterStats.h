@@ -11,7 +11,7 @@ class TOWERDEFENSE_API UDA_EnemyCharacterStats : public UDataAsset
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 
 	/**
 	* The name of the enemy character
