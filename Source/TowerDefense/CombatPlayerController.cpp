@@ -55,22 +55,20 @@ void ACombatPlayerController::SetupInputComponent()
 void ACombatPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
+	myPlayerCharacter = Cast<APlayerCharacter>(InPawn);
 }
 
 void ACombatPlayerController::MovementAction(const FInputActionValue& Value)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("WSAD"));
 
-	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
-	{
-		const FVector2D MovementVector = Value.Get<FVector2D>();
+	const FVector2D MovementVector = Value.Get<FVector2D>();
+	const FVector Forward = myPlayerCharacter->GetActorForwardVector();
+	const FVector Right = myPlayerCharacter->GetActorRightVector();
 
-		const FVector Forward = myCharacter->GetActorForwardVector();
-		const FVector Right = myCharacter->GetActorRightVector();
-
-		myCharacter->AddMovementInput(Forward, MovementVector.Y);
-		myCharacter->AddMovementInput(Right, MovementVector.X);
-	}
+	myPlayerCharacter->AddMovementInput(Forward, MovementVector.Y);
+	myPlayerCharacter->AddMovementInput(Right, MovementVector.X);
 
 }
 
@@ -78,61 +76,41 @@ void ACombatPlayerController::MouseLookAction(const FInputActionValue& Value)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Mouse"));
 
-	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
-	{
-		const FVector2D LookAxisVector = Value.Get<FVector2D>();
+	const FVector2D LookAxisVector = Value.Get<FVector2D>();
 
-		myCharacter->AddControllerPitchInput(LookAxisVector.Y);
-		myCharacter->AddControllerYawInput(LookAxisVector.X);
-	}
+	myPlayerCharacter->AddControllerPitchInput(LookAxisVector.Y);
+	myPlayerCharacter->AddControllerYawInput(LookAxisVector.X);
 }
 
 void ACombatPlayerController::RunningAction()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
 
-	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
-	{
-		myCharacter->GetCharacterMovement()->MaxWalkSpeed = myCharacter->GetRunSpeed();
-	}
-	
+	myPlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = myPlayerCharacter->GetRunSpeed();
 }
 
 void ACombatPlayerController::RunningActionStop()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
 
-	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
-	{
-		myCharacter->GetCharacterMovement()->MaxWalkSpeed = myCharacter->GetMovementSpeed();
-	}
+	myPlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = myPlayerCharacter->GetMovementSpeed();
 }
 
 void ACombatPlayerController::JumpAction()
 {
-	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
-	{
-		myCharacter->Jump();
-	}
+	myPlayerCharacter->Jump();
 }
 
 void ACombatPlayerController::StopJumpingAction()
 {
-	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
-	{
-		myCharacter->StopJumping();
-	}
+	myPlayerCharacter->StopJumping();
 }
 
 void ACombatPlayerController::AttackAction()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Left Mouse Click"));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Left Mouse Click"));
 
-	if (APlayerCharacter* myCharacter = Cast<APlayerCharacter>(GetPawn()))
-	{
-		//myCharacter->equippedWeapon->spawnProjectile(myCharacter->GetCameraRotation(), myCharacter->GetCameraForwardVector());
-		myCharacter->equippedWeapon->spawnProjectile(myCharacter->GetPlayerCamera());
-	}
+	myPlayerCharacter->equippedWeapon->spawnProjectile(myPlayerCharacter->GetPlayerCamera());
 }
 
 

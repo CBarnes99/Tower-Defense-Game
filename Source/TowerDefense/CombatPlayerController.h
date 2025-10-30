@@ -28,6 +28,8 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class APlayerCharacter* myPlayerCharacter;
 
 	//Player Input Mapping Variables which are editable in BP to select the button inputs for each action
 	UPROPERTY(EditAnywhere, Category = "Input")

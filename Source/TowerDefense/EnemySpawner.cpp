@@ -66,7 +66,7 @@ int AEnemySpawner::CalculateAmountOfEnemiesInWave()
 }
 
 //Spawns the Enemy Actors from the Array of characters that are assigned in the BP Editor
-AActor* AEnemySpawner::SpawnEnemyActor()
+AEnemyCharacterBase* AEnemySpawner::SpawnEnemyActor()
 {
 	if (FAmountOfEnemysSpawning* enemyStruct = waveAndEnemyQueue.Find(currentWaveBeingSpawned))
 	{
@@ -74,10 +74,12 @@ AActor* AEnemySpawner::SpawnEnemyActor()
 
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Valid Index In Spawner "));
 			FActorSpawnParameters spawnParams;
-			AActor* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
+			spawnParams.Instigator = GetInstigator();
+
+			AEnemyCharacterBase* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
 			enemyStruct->enemyTypeArray.RemoveAt(0);
-			//spawnerManager->BindDelegateOnEnemy(Cast<AEnemyCharacterBase>(spawnedEnemy));
-			OnEnemySpawnedEvent.Broadcast(Cast<AEnemyCharacterBase>(spawnedEnemy));
+			//OnEnemySpawnedEvent.Broadcast(Cast<AEnemyCharacterBase>(spawnedEnemy));
+			OnEnemySpawnedEvent.Broadcast(spawnedEnemy);
 			return spawnedEnemy;
 		}
 		else

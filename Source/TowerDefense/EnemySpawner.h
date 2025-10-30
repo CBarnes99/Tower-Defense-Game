@@ -8,7 +8,6 @@
 #include "EnemyCharacterBase.h"
 #include "AmountOfEnemysSpawning.h"
 #include "Engine/DataTable.h"
-#include "SpawnerManager.h"
 #include "EnemySpawner.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemySpawnedSigniture, AEnemyCharacterBase*, enemy);
@@ -61,12 +60,11 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void Spawning();
 
+	/*UFUNCTION(BlueprintCallable)
+	AActor* SpawnEnemyActor();*/
 	UFUNCTION(BlueprintCallable)
-	AActor* SpawnEnemyActor();
+	AEnemyCharacterBase* SpawnEnemyActor();
 
 	UFUNCTION(BlueprintCallable)
 	void errorSpawningLog(FString log);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
-	ASpawnerManager* spawnerManager;
 };

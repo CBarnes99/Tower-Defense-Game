@@ -20,16 +20,6 @@ ASpawnerManager::ASpawnerManager()
 void ASpawnerManager::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (!enemySpawners.IsValidIndex(0))
-	{
-		SetAllSpawners();
-	}
-
-	for (auto elememts : enemySpawners)
-	{
-		Cast<AEnemySpawner>(elememts)->OnEnemySpawnedEvent.AddDynamic(this, &ASpawnerManager::BindDelegateOnEnemy);
-	}
 }
 
 // Called every frame
@@ -50,40 +40,58 @@ void ASpawnerManager::StartSpawningEnemies(int currentWave)
 	{
 		SetAllSpawners();
 	}
-	
+
 	//If there isnt a wave currently active, start the wave
-	if (!waveActive)
-	{
-		waveActive = true;
-
-		UE_LOG(LogTemp, Warning, TEXT("current wave = %d"), currentWave);
-
-		//Gets the amount of enemies that are in this round and starts spawning
-		for (AActor* Actor : enemySpawners)
-		{
-			AEnemySpawner* spawner = Cast<AEnemySpawner>(Actor);
-			if (spawner)
-			{
-				spawner->currentWaveBeingSpawned = currentWave;
-				amountOfEnemysInRound += spawner->CalculateAmountOfEnemiesInWave();
-				spawner->StartSpawning();
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("No Spawner Found when spawning calulcating amount of enemies"));
-			}
-		}
-		UE_LOG(LogTemp, Warning, TEXT("There are %d enemies this round"), amountOfEnemysInRound);
-	}
-	else
+	if (waveActive)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Wave is currently active!"));
+		return;
 	}
+
+	waveActive = true;
+	UE_LOG(LogTemp, Warning, TEXT("current wave = %d"), currentWave);
+
+	//Adds to the total of enemies that are in this round and then starts spawning enemies
+	for (AEnemySpawner* spawner : enemySpawners)
+	{
+		if (spawner)
+		{
+			spawner->currentWaveBeingSpawned = currentWave;
+			amountOfEnemysInRound += spawner->CalculateAmountOfEnemiesInWave();
+			spawner->StartSpawning();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No Spawner Found when spawning calulcating amount of enemies"));
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("There are %d enemies this round"), amountOfEnemysInRound);
 };
 
 void ASpawnerManager::SetAllSpawners()
 {
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawner::StaticClass(), enemySpawners);
+	TArray<AActor*> foundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawner::StaticClass(), foundActors);
+
+	enemySpawners.Empty();
+	for (auto elements : foundActors)
+	{
+		if (AEnemySpawner* spawner = Cast<AEnemySpawner>(elements))
+		{
+			enemySpawners.Add(spawner);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Fatal, TEXT("Cast to Enemy Spawner Failed!"));
+		}
+	}
+
+	//Bind the spawners OnEnemySpawnedEvent Delegate for when an enemy is spawned within the spawner, then this can set the delegate within the enemy spawned
+	for (AEnemySpawner* elememt : enemySpawners)
+	{
+		elememt->OnEnemySpawnedEvent.AddDynamic(this, &ASpawnerManager::BindDelegateOnEnemy);
+		UE_LOG(LogTemp, Warning, TEXT("%s spawning delegate has been bound in the spawner manager"), *elememt->GetName());
+	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Found %d actors from class AEnemySpawner"), enemySpawners.Num());
 }
@@ -91,10 +99,8 @@ void ASpawnerManager::SetAllSpawners()
 int ASpawnerManager::CalculateLastWave()
 {
 	int maxWave = 0;
-	for (AActor* actor : enemySpawners)
+	for (AEnemySpawner* spawner : enemySpawners)
 	{
-		AEnemySpawner* spawner = Cast<AEnemySpawner>(actor);
-
 		for (auto element : spawner->waveAndEnemyQueue)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Key/Wave is %d"), element.Key);
@@ -108,7 +114,7 @@ int ASpawnerManager::CalculateLastWave()
 	return maxWave;
 }
 
-
+//Bind the enemy spawned so that when it is destoryed, it redudces the count for amount of enemies in the round
 void ASpawnerManager::BindDelegateOnEnemy(AEnemyCharacterBase* enemy)
 {
 	if (enemy)

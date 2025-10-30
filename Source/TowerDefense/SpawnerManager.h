@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EnemyCharacterBase.h"
+#include "EnemySpawner.h"
 #include "SpawnerManager.generated.h"
 
 UCLASS()
@@ -20,7 +21,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere)
-	TArray<AActor*> enemySpawners;
+	TArray<AEnemySpawner*> enemySpawners;
 
 	UFUNCTION(BlueprintCallable)
 	void StartSpawningEnemies(int currentWave);
