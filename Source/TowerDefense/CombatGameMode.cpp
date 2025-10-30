@@ -33,13 +33,13 @@ ACombatGameMode::ACombatGameMode()
 		UE_LOG(LogTemp, Error, TEXT("Player Controller class NOT found in Game Mode!"))
 	}
 
-	currentWave = 0;
 }
 
 
 void ACombatGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	currentWave = 0;
 }
 
 void ACombatGameMode::StartEnemyWave()
@@ -49,6 +49,8 @@ void ACombatGameMode::StartEnemyWave()
 	{
 		AActor* actor = UGameplayStatics::GetActorOfClass(GetWorld(), ASpawnerManager::StaticClass());
 		spawnerManager = Cast<ASpawnerManager>(actor);
+	
+		spawnerManager->WaveEndedEvent.AddDynamic(this, &ACombatGameMode::PrepareNewWave);
 	}
 
 	//Check to see if the spawner manager has all the spawners refereneced
@@ -68,10 +70,27 @@ void ACombatGameMode::StartEnemyWave()
 	if (!spawnerManager->IsWaveActive())
 	{
 		currentWave++;
+
+		UE_LOG(LogTemp, Warning, TEXT("Wave %d is now active!"), currentWave);
+
 		spawnerManager->StartSpawningEnemies(currentWave);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Wave is already active!"));
+		UE_LOG(LogTemp, Warning, TEXT("Wave %d is already active!"), currentWave);
+	}
+}
+
+void ACombatGameMode::PrepareNewWave()
+{
+	UE_LOG(LogTemp, Display, TEXT("New Wave has been prepared"));
+	if (currentWave == lastWave)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Last Wave has been Defeated"));
+		//Finish Level function here
+	}
+	else
+	{
+		//Do setup phase thing here
 	}
 }

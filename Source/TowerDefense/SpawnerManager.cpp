@@ -11,15 +11,15 @@ ASpawnerManager::ASpawnerManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	waveActive = false;
-	amountOfEnemysInRound = 0;
 }
 
 // Called when the game starts or when spawned
 void ASpawnerManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	waveActive = false;
+	amountOfEnemysInRound = 0;
 }
 
 // Called every frame
@@ -49,6 +49,7 @@ void ASpawnerManager::StartSpawningEnemies(int currentWave)
 	}
 
 	waveActive = true;
+	amountOfEnemysInRound = 0;
 	UE_LOG(LogTemp, Warning, TEXT("current wave = %d"), currentWave);
 
 	//Adds to the total of enemies that are in this round and then starts spawning enemies
@@ -103,14 +104,15 @@ int ASpawnerManager::CalculateLastWave()
 	{
 		for (auto element : spawner->waveAndEnemyQueue)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Key/Wave is %d"), element.Key);
+			//UE_LOG(LogTemp, Display, TEXT("Key/Wave is %d"), element.Key);
 			if (element.Key > maxWave)
 			{
 				maxWave = element.Key;
-				UE_LOG(LogTemp, Warning, TEXT("Max Wave = % d"), maxWave);
+				//UE_LOG(LogTemp, Display, TEXT("Last Wave = % d"), maxWave);
 			}
 		}
 	}
+	UE_LOG(LogTemp, Display, TEXT("Last Wave = % d"), maxWave);
 	return maxWave;
 }
 
@@ -120,7 +122,7 @@ void ASpawnerManager::BindDelegateOnEnemy(AEnemyCharacterBase* enemy)
 	if (enemy)
 	{
 		enemy->OnEnemyDeathEvent.AddDynamic(this, &ASpawnerManager::EnemyHasDied);
-		UE_LOG(LogTemp, Warning, TEXT("%s Delegate has been bound in Spawner Manager"), *enemy->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("%s Delegate has been bound in Spawner Manager"), *enemy->GetName());
 
 	}
 	else 
@@ -132,5 +134,11 @@ void ASpawnerManager::BindDelegateOnEnemy(AEnemyCharacterBase* enemy)
 void ASpawnerManager::EnemyHasDied(AEnemyCharacterBase* enemy)
 {
 	amountOfEnemysInRound--;
-	UE_LOG(LogTemp, Warning, TEXT("Amount of enemies left in the round = %d"), amountOfEnemysInRound)
+	UE_LOG(LogTemp, Warning, TEXT("Amount of enemies left in the round = %d"), amountOfEnemysInRound);
+
+	if (amountOfEnemysInRound <= 0)
+	{
+		WaveEndedEvent.Broadcast();
+		waveActive = false;
+	}
 }

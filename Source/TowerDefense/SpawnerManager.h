@@ -8,6 +8,8 @@
 #include "EnemySpawner.h"
 #include "SpawnerManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaveEnded);
+
 UCLASS()
 class TOWERDEFENSE_API ASpawnerManager : public AActor
 {
@@ -41,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void EnemyHasDied(AEnemyCharacterBase* enemy);
 
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FWaveEnded WaveEndedEvent;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,7 +55,5 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	bool waveActive;
-
-
 
 };

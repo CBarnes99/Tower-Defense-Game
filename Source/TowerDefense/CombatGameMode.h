@@ -21,6 +21,7 @@ public:
 
 	virtual void BeginPlay() override;
 
+//protected:
 	/**
 	* The spawner manager in the level
 	*/
@@ -34,14 +35,17 @@ public:
 	int currentWave;
 
 	/**
+	* This is called when the player calls to start the next wave
+	*/
+	UFUNCTION(BlueprintCallable)
+	void StartEnemyWave();
+
+	/**
 	* The final wave in the level, is set in StartEnemyWave()
 	*/
 	UPROPERTY(VisibleAnywhere)
 	int lastWave;
 
-	/**
-	* This is called when the player calls to start the next wave
-	*/
 	UFUNCTION(BlueprintCallable)
-	void StartEnemyWave();
+	void PrepareNewWave();
 };

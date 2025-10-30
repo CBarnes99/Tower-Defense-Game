@@ -32,18 +32,24 @@ void AEnemySpawner::Tick(float DeltaTime)
 //When Enter is pressed in combat player controller, this function starts
 void AEnemySpawner::StartSpawning()
 {
-	isSpawning = true;
-	GetWorld()->GetTimerManager().SetTimer(spawnEnemyTimerHandle, this, &AEnemySpawner::Spawning, spawnInterval, true);
+	if (!isSpawning)
+	{
+		isSpawning = true;
+		GetWorld()->GetTimerManager().SetTimer(spawnEnemyTimerHandle, this, &AEnemySpawner::SpawningFunctionForTimer, spawnInterval, true);
+	}
 }
 
 //When all enemies have spawned, stop spawning
 void AEnemySpawner::StopSpawning()
 {
-	isSpawning = false;
-	GetWorld()->GetTimerManager().ClearTimer(spawnEnemyTimerHandle);
+	if (isSpawning)
+	{
+		isSpawning = false;
+		GetWorld()->GetTimerManager().ClearTimer(spawnEnemyTimerHandle);
+	}
 }
 
-void AEnemySpawner::Spawning()
+void AEnemySpawner::SpawningFunctionForTimer()
 {
 	SpawnEnemyActor();
 }
@@ -72,34 +78,28 @@ AEnemyCharacterBase* AEnemySpawner::SpawnEnemyActor()
 	{
 		if (enemyStruct->enemyTypeArray.IsValidIndex(0)) {
 
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Valid Index In Spawner "));
+			UE_LOG(LogTemp, Display, TEXT("Valid Index 0 In %s"), *this->GetName());
 			FActorSpawnParameters spawnParams;
 			spawnParams.Instigator = GetInstigator();
 
 			AEnemyCharacterBase* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
 			enemyStruct->enemyTypeArray.RemoveAt(0);
-			//OnEnemySpawnedEvent.Broadcast(Cast<AEnemyCharacterBase>(spawnedEnemy));
 			OnEnemySpawnedEvent.Broadcast(spawnedEnemy);
 			return spawnedEnemy;
 		}
 		else
 		{
-			errorSpawningLog("NO Valid Index In Spawner");
+			UE_LOG(LogTemp, Error, TEXT("NO Valid Index In %s"), *this->GetName());
+			StopSpawning();
 			return NULL;
 		}
 	}
 
 	else
 	{
-		errorSpawningLog("NO Valid Index In waveAndEnemyQueue");
+		UE_LOG(LogTemp, Error, TEXT("NO Valid Index In waveAndEnemyQueue"));
+		StopSpawning();
 		return NULL;
 	}
-}
-
-void AEnemySpawner::errorSpawningLog(FString log)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, log);
-	StopSpawning();
-	isSpawning = false;
 }
 

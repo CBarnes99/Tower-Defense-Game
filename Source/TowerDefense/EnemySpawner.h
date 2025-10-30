@@ -58,13 +58,9 @@ protected:
 	float spawnInterval;
 
 	UFUNCTION(BlueprintCallable)
-	void Spawning();
+	void SpawningFunctionForTimer();
 
-	/*UFUNCTION(BlueprintCallable)
-	AActor* SpawnEnemyActor();*/
 	UFUNCTION(BlueprintCallable)
 	AEnemyCharacterBase* SpawnEnemyActor();
 
-	UFUNCTION(BlueprintCallable)
-	void errorSpawningLog(FString log);
 };

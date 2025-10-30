@@ -71,7 +71,7 @@ void AProjectileBase::SetProjectileSpeed(float speed)
 
 void AProjectileBase::destoryProjectileActor()
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s is destroyed"), *this->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("%s is destroyed"), *this->GetName());
 	AProjectileBase::Destroy();
 }
 
@@ -88,7 +88,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* hitComponent, AActor* OtherActo
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("OtherActor is %s"), *OtherActor->GetName())
+	UE_LOG(LogTemp, Display, TEXT("OtherActor that projectile is colliding with is %s"), *OtherActor->GetName())
 	UGameplayStatics::ApplyDamage(OtherActor, damageDelt, GetInstigator()->GetController(), this, NULL /*CHANGE THIS TO A DAMAGE TYPE LATER ON*/);
 
 	destoryProjectileActor();
