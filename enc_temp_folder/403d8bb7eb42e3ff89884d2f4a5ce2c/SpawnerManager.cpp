@@ -20,16 +20,6 @@ ASpawnerManager::ASpawnerManager()
 void ASpawnerManager::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (!enemySpawners.IsValidIndex(0))
-	{
-		SetAllSpawners();
-	}
-
-	for (auto elememts : enemySpawners)
-	{
-		Cast<AEnemySpawner>(elememts)->OnEnemySpawnedEvent.AddDynamic(this, &ASpawnerManager::BindDelegateOnEnemy);
-	}
 }
 
 // Called every frame
@@ -65,7 +55,7 @@ void ASpawnerManager::StartSpawningEnemies(int currentWave)
 			if (spawner)
 			{
 				spawner->currentWaveBeingSpawned = currentWave;
-				amountOfEnemysInRound += spawner->CalculateAmountOfEnemiesInWave();
+				amountOfEnemysInRound = spawner->CalculateAmountOfEnemiesInWave();
 				spawner->StartSpawning();
 			}
 			else
@@ -114,8 +104,6 @@ void ASpawnerManager::BindDelegateOnEnemy(AEnemyCharacterBase* enemy)
 	if (enemy)
 	{
 		enemy->OnEnemyDeathEvent.AddDynamic(this, &ASpawnerManager::EnemyHasDied);
-		UE_LOG(LogTemp, Warning, TEXT("%s Delegate has been bound in Spawner Manager"), *enemy->GetName());
-
 	}
 	else 
 	{

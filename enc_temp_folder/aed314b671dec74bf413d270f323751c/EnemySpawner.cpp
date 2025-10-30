@@ -76,8 +76,7 @@ AActor* AEnemySpawner::SpawnEnemyActor()
 			FActorSpawnParameters spawnParams;
 			AActor* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
 			enemyStruct->enemyTypeArray.RemoveAt(0);
-			//spawnerManager->BindDelegateOnEnemy(Cast<AEnemyCharacterBase>(spawnedEnemy));
-			OnEnemySpawnedEvent.Broadcast(Cast<AEnemyCharacterBase>(spawnedEnemy));
+			//EnemySpawnedEvent
 			return spawnedEnemy;
 		}
 		else
