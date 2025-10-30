@@ -55,7 +55,7 @@ void ASpawnerManager::StartSpawningEnemies(int currentWave)
 			if (spawner)
 			{
 				spawner->currentWaveBeingSpawned = currentWave;
-				amountOfEnemysInRound += spawner->amountOfEnemiesInWave();
+				amountOfEnemysInRound = spawner->CalculateAmountOfEnemiesInWave();
 				spawner->StartSpawning();
 			}
 			else
@@ -96,4 +96,23 @@ int ASpawnerManager::CalculateLastWave()
 		}
 	}
 	return maxWave;
+}
+
+
+void ASpawnerManager::BindDelegateOnEnemy(AEnemyCharacterBase* enemy)
+{
+	if (enemy)
+	{
+		enemy->OnEnemyDeathEvent.AddDynamic(this, &ASpawnerManager::EnemyHasDied);
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Fatal, TEXT("Binding Delegate to spawner manager not bound correctly"));
+	}
+}
+
+void ASpawnerManager::EnemyHasDied(AEnemyCharacterBase* enemy)
+{
+	amountOfEnemysInRound--;
+	UE_LOG(LogTemp, Warning, TEXT("Amount of enemies left in the round = %d"), amountOfEnemysInRound)
 }

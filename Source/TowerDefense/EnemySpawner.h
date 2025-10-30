@@ -10,6 +10,9 @@
 #include "Engine/DataTable.h"
 #include "EnemySpawner.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemySpawnSignature, AEnemyCharacterBase*, Enemy);
+
+
 UCLASS()
 class TOWERDEFENSE_API AEnemySpawner : public AActor
 {
@@ -36,7 +39,6 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Spawner")
 	int currentWaveBeingSpawned;
 
-
 	UFUNCTION(BlueprintCallable)
 	void StartSpawning();
 
@@ -44,7 +46,10 @@ public:
 	void StopSpawning();
 
 	UFUNCTION(BlueprintCallable)
-	int amountOfEnemiesInWave();
+	int CalculateAmountOfEnemiesInWave();
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnEnemySpawnSignature EnemySpawnedEvent;
 
 protected:
 	// Called when the game starts or when spawned
@@ -62,4 +67,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void errorSpawningLog(FString log);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
+	class ASpawnerManager* spawnerManager;
 };

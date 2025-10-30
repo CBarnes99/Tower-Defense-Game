@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EnemyCharacterBase.h"
 #include "SpawnerManager.generated.h"
-
-DECLARE_DELEGATE(FOnEnemyUnitsDeath);
 
 UCLASS()
 class TOWERDEFENSE_API ASpawnerManager : public AActor
@@ -19,9 +18,6 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(VisibleAnywhere)
-	bool waveActive;
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<AActor*> enemySpawners;
@@ -38,7 +34,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsWaveActive();
 
-	FOnEnemyUnitsDeath DelegateEnemyDied;
+	UFUNCTION(BlueprintCallable)
+	void BindDelegateOnEnemy(AEnemyCharacterBase* enemy);
+
+	UFUNCTION(BlueprintCallable)
+	void EnemyHasDied(AEnemyCharacterBase* enemy);
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,4 +46,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	int amountOfEnemysInRound;
+
+	UPROPERTY(VisibleAnywhere)
+	bool waveActive;
+
+
+
 };

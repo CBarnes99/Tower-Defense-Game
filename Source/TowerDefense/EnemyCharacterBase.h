@@ -9,6 +9,8 @@
 #include "DA_EnemyCharacterStats.h"
 #include "EnemyCharacterBase.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, AEnemyCharacterBase*, Enemy);
+
 UCLASS()
 class TOWERDEFENSE_API AEnemyCharacterBase : public ACharacter
 {
@@ -27,6 +29,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnEnemyDeathSignature OnEnemyDeathEvent;
 
 protected:
 	// Called when the game starts or when spawned

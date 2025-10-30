@@ -48,7 +48,7 @@ void AEnemySpawner::Spawning()
 	SpawnEnemyActor();
 }
 
-int AEnemySpawner::amountOfEnemiesInWave()
+int AEnemySpawner::CalculateAmountOfEnemiesInWave()
 {
 	if (FAmountOfEnemysSpawning* enemyStruct = waveAndEnemyQueue.Find(currentWaveBeingSpawned))
 	{
@@ -76,6 +76,7 @@ AActor* AEnemySpawner::SpawnEnemyActor()
 			FActorSpawnParameters spawnParams;
 			AActor* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
 			enemyStruct->enemyTypeArray.RemoveAt(0);
+			//EnemySpawnedEvent
 			return spawnedEnemy;
 		}
 		else

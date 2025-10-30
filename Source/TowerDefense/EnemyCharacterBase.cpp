@@ -22,12 +22,16 @@ void AEnemyCharacterBase::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = movementSpeed;
 
+
+	//Change this when I use object pooling
+	//OnDestroyed.AddDynamic();
 }
 
 // Called every frame
 void AEnemyCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 UBehaviorTree* AEnemyCharacterBase::GetBehaviourTree() const
@@ -65,6 +69,7 @@ void AEnemyCharacterBase::OnDeath()
 	if 0 end round and can start the next	
 	*/
 
+	OnEnemyDeathEvent.Broadcast(this);
 
 	Destroy();
 }

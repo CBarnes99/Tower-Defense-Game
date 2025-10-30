@@ -57,7 +57,7 @@ void AProjectileBase::Tick(float DeltaTime)
 void AProjectileBase::SetDamage(float damageAmount)
 {
 	damageDelt = damageAmount;
-	UE_LOG(LogTemp, Error, TEXT("Damage Amount = %f"), damageDelt);
+	//UE_LOG(LogTemp, Error, TEXT("Damage Amount = %f"), damageDelt);
 
 }
 
