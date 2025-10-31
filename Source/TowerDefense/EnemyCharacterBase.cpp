@@ -8,6 +8,8 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	healthComponent = CreateDefaultSubobject<UAC_Health>(TEXT("Health Componenet"));
 }
 
 // Called when the game starts or when spawned
@@ -16,7 +18,8 @@ void AEnemyCharacterBase::BeginPlay()
 	Super::BeginPlay();
 	
 	name = enemyInfo->name;
-	health = enemyInfo->health;
+	//health = enemyInfo->health;
+	healthComponent->SetHealth(enemyInfo->health);
 	movementSpeed = enemyInfo->movementSpeed;
 	damageDelt = enemyInfo->damageDelt;
 
@@ -51,9 +54,9 @@ float AEnemyCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	UE_LOG(LogTemp, Warning, TEXT("EventInstigator = %s"), *EventInstigator->GetName())
 	UE_LOG(LogTemp, Warning, TEXT("DamageCauser = %s"), *DamageCauser->GetName());
 	*/
-
-	health -= DamageAmount;	
-	if (health <= 0)
+	healthComponent->RecieveDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	//health -= DamageAmount;	
+	if (healthComponent->GetHealth() <= 0)
 	{
 		OnDeath();
 	}

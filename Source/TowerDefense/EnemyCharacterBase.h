@@ -7,6 +7,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "GameFramework/Character.h"
 #include "DA_EnemyCharacterStats.h"
+#include "AC_Health.h"
 #include "EnemyCharacterBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, AEnemyCharacterBase*, Enemy);
@@ -39,6 +40,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* enemyBehaviorTree;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	class UAC_Health* healthComponent;
+
+
 	//Assign a Data Asset in Blueprints for each of the enemys information
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
 	TObjectPtr<UDA_EnemyCharacterStats> enemyInfo;
@@ -46,8 +51,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	FString name;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	float health;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	float health;*/
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	float damageDelt;

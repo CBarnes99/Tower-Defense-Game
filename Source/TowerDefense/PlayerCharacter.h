@@ -6,6 +6,7 @@
 #include "DA_PlayerCharacterStats.h"
 #include "Components/StaticMeshComponent.h"
 #include "WeaponBase.h"
+#include "AC_Health.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -24,7 +25,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//Player Stats, Edit in Blueprints Data Asset
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TObjectPtr<UDA_PlayerCharacterStats> DA_playerInfo;
 
 	UFUNCTION(BlueprintCallable)
@@ -56,27 +57,32 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USpringArmComponent* springArm;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	class UAC_Health* healthComponent;
+
 	//This is the socket name on the skeleton, if the socket name changes, can be edited in the editor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName weaponSocket;
 
+
+
 	//These properties are assigned in the begin play by referencing the DA_playerInfo Data Asset
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	FString name;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
-	float health;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	float health;*/
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	float mana;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	float jumpHeight;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	float movementSpeed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerStats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	float runSpeed;
 
 	//Set the class of the weapon in the BP Editor
