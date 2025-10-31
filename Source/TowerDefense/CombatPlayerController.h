@@ -9,6 +9,8 @@
 #include "InputActionValue.h"
 #include "CombatPlayerController.generated.h"
 
+//create delegate for starting wave instead of having the player controller know about the game mode
+
 /**
  * 
  */
