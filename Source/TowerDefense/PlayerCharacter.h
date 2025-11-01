@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "WeaponBase.h"
 #include "AC_Health.h"
+#include "AC_Mana.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -60,6 +61,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	class UAC_Health* healthComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	class UAC_Mana* manaComponent;
+
 	//This is the socket name on the skeleton, if the socket name changes, can be edited in the editor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName weaponSocket;
@@ -67,9 +71,6 @@ protected:
 	//These properties are assigned in the begin play by referencing the DA_playerInfo Data Asset
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	FString name;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	float mana;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	float jumpHeight;

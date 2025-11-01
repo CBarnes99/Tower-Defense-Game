@@ -40,6 +40,7 @@ APlayerCharacter::APlayerCharacter()
 	camera->bUsePawnControlRotation = false;
 
 	healthComponent = CreateDefaultSubobject<UAC_Health>(TEXT("Health Component"));
+	manaComponent = CreateDefaultSubobject<UAC_Mana >(TEXT("Mana Component"));
 
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
@@ -54,9 +55,8 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	name = DA_playerInfo->name;
-	//health = DA_playerInfo->health;
 	healthComponent->SetHealth(DA_playerInfo->health);
-	mana = DA_playerInfo->mana;
+	manaComponent->SetMana(DA_playerInfo->mana);
 	movementSpeed = DA_playerInfo->movementSpeed;
 	runSpeed = DA_playerInfo->runSpeed;
 	jumpHeight = DA_playerInfo->jumpHeight;
@@ -64,7 +64,7 @@ void APlayerCharacter::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = movementSpeed;
 	GetCharacterMovement()->JumpZVelocity = jumpHeight;
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s, Health: %f, Mana: %f, Movement Speed: %f, Run Speed: %f, Jump Height: %f"),
-		*name, healthComponent->GetHealth(), mana, movementSpeed, runSpeed, jumpHeight);
+		*name, healthComponent->GetHealth(), manaComponent->GetMana(), movementSpeed, runSpeed, jumpHeight);
 	
 	EquipWeapon();
 }
