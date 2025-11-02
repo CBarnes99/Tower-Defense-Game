@@ -31,11 +31,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	bool isSpawning;
 
-	UPROPERTY(EditAnywhere, Category = "Spawner")
+	UPROPERTY(EditAnywhere)
 	TMap<int, FAmountOfEnemysSpawning> waveAndEnemyQueue;
 
 	//This is set by the spawner manager which recives input from the game mode which holds the current wave
-	UPROPERTY(VisibleAnywhere, Category = "Spawner")
+	UPROPERTY(VisibleAnywhere)
 	int currentWaveBeingSpawned;
 
 	UFUNCTION(BlueprintCallable)
@@ -47,14 +47,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int CalculateAmountOfEnemiesInWave();
 
-	UPROPERTY(BlueprintAssignable, Category = "Events")
+	UPROPERTY(BlueprintAssignable)
 	FOnEnemySpawnedSigniture OnEnemySpawnedEvent;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere)
+	class USphereComponent* spawnCollision;
 	
-	UPROPERTY(EditAnywhere, Category = "Spawner")
+	UPROPERTY(EditAnywhere)
 	float spawnInterval;
 
 	UFUNCTION(BlueprintCallable)
@@ -62,5 +65,8 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	AEnemyCharacterBase* SpawnEnemyActor();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsEnemyCollisionOverlap();
 
 };

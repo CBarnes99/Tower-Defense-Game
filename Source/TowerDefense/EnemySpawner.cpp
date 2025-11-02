@@ -4,12 +4,16 @@
 #include "EnemySpawner.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 AEnemySpawner::AEnemySpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	spawnCollision = CreateDefaultSubobject<USphereComponent>(TEXT("Spawn Collision"));
+	spawnCollision->SetSphereRadius(150.f);
 
 	spawnInterval = 0.5f; //Spawns every 0.5 seconds
 }
@@ -51,7 +55,28 @@ void AEnemySpawner::StopSpawning()
 
 void AEnemySpawner::SpawningFunctionForTimer()
 {
+	if (IsEnemyCollisionOverlap())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Enemy In %s Collision Area"), *this->GetName());
+		return;
+	}
+
 	SpawnEnemyActor();
+}
+
+bool AEnemySpawner::IsEnemyCollisionOverlap()
+{
+	TArray<AActor*> overlappingActors;
+	spawnCollision->GetOverlappingActors(overlappingActors);
+	
+	for (AActor* actor : overlappingActors)
+	{
+		if (Cast<AEnemyCharacterBase>(actor))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 int AEnemySpawner::CalculateAmountOfEnemiesInWave()
@@ -102,4 +127,6 @@ AEnemyCharacterBase* AEnemySpawner::SpawnEnemyActor()
 		return NULL;
 	}
 }
+
+
 
