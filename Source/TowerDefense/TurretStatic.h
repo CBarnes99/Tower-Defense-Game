@@ -27,16 +27,24 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	void OnConstruction(const FTransform& Transform) override;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	class UStaticMeshComponent* turretMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class UBoxComponent* collisionBox;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	class UStaticMeshComponent* collisionMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FVector collisionBoxSize;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	class UBoxComponent* collisionBox;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UArrowComponent* arrowComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Turret")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	UDA_TurretStats* turretStats;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Turret")

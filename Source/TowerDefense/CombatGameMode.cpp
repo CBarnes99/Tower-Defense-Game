@@ -11,7 +11,7 @@
 
 ACombatGameMode::ACombatGameMode()
 {
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/Player/BP_PlayerCharacter"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/Characters/Player/BP_PlayerCharacter"));
 	if (PlayerPawnClassFinder.Class)
 	{
 		DefaultPawnClass = PlayerPawnClassFinder.Class;	
@@ -22,7 +22,7 @@ ACombatGameMode::ACombatGameMode()
 		UE_LOG(LogTemp, Error, TEXT("Player Pawn/Character NOT found in Game Mode!"))
 	}
 
-	static ConstructorHelpers::FClassFinder<APlayerController> CombatPlayerControllerClass(TEXT("/Game/BP_CombatPlayerController"));
+	static ConstructorHelpers::FClassFinder<APlayerController> CombatPlayerControllerClass(TEXT("/Game/Core/BP_CombatPlayerController"));
 	if (CombatPlayerControllerClass.Class)
 	{
 		PlayerControllerClass = CombatPlayerControllerClass.Class;

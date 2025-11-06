@@ -13,7 +13,7 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FClassFinder<AActor> weaponBP(TEXT("/Game/BP_WeaponBase"));
+	static ConstructorHelpers::FClassFinder<AActor> weaponBP(TEXT("/Game/Weapons/BP_WeaponBase"));
 	if (weaponBP.Class)
 	{
 		weaponClass = weaponBP.Class;
@@ -26,7 +26,7 @@ APlayerCharacter::APlayerCharacter()
 	}
 	weaponSocket = "weapon_righthand";
 
-	static ConstructorHelpers::FClassFinder<AActor> turretBP(TEXT("/Game/Turrets/BP_TurretStatic"));
+	static ConstructorHelpers::FClassFinder<AActor> turretBP(TEXT("/Game/Turrets/MyTurretStatic"));
 	if (turretBP.Class)
 	{
 		turretClass = turretBP.Class;

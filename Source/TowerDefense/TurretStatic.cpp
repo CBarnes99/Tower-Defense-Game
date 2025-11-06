@@ -15,17 +15,25 @@ ATurretStatic::ATurretStatic()
 	PrimaryActorTick.bCanEverTick = true;
 
 	turretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret Mesh"));
-	RootComponent = turretMesh;
+	//RootComponent = turretMesh;
+	turretMesh->SetupAttachment(RootComponent);
 
 	collisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
 	collisionBox->SetCollisionProfileName(TEXT("Trigger"));
 	collisionBox->SetGenerateOverlapEvents(true);
-
+	collisionBoxSize = FVector(150, 50, 50);
+	collisionBox->SetBoxExtent(FVector(collisionBoxSize));
+	collisionBox->SetRelativeLocation(FVector(collisionBoxSize.X, 0, 0));
 	collisionBox->OnComponentBeginOverlap.AddDynamic(this, &ATurretStatic::OnOverlap);
+
+	collisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Collision Mesh"));
+	collisionMesh->SetCollisionProfileName("NoCollision", false);
+	
 
     arrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("Forward Arrow"));
 
     collisionBox->SetupAttachment(turretMesh);
+	collisionMesh->SetupAttachment(collisionBox);
     arrowComponent->SetupAttachment(turretMesh);
 
 	previewMeshComponent = CreateDefaultSubobject<UAC_PreviewMesh>(TEXT("Preview Mesh Component"));
@@ -44,6 +52,10 @@ void ATurretStatic::BeginPlay()
 	turretActive = true;
 	turretRecharging = false;
 
+}
+void ATurretStatic::OnConstruction(const FTransform& Transform)
+{
+	collisionMesh->SetRelativeScale3D(collisionBoxSize / 125);	
 }
 
 
