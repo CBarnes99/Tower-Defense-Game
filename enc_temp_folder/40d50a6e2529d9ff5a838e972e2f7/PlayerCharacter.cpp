@@ -223,11 +223,11 @@ void APlayerCharacter::DestroyTurretPlacement()
 
 void APlayerCharacter::PlaceTurret()
 {
-	FVector spawnLoc = previewTurretActor->GetActorLocation();
-	FRotator spawnRot = previewTurretActor->GetActorRotation();
 	DestroyTurretPlacement();
-	
-	ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, spawnLoc, spawnRot);
+	FVector placeTurretPos = lineTraceComponent->GetTraceTargetLocation(GetCameraLocation(), GetCameraForwardVector(), 2000.f);
+	ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, placeTurretPos, FRotator::ZeroRotator);
+	lineTraceComponent->SetIgnoredActor(spawnedTurret);
+	spawnedTurret->SetActorLocation(placeTurretPos);
 	spawnedTurret->SetMaterial(false);
 
 
