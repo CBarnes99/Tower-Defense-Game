@@ -26,7 +26,8 @@ APlayerCharacter::APlayerCharacter()
 	}
 	weaponSocket = "weapon_righthand";
 
-	static ConstructorHelpers::FClassFinder<AActor> turretBP(TEXT("/Game/Turrets/MyTurretStatic"));
+	//Change this to a data table, possibly remove it entirely
+	/*static ConstructorHelpers::FClassFinder<AActor> turretBP(TEXT("/Game/Turrets/MyTurretStatic"));
 	if (turretBP.Class)
 	{
 		turretClass = turretBP.Class;
@@ -36,8 +37,19 @@ APlayerCharacter::APlayerCharacter()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Turret BP not found in player character"));
-	}
+	}*/
 
+	static ConstructorHelpers::FClassFinder<UDataTable> turretDataTable(TEXT("/Game/Data/DataTables/DT_TurretObjectPath"));
+	if (turretDataTable.Class)
+	{
+		turretDataTableClass = turretDataTable.Class;
+		UE_LOG(LogTemp, Display, TEXT("turretDataTable BP found in player character"));
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("turretDataTable BP not found in player character"));
+	}
 
 
 
