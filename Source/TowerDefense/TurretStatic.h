@@ -23,6 +23,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetMaterial(bool isPreview);
 
+	UFUNCTION(BlueprintCallable)
+	void pooledTurretDisable();
+
+	UFUNCTION(BlueprintCallable)
+	void pooledTurretEnable();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -76,7 +82,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void enableTurret();
-	
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSet<AActor*> damagedActors;

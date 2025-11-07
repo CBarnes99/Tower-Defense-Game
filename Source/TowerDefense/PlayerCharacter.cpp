@@ -227,6 +227,4 @@ void APlayerCharacter::PlaceTurret()
 	
 	ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, spawnLoc, spawnRot);
 	spawnedTurret->SetMaterial(false);
-
-
 }

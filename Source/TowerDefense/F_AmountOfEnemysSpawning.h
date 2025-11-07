@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyCharacterBase.h"
-#include "AmountOfEnemysSpawning.generated.h"
+#include "F_AmountOfEnemysSpawning.generated.h"
 
 USTRUCT(BlueprintType)
 struct FAmountOfEnemysSpawning

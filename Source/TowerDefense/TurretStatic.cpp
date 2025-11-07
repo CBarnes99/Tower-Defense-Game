@@ -115,3 +115,13 @@ void ATurretStatic::SetMaterial(bool isPreview)
 	}
 }
 
+void ATurretStatic::pooledTurretDisable()
+{
+	
+}
+
+void ATurretStatic::pooledTurretEnable()
+{
+
+}
+

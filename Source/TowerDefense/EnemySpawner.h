@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Containers/Map.h"
 #include "EnemyCharacterBase.h"
-#include "AmountOfEnemysSpawning.h"
+#include "F_AmountOfEnemysSpawning.h"
 #include "Engine/DataTable.h"
 #include "EnemySpawner.generated.h"
 

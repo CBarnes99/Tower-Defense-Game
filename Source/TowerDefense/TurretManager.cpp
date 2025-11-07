@@ -26,13 +26,14 @@ void ATurretManager::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Data Table Within - %s"), *this->GetName());
 	}
+
+	PoolAllPreivewTurrets();
 }
 
 // Called every frame
 void ATurretManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 ATurretStatic* ATurretManager::SpawnTurretByRow(int rowIndex, FVector spawnLoc, FRotator spawnRot)
@@ -57,3 +58,89 @@ ATurretStatic* ATurretManager::SpawnTurretByRow(int rowIndex, FVector spawnLoc, 
 	return spawnedTurret;
 }
 
+void ATurretManager::PoolAllPreivewTurrets()
+{
+	for (FName indexName : dataTableRowNames)
+	{
+		F_TurretObjectPath* turretPtr = turretDataTable->FindRow<F_TurretObjectPath>(indexName, TEXT("Pooling the Preview Turrets"));
+		UClass* turretClass = turretPtr->turretClass.LoadSynchronous();
+		FActorSpawnParameters spawnParams;
+		ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
+		pooledPreviewTurrets.Add(spawnedTurret);
+		DisablePreviewTurret(spawnedTurret);
+	}
+}
+
+//void ATurretManager::UpdatePreviewTurretLocation(FVector previewTurretPos, int index)
+//{
+//	if (!previewTurretActor && turretClass)
+//	{
+//		previewTurretActor = GetWorld()->SpawnActor<ATurretStatic>(turretClass, placeTurretPos, FRotator::ZeroRotator);
+//		previewTurretActor->SetMaterial(true);
+//		//Set preview material here
+//	}
+//	else if (previewTurretActor)
+//	{
+//		lineTraceComponent->SetIgnoredActor(previewTurretActor);
+//		previewTurretActor->SetActorLocation(placeTurretPos);
+//	}
+//}
+
+void ATurretManager::DisablePreviewTurret(ATurretStatic* turret)
+{
+	turret->SetActorHiddenInGame(true);
+	turret->SetActorEnableCollision(false);
+	turret->SetActorTickEnabled(false);
+}
+
+void ATurretManager::EnablePreviewTurret(ATurretStatic* turret)
+{
+	turret->SetActorHiddenInGame(false);
+	turret->SetActorEnableCollision(true);
+	turret->SetActorTickEnabled(true);
+}
+
+//void ATurretManager::PlaceTurret()
+//{
+//
+//}
+
+//////////////////////////////////////////////////////////////////////
+
+//void APlayerCharacter::UpdateTurretPlacement()
+//{
+//
+//	if (!lineTraceComponent->HasImpactPoint(GetCameraLocation(), GetCameraForwardVector(), 2000.f)) return;
+//
+//	FVector placeTurretPos = lineTraceComponent->GetTraceTargetLocation(GetCameraLocation(), GetCameraForwardVector(), 2000.f);
+//
+//
+//	if (!previewTurretActor && turretClass)
+//	{
+//		previewTurretActor = GetWorld()->SpawnActor<ATurretStatic>(turretClass, placeTurretPos, FRotator::ZeroRotator);
+//		previewTurretActor->SetMaterial(true);
+//		//Set preview material here
+//	}
+//	else if (previewTurretActor)
+//	{
+//		lineTraceComponent->SetIgnoredActor(previewTurretActor);
+//		previewTurretActor->SetActorLocation(placeTurretPos);
+//	}
+//}
+//
+//void APlayerCharacter::DestroyTurretPlacement()
+//{
+//	hotbarSelectionIndex = 1;
+//	previewTurretActor->Destroy();
+//	previewTurretActor = nullptr;
+//}
+//
+//void APlayerCharacter::PlaceTurret()
+//{
+//	FVector spawnLoc = previewTurretActor->GetActorLocation();
+//	FRotator spawnRot = previewTurretActor->GetActorRotation();
+//	DestroyTurretPlacement();
+//
+//	ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, spawnLoc, spawnRot);
+//	spawnedTurret->SetMaterial(false);
+//}

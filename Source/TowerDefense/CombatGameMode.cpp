@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PlayerCharacter.h"
 #include "CombatPlayerController.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
 
 
 ACombatGameMode::ACombatGameMode()
