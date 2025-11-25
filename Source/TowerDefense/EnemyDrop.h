@@ -42,4 +42,29 @@ protected:
 	*/
 	UFUNCTION(BlueprintCallable)
 	void OnPickUp(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	FTimerHandle MovementTimerHandle;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Motion")
+	float rotationSpeed;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Motion")
+	float bobbingAmplitude;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Motion")
+	float bobbingFrequency;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Motion")
+	float timerInterval;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Motion")
+	float runningTime;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Motion")
+	FVector initialLocation;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateMotion();
+
+
 };

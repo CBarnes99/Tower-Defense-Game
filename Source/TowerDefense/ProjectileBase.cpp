@@ -90,7 +90,7 @@ void AProjectileBase::DeactivateProjectile()
 	}
 
 	isActive = false;
-	UE_LOG(LogTemp, Warning, TEXT("Deactivated! - %s"), *this->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Deactivated! - %s"), *this->GetName());
 }
 
 
@@ -109,7 +109,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* hitComponent, AActor* OtherActo
 		return;
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("OtherActor that projectile is colliding with is %s"), *OtherActor->GetName())
+	//UE_LOG(LogTemp, Display, TEXT("OtherActor that projectile is colliding with is %s"), *OtherActor->GetName())
 	UGameplayStatics::ApplyDamage(OtherActor, damageDelt, GetInstigator()->GetController(), this, NULL /*CHANGE THIS TO A DAMAGE TYPE LATER ON*/);
 
 	DeactivateProjectile();

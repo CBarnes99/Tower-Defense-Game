@@ -2,6 +2,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "PlayerCharacter.h"
+#include "Math/UnrealMathUtility.h"
 
 AEnemyDrop::AEnemyDrop()
 {
@@ -30,6 +31,17 @@ AEnemyDrop::AEnemyDrop()
 void AEnemyDrop::BeginPlay()
 {
 	Super::BeginPlay();
+
+	rotationSpeed = 20.f;
+	bobbingAmplitude = 3.f;
+	bobbingFrequency = 0.3f;
+	timerInterval = 0.02f;
+	runningTime = 0.f;
+	initialLocation = GetActorLocation();
+
+
+	GetWorldTimerManager().SetTimer(MovementTimerHandle, this, &AEnemyDrop::UpdateMotion, timerInterval, true);
+
 }
 
 void AEnemyDrop::SetDrop(EEnemyDrop type)
@@ -99,6 +111,23 @@ void AEnemyDrop::OnPickUp(UPrimitiveComponent* OverlappedComp, AActor* OtherActo
 		UE_LOG(LogTemp, Error, TEXT("Defualt Switch Statement, create new case in set drop function within EnemyDrop.cpp!!"));
 		break;
 	}
-	
+
+	GetWorldTimerManager().ClearTimer(MovementTimerHandle);
 	Destroy();
-};
+}
+
+void AEnemyDrop::UpdateMotion()
+{
+	runningTime += timerInterval;
+
+	float deltaRotation = rotationSpeed * timerInterval;
+	FRotator newRotation = GetActorRotation();
+	newRotation.Yaw += deltaRotation;
+
+	float bobbingOffset = FMath::Sin(runningTime * 2.f * PI * bobbingFrequency) * bobbingAmplitude;
+	FVector newLocation = initialLocation;
+	newLocation.Z += bobbingOffset;
+
+	SetActorLocationAndRotation(newLocation, newRotation);
+}
+;

@@ -88,7 +88,8 @@ void UAC_SpawnProjectile::FireProjectile(FVector traceStartLocation, FVector wea
 		//return;
 		spawnProjectile();
 		currentProjectile = GetInactiveProjectile();
-		UE_LOG(LogTemp, Warning, TEXT("Added another projectile to the pool for - %s"), *GetOwner()->GetName());
+		poolSize++;
+		UE_LOG(LogTemp, Warning, TEXT("Added another projectile to the pool for - %s. There are %d projectiles within the pool"), *GetOwner()->GetName(), poolSize);
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Using - %s"), *currentProjectile->GetName());
 
