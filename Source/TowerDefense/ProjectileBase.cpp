@@ -8,7 +8,7 @@ AProjectileBase::AProjectileBase()
 	collisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
 	collisionComponent->InitSphereRadius(20.f);
 	collisionComponent->SetSimulatePhysics(false);
-	collisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	collisionComponent->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	collisionComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	collisionComponent->SetEnableGravity(false);
 
@@ -23,6 +23,7 @@ AProjectileBase::AProjectileBase()
 	projectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
 	projectileMesh->SetupAttachment(RootComponent.Get());
 	projectileMesh->SetSimulatePhysics(false);
+	projectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	lifeTime = 5.f;
 

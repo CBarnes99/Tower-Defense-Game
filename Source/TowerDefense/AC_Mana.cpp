@@ -19,6 +19,7 @@ float UAC_Mana::GetMana()
 void UAC_Mana::GainMana(float gainAmount)
 {
 	mana = FMath::Clamp(mana + gainAmount, 0, maxMana);
+	UE_LOG(LogTemp, Display, TEXT("Mana = %f"), mana);
 }
 
 bool UAC_Mana::SpendMana(float manaCostAmount)
@@ -26,6 +27,7 @@ bool UAC_Mana::SpendMana(float manaCostAmount)
 	if (HasEnoughMana(manaCostAmount))
 	{
 		mana -= manaCostAmount;
+		UE_LOG(LogTemp, Display, TEXT("Mana = %f"), mana);
 		return true;
 	}
 	else 

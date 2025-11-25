@@ -85,6 +85,12 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	class ATurretManager* turretManager;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	class UAC_Health* healthComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	class UAC_Mana* manaComponent;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -95,12 +101,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USpringArmComponent* springArm;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	class UAC_Health* healthComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	class UAC_Mana* manaComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UAC_LineTrace* lineTraceComponent;

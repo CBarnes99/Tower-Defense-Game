@@ -1,4 +1,7 @@
 #include "EnemyCharacterBase.h"
+#include "Containers/Map.h"
+#include "Math/UnrealMathUtility.h"
+#include "EnemyDrop.h"
 
 AEnemyCharacterBase::AEnemyCharacterBase()
 {
@@ -12,12 +15,9 @@ void AEnemyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	name = enemyInfo->name;
 	healthComponent->SetHealth(enemyInfo->health);
-	movementSpeed = enemyInfo->movementSpeed;
-	damageDelt = enemyInfo->damageDelt;
 
-	GetCharacterMovement()->MaxWalkSpeed = movementSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = enemyInfo->movementSpeed;
 }
 
 UBehaviorTree* AEnemyCharacterBase::GetBehaviourTree() const
@@ -46,7 +46,7 @@ void AEnemyCharacterBase::OnDeath()
 {
 	OnEnemyDeathEvent.Broadcast(this);
 
-	//Drop loot here
+	SpawnDrop();
 
 	Destroy();
 	/*
@@ -54,4 +54,37 @@ void AEnemyCharacterBase::OnDeath()
 	UE_LOG(LogTemp, Warning, TEXT("EventInstigator = %s"), *EventInstigator->GetName())
 	UE_LOG(LogTemp, Warning, TEXT("DamageCauser = %s"), *DamageCauser->GetName());
 	*/
+}
+
+void AEnemyCharacterBase::SpawnDrop()
+{
+	/*if (!enemyDrop)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Enemy Drop Isn't Set!"));
+		return;
+	}*/
+
+	float dropWeightTotal = 0.f;
+
+	for (const TPair<EEnemyDrop, float>& element : dropWeight)
+	{
+		dropWeightTotal += element.Value;
+	}
+
+	float randomWeight = FMath::FRandRange(0.f, dropWeightTotal);
+	float accumulatedWeight = 0.f;
+
+	for (const TPair<EEnemyDrop, float>& element : dropWeight)
+	{
+		accumulatedWeight += element.Value;
+		if (randomWeight <= accumulatedWeight)
+		{
+			if (element.Key == EEnemyDrop::NONE) break;
+
+			FActorSpawnParameters spawnParams;
+			AEnemyDrop* drop = GetWorld()->SpawnActor<AEnemyDrop>(AEnemyDrop::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator, spawnParams);
+			drop->SetDrop(element.Key);
+			break;
+		}
+	}
 }
