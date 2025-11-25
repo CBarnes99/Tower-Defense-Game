@@ -52,12 +52,12 @@ void AEnemyDrop::SetDrop(EEnemyDrop type)
 	{
 	case EEnemyDrop::HEALTH:
 		UE_LOG(LogTemp, Display, TEXT("Set Drop To Health"));
-		dropMesh->SetStaticMesh(Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/Fab/Stylized_guns___Lowpoly_Free/SM_Gun.SM_Gun"))));
+		dropMesh->SetStaticMesh(Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/Assets/Enemy_Drops/Potions/StaticMeshes/SM_Health_Potion.SM_Health_Potion"))));
 		break;
 
 	case EEnemyDrop::MANA:
 		UE_LOG(LogTemp, Display, TEXT("Set Drop To Mana"));
-		dropMesh->SetStaticMesh(Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/Fab/Stylized_guns___Lowpoly_Free/SM__Cannon.SM__Cannon"))));
+		dropMesh->SetStaticMesh(Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/Assets/Enemy_Drops/Potions/StaticMeshes/SM_Mana_Potion.SM_Mana_Potion"))));
 		break;
 
 	case EEnemyDrop::SMALL_CURRENCY:

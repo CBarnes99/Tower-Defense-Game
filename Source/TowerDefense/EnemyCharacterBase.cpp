@@ -2,6 +2,7 @@
 #include "Containers/Map.h"
 #include "Math/UnrealMathUtility.h"
 #include "EnemyDrop.h"
+#include "Components/CapsuleComponent.h"
 
 AEnemyCharacterBase::AEnemyCharacterBase()
 {
@@ -82,7 +83,11 @@ void AEnemyCharacterBase::SpawnDrop()
 			if (element.Key == EEnemyDrop::NONE) break;
 
 			FActorSpawnParameters spawnParams;
-			AEnemyDrop* drop = GetWorld()->SpawnActor<AEnemyDrop>(AEnemyDrop::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator, spawnParams);
+			FVector spawnLoc = GetActorLocation();
+			float capsuleHalfHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+			spawnLoc.Z -= capsuleHalfHeight;
+
+			AEnemyDrop* drop = GetWorld()->SpawnActor<AEnemyDrop>(AEnemyDrop::StaticClass(), spawnLoc, FRotator::ZeroRotator, spawnParams);
 			drop->SetDrop(element.Key);
 			break;
 		}
