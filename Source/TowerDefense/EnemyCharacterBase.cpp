@@ -32,8 +32,6 @@ void AEnemyCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-
-
 float AEnemyCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	
@@ -62,12 +60,6 @@ void AEnemyCharacterBase::OnDeath()
 
 void AEnemyCharacterBase::SpawnDrop()
 {
-	/*if (!enemyDrop)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Enemy Drop Isn't Set!"));
-		return;
-	}*/
-
 	float dropWeightTotal = 0.f;
 
 	for (const TPair<EEnemyDrop, float>& element : dropWeight)

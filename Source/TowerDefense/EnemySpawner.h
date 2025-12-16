@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,7 +6,7 @@
 #include "EnemyCharacterBase.h"
 #include "F_AmountOfEnemysSpawning.h"
 #include "Engine/DataTable.h"
-#include "AC_NodePathLocations.h"
+#include "EnemyPathSpline.h"
 #include "EnemySpawner.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemySpawnedSigniture, AEnemyCharacterBase*, enemy);
@@ -72,11 +70,14 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly)
 	class USphereComponent* spawnCollision;
 
-	/**
-	* @brief The actor component that holds pathing information for the enemies spawned
-	*/
-	UPROPERTY(VisibleDefaultsOnly)
-	UAC_NodePathLocations* nodePathLocations;
+	UPROPERTY(EditAnywhere)
+	TArray<AEnemyPathSpline*> enemyPathSplines;
+
+	UFUNCTION(BlueprintCallable)
+	bool IsThereEnemyPathSplines();
+
+	UFUNCTION(BlueprintCallable)
+	AEnemyPathSpline* GetRandomEnemyPath();
 	
 	/**
 	* @brief How frequent the spawner spawns an enemy

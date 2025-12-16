@@ -22,7 +22,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviourTree() const;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -42,13 +41,6 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable)
 	FVector GetNextPathNodeLocation();
-
-	///**
-	//* @brief Gets the Path Node Index
-	//* @return The Path Node Index, as an int
-	//*/
-	//UFUNCTION(BlueprintCallable)
-	//int GetPathNodeIndex();
 
 protected:
 	virtual void BeginPlay() override;
@@ -98,12 +90,6 @@ protected:
 	*/
 	UFUNCTION(BlueprintCallable)
 	void OnDeath();
-
-	///**
-	//* @brief The drop that the enemy is holding
-	//*/
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Drop")
-	//TSubclassOf<AEnemyDrop> enemyDrop;
 
 	/**
 	* @brief On death, check to see if they will drop the item

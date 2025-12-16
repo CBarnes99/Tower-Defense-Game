@@ -5,7 +5,7 @@ UAC_SpawnProjectile::UAC_SpawnProjectile()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-	poolSize = 3;
+	poolSize = 20;
 }
 
 void UAC_SpawnProjectile::BeginPlay()
