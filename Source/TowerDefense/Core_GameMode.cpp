@@ -1,11 +1,11 @@
-#include "CombatGameMode.h"
+#include "Core_GameMode.h"
 #include "UObject/ConstructorHelpers.h"
 #include "GameFramework/Actor.h"
 #include "PlayerCharacter.h"
-#include "CombatPlayerController.h"
+#include "Core_PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
-ACombatGameMode::ACombatGameMode()
+ACore_GameMode::ACore_GameMode()
 {
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/Characters/Player/BP_PlayerCharacter"));
 	if (PlayerPawnClassFinder.Class)
@@ -18,10 +18,10 @@ ACombatGameMode::ACombatGameMode()
 		UE_LOG(LogTemp, Error, TEXT("Player Pawn/Character NOT found in Game Mode!"))
 	}
 
-	static ConstructorHelpers::FClassFinder<APlayerController> CombatPlayerControllerClass(TEXT("/Game/Core/BP_CombatPlayerController"));
-	if (CombatPlayerControllerClass.Class)
+	static ConstructorHelpers::FClassFinder<APlayerController> CorePlayerControllerClass(TEXT("/Game/Core/BP_Core_PlayerController"));
+	if (CorePlayerControllerClass.Class)
 	{
-		PlayerControllerClass = CombatPlayerControllerClass.Class;
+		PlayerControllerClass = CorePlayerControllerClass.Class;
 		
 		UE_LOG(LogTemp, Warning, TEXT("Player Controller class found in Game Mode!"))
 	}
@@ -30,10 +30,10 @@ ACombatGameMode::ACombatGameMode()
 		UE_LOG(LogTemp, Error, TEXT("Player Controller class NOT found in Game Mode!"))
 	}
 
-	static ConstructorHelpers::FClassFinder<AHUD> GameplayHUDClass(TEXT("/Game/HUD/BP_GameplayHUD"));
-	if (GameplayHUDClass.Class)
+	static ConstructorHelpers::FClassFinder<AHUD> CoreHUDClass(TEXT("/Game/HUD/BP_Core_HUD"));
+	if (CoreHUDClass.Class)
 	{
-		HUDClass = GameplayHUDClass.Class;
+		HUDClass = CoreHUDClass.Class;
 
 		UE_LOG(LogTemp, Warning, TEXT("Combat HUD class found in Game Mode!"))
 	}
@@ -44,15 +44,15 @@ ACombatGameMode::ACombatGameMode()
 
 }
 
-void ACombatGameMode::BeginPlay()
+void ACore_GameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	currentWave = 0;
-	combatPlayerController = Cast<ACombatPlayerController>(GetWorld()->GetFirstPlayerController());
-	combatPlayerController->StartWaveEvent.AddDynamic(this, &ACombatGameMode::StartEnemyWave);
+	corePlayerController = Cast<ACore_PlayerController>(GetWorld()->GetFirstPlayerController());
+	corePlayerController->StartWaveEvent.AddDynamic(this, &ACore_GameMode::StartEnemyWave);
 }
 
-void ACombatGameMode::StartEnemyWave()
+void ACore_GameMode::StartEnemyWave()
 {
 	//Check to see if there is a valid spawner manager
 	if (!spawnerManager)
@@ -60,7 +60,7 @@ void ACombatGameMode::StartEnemyWave()
 		AActor* actor = UGameplayStatics::GetActorOfClass(GetWorld(), ASpawnerManager::StaticClass());
 		spawnerManager = Cast<ASpawnerManager>(actor);
 	
-		spawnerManager->WaveEndedEvent.AddDynamic(this, &ACombatGameMode::PrepareNewWave);
+		spawnerManager->WaveEndedEvent.AddDynamic(this, &ACore_GameMode::PrepareNewWave);
 	}
 
 	//Check to see if the spawner manager has all the spawners refereneced
@@ -91,7 +91,7 @@ void ACombatGameMode::StartEnemyWave()
 	}
 }
 
-void ACombatGameMode::PrepareNewWave()
+void ACore_GameMode::PrepareNewWave()
 {
 	UE_LOG(LogTemp, Display, TEXT("New Wave has been prepared"));
 	if (currentWave == lastWave)

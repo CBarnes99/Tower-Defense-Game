@@ -5,12 +5,12 @@
 #include <EnhancedInputLibrary.h>
 #include "PlayerCharacter.h"
 #include "InputActionValue.h"
-#include "CombatPlayerController.generated.h"
+#include "Core_PlayerController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartWaveSigniture);
 
 UCLASS()
-class TOWERDEFENSE_API ACombatPlayerController : public APlayerController
+class TOWERDEFENSE_API ACore_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 

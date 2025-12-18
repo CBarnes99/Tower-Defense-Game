@@ -1,14 +1,14 @@
-#include "CombatPlayerController.h"
+#include "Core_PlayerController.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
 #include "EngineUtils.h" 
 #include "EnemySpawner.h"
-#include "CombatGameMode.h"
+#include "Core_GameMode.h"
 #include "ProjectileBase.h"
 #include "DrawDebugHelpers.h"
 
-void ACombatPlayerController::BeginPlay()
+void ACore_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -36,45 +36,45 @@ void ACombatPlayerController::BeginPlay()
 	}
 }
 
-void ACombatPlayerController::SetupInputComponent()
+void ACore_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
 	//Binds the Input Actions assigned in the editor to the corisponding functions
 	if (UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
-		Input->BindAction(moveActionInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::MovementAction);
+		Input->BindAction(moveActionInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::MovementAction);
 
-		Input->BindAction(lookActionInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::MouseLookAction);
+		Input->BindAction(lookActionInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::MouseLookAction);
 
-		Input->BindAction(jumpActionInput, ETriggerEvent::Started, this, &ACombatPlayerController::JumpAction);
-		Input->BindAction(jumpActionInput, ETriggerEvent::Completed, this, &ACombatPlayerController::StopJumpingAction);
+		Input->BindAction(jumpActionInput, ETriggerEvent::Started, this, &ACore_PlayerController::JumpAction);
+		Input->BindAction(jumpActionInput, ETriggerEvent::Completed, this, &ACore_PlayerController::StopJumpingAction);
 
-		Input->BindAction(runActionInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::RunningAction);
-		Input->BindAction(runActionInput, ETriggerEvent::Completed, this, &ACombatPlayerController::RunningActionStop);
+		Input->BindAction(runActionInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::RunningAction);
+		Input->BindAction(runActionInput, ETriggerEvent::Completed, this, &ACore_PlayerController::RunningActionStop);
 
-		Input->BindAction(startEnemyWaveActionInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::CallGameModeToStartSpawningEnemies);
+		Input->BindAction(startEnemyWaveActionInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::CallGameModeToStartSpawningEnemies);
 
-		Input->BindAction(attackActionInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::AttackAction);
+		Input->BindAction(attackActionInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::AttackAction);
 
-		Input->BindAction(scrollWheelSelectionInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::ScrollWheelSelectionAction);
+		Input->BindAction(scrollWheelSelectionInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::ScrollWheelSelectionAction);
 
-		Input->BindAction(confirmTurretPlacementInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::ConfirmTurretPlacementAction);
+		Input->BindAction(confirmTurretPlacementInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::ConfirmTurretPlacementAction);
 
-		Input->BindAction(rotateTurretRightInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::RotateTurret);
-		Input->BindAction(rotateTurretLeftInput, ETriggerEvent::Triggered, this, &ACombatPlayerController::RotateTurret);
+		Input->BindAction(rotateTurretRightInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::RotateTurret);
+		Input->BindAction(rotateTurretLeftInput, ETriggerEvent::Triggered, this, &ACore_PlayerController::RotateTurret);
 
-		Input->BindAction(openTurretSelectionMenu, ETriggerEvent::Triggered, this, &ACombatPlayerController::OpenTurretSelectionMenu);
+		Input->BindAction(openTurretSelectionMenu, ETriggerEvent::Triggered, this, &ACore_PlayerController::OpenTurretSelectionMenu);
 	}
 }
 
-void ACombatPlayerController::OnPossess(APawn* InPawn)
+void ACore_PlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	myPlayerCharacter = Cast<APlayerCharacter>(InPawn);
 }
 
-void ACombatPlayerController::MovementAction(const FInputActionValue& Value)
+void ACore_PlayerController::MovementAction(const FInputActionValue& Value)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("WSAD"));
 	const FVector2D MovementVector = Value.Get<FVector2D>();
@@ -86,7 +86,7 @@ void ACombatPlayerController::MovementAction(const FInputActionValue& Value)
 
 }
 
-void ACombatPlayerController::MouseLookAction(const FInputActionValue& Value)
+void ACore_PlayerController::MouseLookAction(const FInputActionValue& Value)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Mouse"));
 	const FVector2D LookAxisVector = Value.Get<FVector2D>();
@@ -96,31 +96,31 @@ void ACombatPlayerController::MouseLookAction(const FInputActionValue& Value)
 	UpdateHotbarSelection();
 }
 
-void ACombatPlayerController::RunningAction()
+void ACore_PlayerController::RunningAction()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
 
 	myPlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = myPlayerCharacter->GetRunSpeed();
 }
 
-void ACombatPlayerController::RunningActionStop()
+void ACore_PlayerController::RunningActionStop()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
 
 	myPlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = myPlayerCharacter->GetMovementSpeed();
 }
 
-void ACombatPlayerController::JumpAction()
+void ACore_PlayerController::JumpAction()
 {
 	myPlayerCharacter->Jump();
 }
 
-void ACombatPlayerController::StopJumpingAction()
+void ACore_PlayerController::StopJumpingAction()
 {
 	myPlayerCharacter->StopJumping();
 }
 
-void ACombatPlayerController::AttackAction()
+void ACore_PlayerController::AttackAction()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Left Mouse Click"));
 
@@ -135,19 +135,19 @@ void ACombatPlayerController::AttackAction()
 
 }
 
-void ACombatPlayerController::CallGameModeToStartSpawningEnemies()
+void ACore_PlayerController::CallGameModeToStartSpawningEnemies()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, TEXT("ENTER PRESSED"));
 
 	StartWaveEvent.Broadcast();
 };
 
-void ACombatPlayerController::OpenTurretSelectionMenu()
+void ACore_PlayerController::OpenTurretSelectionMenu()
 {
 	UE_LOG(LogTemp, Warning, TEXT("OpenTurretButtonPressed"));
 }
 
-void ACombatPlayerController::ScrollWheelSelectionAction(const FInputActionValue& Value)
+void ACore_PlayerController::ScrollWheelSelectionAction(const FInputActionValue& Value)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), *Value.ToString());
 
@@ -166,7 +166,7 @@ void ACombatPlayerController::ScrollWheelSelectionAction(const FInputActionValue
 	UpdateHotbarSelection();
 
 }
-void ACombatPlayerController::ConfirmTurretPlacementAction()
+void ACore_PlayerController::ConfirmTurretPlacementAction()
 {
 	if (myPlayerCharacter->hotbarSelectionIndex > 1)
 	{
@@ -174,7 +174,7 @@ void ACombatPlayerController::ConfirmTurretPlacementAction()
 	}
 
 }
-void ACombatPlayerController::RotateTurret(const FInputActionValue& Value)
+void ACore_PlayerController::RotateTurret(const FInputActionValue& Value)
 {
 
 	UE_LOG(LogTemp, Warning, TEXT("Value = %s"), *Value.ToString());
@@ -182,7 +182,7 @@ void ACombatPlayerController::RotateTurret(const FInputActionValue& Value)
 }
 
 
-void ACombatPlayerController::UpdateHotbarSelection()
+void ACore_PlayerController::UpdateHotbarSelection()
 {
 	if (myPlayerCharacter->hotbarSelectionIndex > 1)
 	{
@@ -204,7 +204,7 @@ void ACombatPlayerController::UpdateHotbarSelection()
 		}
 	}
 }
-void ACombatPlayerController::UseCombatMappingContext(bool confirm)
+void ACore_PlayerController::UseCombatMappingContext(bool confirm)
 {
 	UEnhancedInputLocalPlayerSubsystem* inputSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	if (confirm)
@@ -223,7 +223,7 @@ void ACombatPlayerController::UseCombatMappingContext(bool confirm)
 		return;
 	}
 }
-void ACombatPlayerController::HaveMappingContextsBeenAsigned()
+void ACore_PlayerController::HaveMappingContextsBeenAsigned()
 {
 	if (!defaultMappingContext)
 	{

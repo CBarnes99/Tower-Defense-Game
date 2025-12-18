@@ -3,17 +3,17 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "SpawnerManager.h"
-#include "CombatPlayerController.h"
-#include "CombatGameMode.generated.h"
+#include "Core_PlayerController.h"
+#include "Core_GameMode.generated.h"
 
 UCLASS()
-class TOWERDEFENSE_API ACombatGameMode : public AGameModeBase
+class TOWERDEFENSE_API ACore_GameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
 public:
 	
-	ACombatGameMode();
+	ACore_GameMode();
 
 	virtual void BeginPlay() override;
 
@@ -46,7 +46,7 @@ protected:
 	* @brief The player controller used during combat
 	*/
 	UPROPERTY(VisibleAnywhere)
-	ACombatPlayerController* combatPlayerController;
+	ACore_PlayerController* corePlayerController;
 
 	/**
 	* @brief Checks if theres a new wave or if you've finished the last wave

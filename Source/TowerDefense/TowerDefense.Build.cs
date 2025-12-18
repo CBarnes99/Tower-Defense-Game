@@ -19,8 +19,8 @@ public class TowerDefense : ModuleRules
 			"NavigationSystem",
 			"GameplayTasks",
 			"UMG"
-		});
-
+        });
+		
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
 		// Uncomment if you are using Slate UI
