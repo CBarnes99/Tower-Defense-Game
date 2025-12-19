@@ -3,8 +3,8 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
 #include "EngineUtils.h" 
-#include "EnemySpawner.h"
 #include "Core_GameMode.h"
+#include "Core_HUD.h"
 #include "ProjectileBase.h"
 #include "DrawDebugHelpers.h"
 
@@ -72,6 +72,17 @@ void ACore_PlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	myPlayerCharacter = Cast<APlayerCharacter>(InPawn);
+
+	if (!myPlayerCharacter)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Player Character Not Assigned In Player Controller!"));
+	}
+
+	coreHUD = Cast<class ACore_HUD>(GetHUD());
+	if (!coreHUD)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Core Hud Not Assigned In Player Controller!"));
+	}
 }
 
 void ACore_PlayerController::MovementAction(const FInputActionValue& Value)
@@ -145,6 +156,7 @@ void ACore_PlayerController::CallGameModeToStartSpawningEnemies()
 void ACore_PlayerController::OpenTurretSelectionMenu()
 {
 	UE_LOG(LogTemp, Warning, TEXT("OpenTurretButtonPressed"));
+	coreHUD->ToggleTurretSelectionWidget();
 }
 
 void ACore_PlayerController::ScrollWheelSelectionAction(const FInputActionValue& Value)

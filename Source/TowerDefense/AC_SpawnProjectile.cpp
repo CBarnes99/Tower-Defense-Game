@@ -52,7 +52,7 @@ void UAC_SpawnProjectile::spawnProjectile()
 	AProjectileBase* pooledProjectile = GetWorld()->SpawnActor<AProjectileBase>(projectile, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
 
 	FString lable = FString::Printf(TEXT("%s - %d"), *projectile->GetName(), amountInPool + 1);
-	pooledProjectile->SetActorLabel(lable);
+	//pooledProjectile->SetActorLabel(lable);
 	projectilePool.Add(pooledProjectile);
 
 	amountInPool++;

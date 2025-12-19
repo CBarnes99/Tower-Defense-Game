@@ -15,13 +15,6 @@ class TOWERDEFENSE_API ACore_PlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
-
-	/**
-	* @brief A pointer to the enemy spawner
-	*/
-	UPROPERTY(EditAnywhere, Category = "References")
-	class AEnemySpawner* enemySpawner;
-
 	/**
 	* @brief A delegate to start a new wave
 	*/
@@ -39,6 +32,12 @@ protected:
 	*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class APlayerCharacter* myPlayerCharacter;
+
+	/**
+	* @brief A pointer to the Core HUD
+	*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class ACore_HUD* coreHUD;
 
 	/**
 	* @brief A Data Table pointer to the Data Table that holds a soft ptr to the turrets, assigned in the editor

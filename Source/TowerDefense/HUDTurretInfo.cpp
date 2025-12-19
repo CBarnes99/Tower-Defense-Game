@@ -1,5 +1,8 @@
 
 #include "HUDTurretInfo.h"
+#include "Components/CheckBox.h"
+#include "Components/TextBlock.h"
+#include "Components/Image.h"
 
 void UHUDTurretInfo::NativeConstruct()
 {

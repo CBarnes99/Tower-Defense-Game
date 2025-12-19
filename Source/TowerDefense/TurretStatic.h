@@ -3,7 +3,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "DA_TurretStats.h"
+#include "DA_TurretInfo.h"
 #include "AC_PreviewMesh.h"
 #include "TurretStatic.generated.h"
 
@@ -56,7 +56,7 @@ protected:
 	* @brief Data Asset that holds the turrets defualt values
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	UDA_TurretStats* turretStats;
+	UDA_TurretInfo* turretStats;
 
 	/**
 	* @brief Actor Component that holds the preview material and Defualt material for the turret

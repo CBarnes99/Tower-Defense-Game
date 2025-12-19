@@ -50,7 +50,7 @@ void ATurretManager::PoolAllPreivewTurrets()
 		ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
 		spawnedTurret->SetPreviewMaterial(true);
 		FString turretNameString = FString::Printf(TEXT("Pooled Preview Turret - %s"), *indexName.ToString());
-		spawnedTurret->SetActorLabel(turretNameString);
+		//spawnedTurret->SetActorLabel(turretNameString);
 		pooledPreviewTurrets.Add(spawnedTurret);
 		DisablePreviewTurret(spawnedTurret);
 	}

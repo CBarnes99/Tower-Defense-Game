@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "DA_WeaponStats.h"
+#include "DA_WeaponInfo.h"
 #include "ProjectileBase.h"
 #include "Camera/CameraComponent.h"
 #include "AC_SpawnProjectile.h"
@@ -56,7 +56,7 @@ protected:
 	* @brief A Data Asset that holds the default values for the weapon
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UDA_WeaponStats* weaponStats;
+	UDA_WeaponInfo* weaponStats;
 
 	/**
 	* @brief The name of the muzzle that is within the mesh

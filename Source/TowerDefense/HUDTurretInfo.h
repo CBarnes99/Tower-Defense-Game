@@ -2,15 +2,19 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/CheckBox.h"
-#include "Components/TextBlock.h"
-#include "Components/Image.h"
-#include "Components/Overlay.h"
-#include "Components/VerticalBox.h"
 #include "TurretStatic.h"
 #include "HUDTurretInfo.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCheckboxStateChanged, bool, bIsChecked);
+
+class UOverlay;
+class UVerticalBox;
+class UTextBlock;
+class UImage;
+class UCheckBox;
+class UTextBlock;
+
+class UDA_TurretInfo;
 
 UCLASS(Abstract)
 class TOWERDEFENSE_API UHUDTurretInfo : public UUserWidget
@@ -19,23 +23,26 @@ class TOWERDEFENSE_API UHUDTurretInfo : public UUserWidget
 
 public:
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UOverlay* WidgetOverlay;
+	UPROPERTY(EditAnywhere, meta = (ExposeOnSpawn = true))
+	UDA_TurretInfo* turretInfo;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UVerticalBox* VerticalBox;
+	UOverlay* WidgetOverlay;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* TurretNameText;
+	UVerticalBox* VerticalBox;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UImage* TurretImage;
+	UTextBlock* TurretNameText;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UCheckBox* IsTurretSelectedCheckBox;
+	UImage* TurretImage;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* IsTurretSelectedText;
+	UCheckBox* IsTurretSelectedCheckBox;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* IsTurretSelectedText;
 
 	/*UPROPERTY(EditAnywhere, meta = (BindWidget))
 	TSubclassOf<ATurretStatic> turretToSpawn;*/
