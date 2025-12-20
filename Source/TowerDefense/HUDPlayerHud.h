@@ -5,6 +5,8 @@
 #include "HUDPlayerHud.generated.h"
 
 class UHUDHealthAndMana;
+class UHUDWeaponTurretSelector;
+class UHUDCrosshair;
 
 UCLASS(Abstract)
 class TOWERDEFENSE_API UHUDPlayerHud : public UUserWidget
@@ -16,4 +18,9 @@ public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UHUDHealthAndMana* HealthAndMana;
 
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UHUDWeaponTurretSelector* WeaponAndTurretSelector;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UHUDCrosshair* Crosshair;
 };

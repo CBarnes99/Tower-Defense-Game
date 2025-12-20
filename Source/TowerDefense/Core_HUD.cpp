@@ -2,6 +2,7 @@
 #include "HUDTurretSelectionMenu.h"
 #include "HUDPlayerHud.h"
 #include "HUDHealthAndMana.h"
+#include "Core_PlayerController.h"
 
 void ACore_HUD::BeginPlay()
 {

@@ -2,10 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/CanvasPanel.h"
 #include "Components/UniformGridPanel.h"
-#include "HUDTurretInfo.h"
 #include "HUDTurretSelectionMenu.generated.h"
+
+class UCanvasPanel;
+class UUniformGridPanel;
+class UHUDTurretInfo;
+class UDA_TurretInfo;
 
 UCLASS(Abstract)
 class TOWERDEFENSE_API UHUDTurretSelectionMenu : public UUserWidget
@@ -15,21 +18,28 @@ class TOWERDEFENSE_API UHUDTurretSelectionMenu : public UUserWidget
 public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UCanvasPanel* MenuCanvasPanel;
+	UCanvasPanel* MenuCanvasPanel;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UUniformGridPanel* TurretSelectionGrid;
+	UUniformGridPanel* TurretSelectionGrid;
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UHUDTurretInfo* Turret1;
+	//UPROPERTY(EditAnywhere, meta = (BindWidget))
+	//UHUDTurretInfo* Turret1;
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UHUDTurretInfo* Turret2;
+	//UPROPERTY(EditAnywhere, meta = (BindWidget))
+	//UHUDTurretInfo* Turret2;
 
 protected:
 
 	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable)
-	void TurretHasBeenSelected(bool bIsChecked);
+	void TurretHasBeenSelected(bool bIsChecked, UDA_TurretInfo* turretInformation);
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<UDA_TurretInfo*> turretInfoForWidgetsArray;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UHUDTurretInfo> turretInfoClass;
+
 };

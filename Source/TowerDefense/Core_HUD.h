@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Core_PlayerController.h"
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "Core_HUD.generated.h"
 
 class UHUDTurretSelectionMenu;
 class UHUDPlayerHud;
-//class UHUDHealthAndMana;
+class ACore_PlayerController;
 
 UCLASS()
 class TOWERDEFENSE_API ACore_HUD : public AHUD
@@ -93,14 +92,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Widgets - Modal")
 	void SetUpModalWidgetList();
-
-
-
-
-	UPROPERTY(VisibleAnywhere)
-	class UHUDBase* hudBase;
-
-
 
 
 };
