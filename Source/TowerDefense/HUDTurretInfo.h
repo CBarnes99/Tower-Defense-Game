@@ -15,8 +15,8 @@ class UTextBlock;
 
 class ACore_GameState;
 
-//class UDA_TurretInfo;
-class ATurretStatic;
+class UDA_TurretInfo;
+//class ATurretStatic;
 
 UCLASS(Abstract)
 class TOWERDEFENSE_API UHUDTurretInfo : public UUserWidget
@@ -43,14 +43,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	UTextBlock* IsTurretSelectedText;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<ATurretStatic> turretClass;
+	//UPROPERTY(EditDefaultsOnly)
+	//TSubclassOf<ATurretStatic> turretClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	UDA_TurretInfo* turretInfo;
 
 	UFUNCTION(BlueprintCallable)
-	void SetWidgetDefaults(FText newTurretName, UTexture2D* newTurretTexture, int newTurretCost, TSubclassOf<ATurretStatic> newTurretClass);
+	void SetWidgetDefaults(UDA_TurretInfo* turretInfoDA);
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnCheckboxStateChanged OnCheckboxStateChangedSignature;

@@ -1,8 +1,13 @@
 #include "HUDWeaponTurretSelectorIcon.h"
 #include "Components/Image.h"
 
-void UHUDWeaponTurretSelectorIcon::SetWidgetDefaults(UTexture2D* iconTexture, TSubclassOf<UClass> iconClass)
+void UHUDWeaponTurretSelectorIcon::SetWidgetDefaults(UTexture2D* iconTexture, TSubclassOf<ATurretStatic> iconClass)
 {
 	iconImage->SetBrushFromTexture(iconTexture);
-	weaponOrTurretClass = iconClass;
+	turretClass = iconClass;
+}
+
+TSubclassOf<ATurretStatic> UHUDWeaponTurretSelectorIcon::GetIconClass()
+{
+	return turretClass;
 }

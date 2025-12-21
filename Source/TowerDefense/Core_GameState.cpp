@@ -4,6 +4,9 @@ void ACore_GameState::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Display, TEXT("%s has initilized!"), *this->GetName());
+
+
 	if (playerCurrencyAmount == NULL)
 	{
 		playerCurrencyAmount = 100;

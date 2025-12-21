@@ -10,6 +10,8 @@ void ACore_HUD::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Display, TEXT("%s has initilized!"), *this->GetName());
+
 	localCorePlayerController = Cast<ACore_PlayerController>(GetOwningPlayerController());
 
 	if (!localCorePlayerController)
@@ -179,10 +181,9 @@ void ACore_HUD::ToggleTurretSelectionWidget()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Toggle Turret Selection Widget Function"));
 	ToggleGameMenuWidgets(turretSelectionMenu);
-	ToggleInGameWidgets();
 }
 
 void ACore_HUD::BindDelegates()
 {
-	turretSelectionMenu->OnMenuSelectionSigniture.AddDynamic(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::TestDelegateFunction);
+	turretSelectionMenu->OnMenuSelectionSigniture.AddDynamic(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::GetInfoFromTurretMenu);
 }

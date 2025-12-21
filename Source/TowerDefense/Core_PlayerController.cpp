@@ -12,6 +12,8 @@ void ACore_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Display, TEXT("%s has initilized!"), *this->GetName());
+
 	HaveMappingContextsBeenAsigned();
 
 	//Set defualt mapping context

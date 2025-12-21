@@ -61,6 +61,8 @@ ACore_GameMode::ACore_GameMode()
 void ACore_GameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	UE_LOG(LogTemp, Display, TEXT("%s has initilized!"), *this->GetName());
+
 	currentWave = 0;
 	corePlayerController = Cast<ACore_PlayerController>(GetWorld()->GetFirstPlayerController());
 	corePlayerController->StartWaveEvent.AddDynamic(this, &ACore_GameMode::StartEnemyWave);

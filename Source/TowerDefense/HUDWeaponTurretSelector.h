@@ -5,6 +5,8 @@
 #include "HUDWeaponTurretSelector.generated.h"
 
 class UDA_TurretInfo;
+class UHorizontalBox;
+class UHUDWeaponTurretSelectorIcon;
 
 UCLASS(Abstract)
 class TOWERDEFENSE_API UHUDWeaponTurretSelector : public UUserWidget
@@ -14,6 +16,20 @@ class TOWERDEFENSE_API UHUDWeaponTurretSelector : public UUserWidget
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void TestDelegateFunction(bool bIsChecked, UDA_TurretInfo* turretInformation);
+	void GetInfoFromTurretMenu(bool bIsChecked, UDA_TurretInfo* turretInformation);
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	UHorizontalBox* IconHBox;
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<UDA_TurretInfo*> arrayOfTurretInfo;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UHUDWeaponTurretSelectorIcon> iconClass;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateWeaponTurretSelector(UDA_TurretInfo* turretInformation);
 
 };

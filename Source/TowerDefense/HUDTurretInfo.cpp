@@ -4,6 +4,7 @@
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
 #include "Core_GameState.h"
+#include "DA_TurretInfo.h"
 
 void UHUDTurretInfo::NativeConstruct()
 {
@@ -14,21 +15,20 @@ void UHUDTurretInfo::NativeConstruct()
 	IsTurretSelectedCheckBox->OnCheckStateChanged.AddDynamic(this, &UHUDTurretInfo::HandleCheckboxStateChange);
 }
 
-void UHUDTurretInfo::SetWidgetDefaults(FText newTurretName, UTexture2D* newTurretTexture, int newTurretCost, TSubclassOf<ATurretStatic> newTurretClass)
+void UHUDTurretInfo::SetWidgetDefaults(UDA_TurretInfo* turretInfoDA)
 {
-	TurretNameText->SetText(newTurretName);
+	turretInfo = turretInfoDA;
 
-	TurretImage->SetBrushFromTexture(newTurretTexture);
+	TurretNameText->SetText(turretInfo->turretName);
+
+	TurretImage->SetBrushFromTexture(turretInfo->turretIcon);
 
 	FText textToFormat = FText::FromString(TEXT("Cost: {cost}"));
 	FFormatNamedArguments args;
-	args.Add(TEXT("cost"), FText::AsNumber(newTurretCost));
+	args.Add(TEXT("cost"), FText::AsNumber(turretInfo->cost));
 	FText formattedText = FText::Format(textToFormat, args);
 	turretCost->SetText(formattedText);
-
-	turretClass = newTurretClass;
 }
-
 
 void UHUDTurretInfo::SetSelectedText()
 {
@@ -77,7 +77,6 @@ void UHUDTurretInfo::HandleCheckboxStateChange(bool bIsChecked)
 		OnCheckboxStateChangedSignature.Broadcast(bIsChecked, turretInfo);
 	}
 		
-
 	SetSelectedText();
 
 }
