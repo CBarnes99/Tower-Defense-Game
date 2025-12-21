@@ -35,13 +35,27 @@ ACore_GameMode::ACore_GameMode()
 	{
 		HUDClass = CoreHUDClass.Class;
 
-		UE_LOG(LogTemp, Warning, TEXT("Combat HUD class found in Game Mode!"))
+		UE_LOG(LogTemp, Warning, TEXT("HUD class found in Game Mode!"))
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Combat HUD class NOT found in Game Mode!"))
+		UE_LOG(LogTemp, Error, TEXT("HUD class NOT found in Game Mode!"))
 	}
 
+	static ConstructorHelpers::FClassFinder<AGameStateBase> CoreGameStateClass(TEXT("/Game/Core/BP_Core_GameState"));
+	if (CoreGameStateClass.Class)
+	{
+		GameStateClass = CoreGameStateClass.Class;
+
+		UE_LOG(LogTemp, Warning, TEXT("GameState class found in Game Mode!"))
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("GameState class NOT found in Game Mode!"))
+	}
+
+
+	
 }
 
 void ACore_GameMode::BeginPlay()

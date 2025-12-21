@@ -2,6 +2,8 @@
 #include "Components/CheckBox.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
+#include "Kismet/GameplayStatics.h"
+#include "Core_GameState.h"
 
 void UHUDTurretInfo::NativeConstruct()
 {
@@ -42,8 +44,40 @@ void UHUDTurretInfo::SetSelectedText()
 
 void UHUDTurretInfo::HandleCheckboxStateChange(bool bIsChecked)
 {
-	SetSelectedText();
+	if (gameState == nullptr)
+	{
+		AGameStateBase* gameStateBase = UGameplayStatics::GetGameState(GetWorld());
+		gameState = Cast<ACore_GameState>(gameStateBase);
 
-	OnCheckboxStateChangedSignature.Broadcast(bIsChecked, turretInfo);
+		if (!gameState)
+		{
+			UE_LOG(LogTemp, Error, TEXT("GameState is not casted correctly within HUDTurretInfo!!"));
+			return;
+		}
+	}
+
+	if (bIsChecked)
+	{
+		if (gameState->IsCurrentListSizeLessThanMax())
+		{
+			gameState->SetCurrentListSizeInWeaponTurretHud(true);
+			OnCheckboxStateChangedSignature.Broadcast(bIsChecked, turretInfo);
+		}
+		else
+		{
+			IsTurretSelectedCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+			UE_LOG(LogTemp, Warning, TEXT("List Size Max Has Been Reached - %d"), gameState->GetCurrentListSizeInWeaponTurretHud());
+			//SET UP MODAL FOR MAX LIST SIZE REACHED TO LET THE PLAYER KNOW THEY CANT ADD ANYMORE!
+		}
+
+	}
+	else
+	{
+		gameState->SetCurrentListSizeInWeaponTurretHud(false);
+		OnCheckboxStateChangedSignature.Broadcast(bIsChecked, turretInfo);
+	}
+		
+
+	SetSelectedText();
 
 }

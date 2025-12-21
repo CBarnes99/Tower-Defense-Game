@@ -57,6 +57,10 @@ void UHUDTurretSelectionMenu::TurretHasBeenSelected(bool bIsChecked, UDA_TurretI
 {
 	UE_LOG(LogTemp, Warning, TEXT("Checkbox is doing things"));
 
+
+
+
+
 	OnMenuSelectionSigniture.Broadcast(bIsChecked, turretInformation);
 
 }

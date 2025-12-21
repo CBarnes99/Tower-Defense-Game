@@ -13,6 +13,8 @@ class UImage;
 class UCheckBox;
 class UTextBlock;
 
+class ACore_GameState;
+
 //class UDA_TurretInfo;
 class ATurretStatic;
 
@@ -62,4 +64,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void SetSelectedText();
+
+	UPROPERTY(VisibleDefaultsOnly)
+	ACore_GameState* gameState;
 };
