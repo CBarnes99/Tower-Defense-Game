@@ -5,7 +5,7 @@
 #include "DA_TurretInfo.h"
 #include "HUDTurretInfo.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCheckboxStateChanged, bool, bIsChecked, UDA_TurretInfo*, turretInformation);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCheckboxStateChangedSignature, bool, bIsChecked, UDA_TurretInfo*, turretInformation);
 
 class UVerticalBox;
 class UTextBlock;
@@ -53,7 +53,7 @@ public:
 	void SetWidgetDefaults(UDA_TurretInfo* turretInfoDA);
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnCheckboxStateChanged OnCheckboxStateChangedSignature;
+	FOnCheckboxStateChangedSignature OnCheckboxStateChangedEvent;
 
 protected:
 

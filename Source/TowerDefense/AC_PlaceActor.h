@@ -13,6 +13,27 @@ class TOWERDEFENSE_API UAC_PlaceActor : public UActorComponent
 public:	
 	UAC_PlaceActor();
 
+	UFUNCTION(BlueprintCallable)
+	void StartPlacement(TSubclassOf<AActor> chosenActorClass);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdatePlacementLocation(FVector traceStartLocation, FVector forwardVector);
+
+	UFUNCTION(BlueprintCallable)
+	void ConfirmPlacement();
+
+	UFUNCTION(BlueprintCallable)
+	void CancelPlacement();
+
+	UFUNCTION(BlueprintCallable)
+	void RotatePlacement(float directon);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsPlacing();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateIgnoreActors(AActor* actor, bool addToArray);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -29,39 +50,15 @@ protected:
 	float traceDistance;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<AActor*> actorsToIgnore;
-
-	UFUNCTION(BlueprintCallable)
-	void StartPlacement(TSubclassOf<AActor> chosenActorClass);
-
-	UFUNCTION(BlueprintCallable)
-	void UpdatePlacementLocation(FVector traceStartLocation, FVector forwardVector);
-
-	UFUNCTION(BlueprintCallable)
-	void ConfirmPlacement();
-
-	UFUNCTION(BlueprintCallable)
-	void CancelPlacement();
-
-	UFUNCTION(BlueprintCallable)
-	void RotatePlacement(float directon);
-
-	UPROPERTY(EditDefaultsOnly)
 	float rotationDegrees;
 
-	UFUNCTION(BlueprintCallable)
-	bool IsPlacing();
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateIgnoreActors(AActor* actor, bool addToArray);
-
-
+	UPROPERTY(EditDefaultsOnly)
+	TArray<AActor*> actorsToIgnore;
 
 	/**
 	* @brief Gets the target location at the end of a line trace
 	* @param traceStartLocation The starting location for the line trace
 	* @param actorForwardVector The forward vector of the actor you want to trace from
-	* @param traceDistance How far you want the trace to go
 	* @return Returns the location of impact or the end distance if no collision, as FVector
 	*/
 	UFUNCTION(BlueprintCallable)
@@ -85,7 +82,6 @@ protected:
 	* @brief A Check to see if there is an impact point from the line trace
 	* @param traceStartLocation The starting location for the line trace
 	* @param actorForwardVector The forward vector of the actor you want to trace from
-	* @param traceDistance How far you want the trace to go
 	* @return If the line trace has an impact, as a Bool
 	*/
 	UFUNCTION(BlueprintCallable)

@@ -21,8 +21,11 @@ void UAC_PlaceActor::StartPlacement(TSubclassOf<AActor> actorClass)
 
 	if (previewActor != nullptr) 
 	{
+		previewActor->Destroy();
 		previewActor = nullptr;
 	}
+
+	actorClassToSpawn = actorClass;
 	FActorSpawnParameters spawnParams;
 
 	previewActor = GetWorld()->SpawnActor<AActor>(actorClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
@@ -86,10 +89,9 @@ void UAC_PlaceActor::RotatePlacement(float directon)
 	
 	float newYawRotation = ((directon * rotationDegrees) + actorCurrentYawRotation);
 
-	FRotator newRotation = FRotator(previewActor->GetActorRotation().Roll, previewActor->GetActorRotation().Pitch, newYawRotation);
+	FRotator newRotation = FRotator(previewActor->GetActorRotation().Pitch, newYawRotation, previewActor->GetActorRotation().Roll);
 
 	previewActor->SetActorRotation(newRotation);
-
 
 }
 

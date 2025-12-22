@@ -3,11 +3,16 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include <EnhancedInputLibrary.h>
-#include "PlayerCharacter.h"
 #include "InputActionValue.h"
 #include "Core_PlayerController.generated.h"
 
+class ATurretManager;
+class ATurretStatic;
+class APlayerCharacter;
+class ACore_GameState;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartWaveSigniture);
+DECLARE_DELEGATE_RetVal_OneParam(TSubclassOf<ATurretStatic>, FGetTurretClassSigniture, int)
 
 UCLASS()
 class TOWERDEFENSE_API ACore_PlayerController : public APlayerController
@@ -20,6 +25,8 @@ public:
 	*/
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FStartWaveSigniture StartWaveEvent;
+
+	FGetTurretClassSigniture GetTurretClassEvent;
 
 protected:
 
@@ -39,6 +46,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class ACore_HUD* coreHUD;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ACore_GameState* coreGameState;
+
 	/**
 	* @brief A Data Table pointer to the Data Table that holds a soft ptr to the turrets, assigned in the editor
 	*/
@@ -50,6 +60,21 @@ protected:
 	*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int dataTableSize;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int currentListSizeInTurretHud;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int hotbarSelectionIndex;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int previousHotbarSelectionIndex;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ATurretManager* turretManager;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TSubclassOf<AActor> currentTurretClass;
 
 	/**
 	* @brief When scroll wheel is used, this function is called

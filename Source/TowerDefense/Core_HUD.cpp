@@ -185,5 +185,5 @@ void ACore_HUD::ToggleTurretSelectionWidget()
 
 void ACore_HUD::BindDelegates()
 {
-	turretSelectionMenu->OnMenuSelectionSigniture.AddDynamic(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::GetInfoFromTurretMenu);
+	turretSelectionMenu->OnMenuSelectionEvent.AddDynamic(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::GetInfoFromTurretMenu);
 }

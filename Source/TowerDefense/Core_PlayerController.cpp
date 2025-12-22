@@ -7,6 +7,10 @@
 #include "Core_HUD.h"
 #include "ProjectileBase.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "Core_GameState.h"
+#include "PlayerCharacter.h"
+#include "TurretStatic.h"
 
 void ACore_PlayerController::BeginPlay()
 {
@@ -36,6 +40,14 @@ void ACore_PlayerController::BeginPlay()
 		dataTableSize = rowNames.Num();
 		UE_LOG(LogTemp, Display, TEXT("Amount Of Turrets In DataTable = %d"), dataTableSize);
 	}
+
+	AGameStateBase* gameState = UGameplayStatics::GetGameState(GetWorld());
+
+	coreGameState = Cast<ACore_GameState>(gameState);
+	if (!coreGameState)
+		UE_LOG(LogTemp, Error, TEXT("NO GAME STATE FOUND IN PLAYER CONTROLLER!!!"));
+	hotbarSelectionIndex = 0;
+
 }
 
 void ACore_PlayerController::SetupInputComponent()
@@ -106,7 +118,12 @@ void ACore_PlayerController::MouseLookAction(const FInputActionValue& Value)
 
 	myPlayerCharacter->AddControllerPitchInput(LookAxisVector.Y);
 	myPlayerCharacter->AddControllerYawInput(LookAxisVector.X);
-	UpdateHotbarSelection();
+
+	if (turretManager && turretManager->IsPlacingTurret())
+	{
+		turretManager->UpdateTurretPlacementLocation(myPlayerCharacter->GetCameraLocation(), myPlayerCharacter->GetCameraForwardVector());
+	}
+	//UpdateHotbarSelection();
 }
 
 void ACore_PlayerController::RunningAction()
@@ -167,24 +184,38 @@ void ACore_PlayerController::ScrollWheelSelectionAction(const FInputActionValue&
 
 	if (Value.Get<float>() > 0)
 	{
+		
+		//myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex + 1, 0, coreGameState->GetCurrentListSizeInWeaponTurretHud());
+		hotbarSelectionIndex = FMath::Clamp(hotbarSelectionIndex + 1, 0, coreGameState->GetCurrentListSizeInWeaponTurretHud());
+
+
 		//UE_LOG(LogTemp, Warning, TEXT("Scroll Up %s"), *Value.ToString());
-		myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex + 1, 1, dataTableSize + 1);
+		//myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex + 1, 1, dataTableSize + 1);
 	}
 	else
 	{
+
+		//myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex - 1, 0, coreGameState->GetCurrentListSizeInWeaponTurretHud());
+		hotbarSelectionIndex = FMath::Clamp(hotbarSelectionIndex - 1, 0, coreGameState->GetCurrentListSizeInWeaponTurretHud());
+
 		//UE_LOG(LogTemp, Warning, TEXT("Scroll Down %s"), *Value.ToString());
-		myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex - 1, 1, dataTableSize + 1);
+		//myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex - 1, 1, dataTableSize + 1);
 
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Hotbar Index is %d"), myPlayerCharacter->hotbarSelectionIndex);
+	//UE_LOG(LogTemp, Warning, TEXT("Hotbar Index is %d"), myPlayerCharacter->hotbarSelectionIndex);
+	UE_LOG(LogTemp, Warning, TEXT("Hotbar Index is %d"), hotbarSelectionIndex);
+
+	
 	UpdateHotbarSelection();
 
 }
 void ACore_PlayerController::ConfirmTurretPlacementAction()
 {
-	if (myPlayerCharacter->hotbarSelectionIndex > 1)
+	//if (myPlayerCharacter->hotbarSelectionIndex > 1)
+	if (hotbarSelectionIndex > 0)
 	{
-		myPlayerCharacter->PlaceTurret();
+		//myPlayerCharacter->PlaceTurret();
+		turretManager->ConfirmTurretPlacement();
 	}
 
 }
@@ -192,13 +223,58 @@ void ACore_PlayerController::RotateTurret(const FInputActionValue& Value)
 {
 
 	UE_LOG(LogTemp, Warning, TEXT("Value = %s"), *Value.ToString());
-	myPlayerCharacter->RotateTurret(Value.Get<float>());
+	//myPlayerCharacter->RotateTurret(Value.Get<float>());
+	turretManager->RotateTurretPlacement(Value.Get<float>());
 }
 
 
 void ACore_PlayerController::UpdateHotbarSelection()
 {
-	if (myPlayerCharacter->hotbarSelectionIndex > 1)
+	if (!turretManager)
+	{
+		AActor* actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATurretManager::StaticClass());
+
+		if (!actor)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Couldn't find turret manager"));
+			return;
+		}
+		turretManager = Cast<ATurretManager>(actor);
+		if (!turretManager)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Cast Failed for turret manager in player character!"));
+		}
+	}
+
+		/*if (turretManager->IsPlacingTurret())
+		{
+		}*/
+	if (/*!turretManager->IsPlacingTurret() || */hotbarSelectionIndex > 0 && hotbarSelectionIndex != previousHotbarSelectionIndex && GetTurretClassEvent.IsBound())
+	{
+		UseCombatMappingContext(false);
+
+		previousHotbarSelectionIndex = hotbarSelectionIndex;
+
+		TSubclassOf<ATurretStatic> turretClass = GetTurretClassEvent.Execute(hotbarSelectionIndex - 1);
+
+		turretManager->StartTurretPlacement(turretClass);
+		turretManager->UpdateTurretPlacementLocation(myPlayerCharacter->GetCameraLocation(), myPlayerCharacter->GetCameraForwardVector());
+
+	}
+	else if (turretManager->IsPlacingTurret())
+	{
+		turretManager->CancelTurretPlacement();
+		UseCombatMappingContext(true);
+
+
+		/*if (turretManager->IsPlacingTurret())
+		{
+			turretManager->CancelTurretPlacement();
+		}*/
+	}
+
+
+	/*if (myPlayerCharacter->hotbarSelectionIndex > 0)
 	{
 		UseCombatMappingContext(false);
 		myPlayerCharacter->UpdateTurretPlacement();
@@ -206,6 +282,7 @@ void ACore_PlayerController::UpdateHotbarSelection()
 	else
 	{
 		UseCombatMappingContext(true);
+
 
 		if (!myPlayerCharacter->turretManager)
 		{
@@ -216,7 +293,7 @@ void ACore_PlayerController::UpdateHotbarSelection()
 		{
 			myPlayerCharacter->turretManager->NoLongerPlacingTurrets();
 		}
-	}
+	}*/
 }
 void ACore_PlayerController::UseCombatMappingContext(bool confirm)
 {

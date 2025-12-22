@@ -60,8 +60,8 @@ void UHUDTurretInfo::HandleCheckboxStateChange(bool bIsChecked)
 	{
 		if (gameState->IsCurrentListSizeLessThanMax())
 		{
-			gameState->SetCurrentListSizeInWeaponTurretHud(true);
-			OnCheckboxStateChangedSignature.Broadcast(bIsChecked, turretInfo);
+			gameState->IncreaseCurrentListSizeInWeaponTurretHud(true);
+			OnCheckboxStateChangedEvent.Broadcast(bIsChecked, turretInfo);
 		}
 		else
 		{
@@ -73,8 +73,8 @@ void UHUDTurretInfo::HandleCheckboxStateChange(bool bIsChecked)
 	}
 	else
 	{
-		gameState->SetCurrentListSizeInWeaponTurretHud(false);
-		OnCheckboxStateChangedSignature.Broadcast(bIsChecked, turretInfo);
+		gameState->IncreaseCurrentListSizeInWeaponTurretHud(false);
+		OnCheckboxStateChangedEvent.Broadcast(bIsChecked, turretInfo);
 	}
 		
 	SetSelectedText();

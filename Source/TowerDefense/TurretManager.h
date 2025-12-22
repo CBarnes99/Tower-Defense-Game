@@ -2,9 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TurretStatic.h"
-#include "AC_PlaceActor.h"
 #include "TurretManager.generated.h"
+
+class UAC_PlaceActor;
+class ATurretStatic;
 
 UCLASS()
 class TOWERDEFENSE_API ATurretManager : public AActor
@@ -69,12 +70,49 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UDataTable* turretDataTable;
 
+	UPROPERTY(EditDefaultsOnly)
+	UAC_PlaceActor* placeActorComponent;
+
+
+
+
+
+
+
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateTurretPlacementLocation(FVector traceStartLocation, FVector forwardVector);
+
+
+	UFUNCTION(BlueprintCallable)
+	void StartTurretPlacement(TSubclassOf<AActor> actorClass);
+
+	UFUNCTION(BlueprintCallable)
+	void ConfirmTurretPlacement();
+
+	UFUNCTION(BlueprintCallable)
+	void CancelTurretPlacement();
+
+	UFUNCTION(BlueprintCallable)
+	void RotateTurretPlacement(float directon);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsPlacingTurret();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateIgnoreActors(AActor* actor, bool addToArray);
+
+
+
+
+
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly)
-	UAC_PlaceActor* placeActorComponent;
+	
 
 
 	/**

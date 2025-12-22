@@ -7,6 +7,8 @@
 class UDA_TurretInfo;
 class UHorizontalBox;
 class UHUDWeaponTurretSelectorIcon;
+class ACore_GameState;
+class ATurretStatic;
 
 UCLASS(Abstract)
 class TOWERDEFENSE_API UHUDWeaponTurretSelector : public UUserWidget
@@ -20,16 +22,27 @@ public:
 
 protected:
 
+	virtual void NativeConstruct() override;
+
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	UHorizontalBox* IconHBox;
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<UDA_TurretInfo*> arrayOfTurretInfo;
 
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<ATurretStatic> GetTurretClassFromArray(int index);
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UHUDWeaponTurretSelectorIcon> iconClass;
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateWeaponTurretSelector(UDA_TurretInfo* turretInformation);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentTurretClass();
+
+	UPROPERTY(EditDefaultsOnly)
+	ACore_GameState* coreGameState;
 
 };

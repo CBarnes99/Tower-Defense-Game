@@ -3,7 +3,16 @@
 #include "Components/HorizontalBox.h"
 #include "HUDWeaponTurretSelectorIcon.h"
 #include "DA_TurretInfo.h"
+#include "Kismet/GameplayStatics.h"
+#include "Core_GameState.h"
+#include "Core_PlayerController.h"
 
+void UHUDWeaponTurretSelector::NativeConstruct()
+{
+	APlayerController* playerController = GetOwningLocalPlayer()->GetPlayerController(GetWorld());
+	ACore_PlayerController* coreController = Cast<ACore_PlayerController>(playerController);
+	coreController->GetTurretClassEvent.BindUObject(this, &UHUDWeaponTurretSelector::GetTurretClassFromArray);
+}
 
 void UHUDWeaponTurretSelector::GetInfoFromTurretMenu(bool bIsChecked, UDA_TurretInfo* turretInformation)
 {
@@ -53,3 +62,18 @@ void UHUDWeaponTurretSelector::UpdateWeaponTurretSelector(UDA_TurretInfo* turret
 
 }
 
+void UHUDWeaponTurretSelector::SetCurrentTurretClass()
+{
+	if (!coreGameState)
+	{
+		AGameStateBase* gameState = UGameplayStatics::GetGameState(GetWorld());
+		coreGameState = Cast<ACore_GameState>(gameState);
+	}
+
+	//coreGameState->SetCurrentTurretClass()
+}
+
+TSubclassOf<ATurretStatic> UHUDWeaponTurretSelector::GetTurretClassFromArray(int index)
+{
+	return arrayOfTurretInfo[index]->turretClass;
+}

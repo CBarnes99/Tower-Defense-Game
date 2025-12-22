@@ -5,7 +5,7 @@
 #include "Components/UniformGridPanel.h"
 #include "HUDTurretSelectionMenu.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMenuSelection, bool, bIsChecked, UDA_TurretInfo*, turretInformation);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMenuSelectionSignature, bool, bIsChecked, UDA_TurretInfo*, turretInformation);
 
 class UCanvasPanel;
 class UUniformGridPanel;
@@ -29,7 +29,7 @@ public:
 	void SetUpWidget(TArray<UDA_TurretInfo*> turretInfoArray);
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnMenuSelection OnMenuSelectionSigniture;
+	FOnMenuSelectionSignature OnMenuSelectionEvent;
 
 protected:
 

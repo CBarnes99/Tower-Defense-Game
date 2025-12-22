@@ -2,6 +2,7 @@
 #include "F_TurretObjectPath.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacter.h"
+#include "AC_PlaceActor.h"
 
 ATurretManager::ATurretManager()
 {
@@ -155,6 +156,51 @@ void ATurretManager::RotatePreviewTurret(float dir)
 
 	pooledPreviewTurrets[currentPreviewTurretIndex]->SetActorRotation(rotation);
 }
+
+
+
+
+
+void ATurretManager::StartTurretPlacement(TSubclassOf<AActor> actorClass)
+{
+	placeActorComponent->StartPlacement(actorClass);
+}
+
+void ATurretManager::ConfirmTurretPlacement()
+{
+	placeActorComponent->ConfirmPlacement();
+}
+
+void ATurretManager::CancelTurretPlacement()
+{
+	placeActorComponent->CancelPlacement();
+}
+
+void ATurretManager::RotateTurretPlacement(float directon)
+{
+	placeActorComponent->RotatePlacement(directon);
+}
+
+bool ATurretManager::IsPlacingTurret()
+{
+	return placeActorComponent->IsPlacing();
+}
+
+void ATurretManager::UpdateIgnoreActors(AActor* actor, bool addToArray)
+{
+	placeActorComponent->UpdateIgnoreActors(actor, addToArray);
+}
+
+void ATurretManager::UpdateTurretPlacementLocation(FVector traceStartLocation, FVector forwardVector)
+{
+	placeActorComponent->UpdatePlacementLocation(traceStartLocation, forwardVector);
+}
+
+
+
+
+
+
 
 ATurretStatic* ATurretManager::SpawnTurretByRow(int rowIndex)
 {

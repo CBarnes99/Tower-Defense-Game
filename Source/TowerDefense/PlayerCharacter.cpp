@@ -61,7 +61,8 @@ void APlayerCharacter::BeginPlay()
 	runSpeed = DA_playerInfo->runSpeed;
 	jumpHeight = DA_playerInfo->jumpHeight;
 
-	hotbarSelectionIndex = 1;
+	//hotbarSelectionIndex = 1;
+	hotbarSelectionIndex = 0;
 
 	GetCharacterMovement()->MaxWalkSpeed = movementSpeed;
 	GetCharacterMovement()->JumpZVelocity = jumpHeight;
@@ -156,7 +157,8 @@ void APlayerCharacter::UpdateTurretPlacement()
 
 	FVector placeTurretPos = lineTraceComponent->GetTraceTargetLocation(GetCameraLocation(), GetCameraForwardVector(), 2000.f);
 
-	turretManager->UpdatePreviewTurretLocation(placeTurretPos, hotbarSelectionIndex - 2);
+	//turretManager->UpdatePreviewTurretLocation(placeTurretPos, hotbarSelectionIndex - 2);
+	turretManager->UpdatePreviewTurretLocation(placeTurretPos, hotbarSelectionIndex - 1);
 
 
 	/*if (!previewTurretActor && turretClass)

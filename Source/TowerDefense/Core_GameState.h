@@ -4,6 +4,8 @@
 #include "GameFramework/GameStateBase.h"
 #include "Core_GameState.generated.h"
 
+class ATurretStatic;
+
 UCLASS()
 class TOWERDEFENSE_API ACore_GameState : public AGameStateBase
 {
@@ -27,10 +29,16 @@ public:
 	int GetCurrentListSizeInWeaponTurretHud();
 
 	UFUNCTION(BlueprintCallable)
-	void SetCurrentListSizeInWeaponTurretHud(bool addSize);
+	void IncreaseCurrentListSizeInWeaponTurretHud(bool addSize);
 
 	UFUNCTION(BlueprintCallable)
 	bool IsCurrentListSizeLessThanMax();
+
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentTurretClass(TSubclassOf<ATurretStatic> turretClass);
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<ATurretStatic> GetCurrentTurretClass();
 
 protected:
 
@@ -44,5 +52,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	int currentListSizeInWeaponTurretHud;
+
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<ATurretStatic> currentTurretClass;
 
 };
