@@ -232,3 +232,15 @@ void APlayerCharacter::SetTurretManager()
 		UE_LOG(LogTemp, Error, TEXT("Cast Failed for turret manager in player character!"));
 	}
 }
+
+void APlayerCharacter::AttackAction()
+{
+	equippedWeapon->spawnProjectileComponent->FireProjectile
+	(
+		GetCameraLocation(),
+		equippedWeapon->GetWeaponMuzzleLocation(),
+		GetCameraForwardVector(),
+		equippedWeapon->GetDamageDelt(),
+		equippedWeapon->GetProjectileSpeed()
+	);
+}

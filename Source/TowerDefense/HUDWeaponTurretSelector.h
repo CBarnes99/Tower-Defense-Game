@@ -20,6 +20,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GetInfoFromTurretMenu(bool bIsChecked, UDA_TurretInfo* turretInformation);
 
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<ATurretStatic> GetTurretClassFromArray(int index);
+
 protected:
 
 	virtual void NativeConstruct() override;
@@ -29,9 +32,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<UDA_TurretInfo*> arrayOfTurretInfo;
-
-	UFUNCTION(BlueprintCallable)
-	TSubclassOf<ATurretStatic> GetTurretClassFromArray(int index);
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UHUDWeaponTurretSelectorIcon> iconClass;

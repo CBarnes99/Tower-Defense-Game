@@ -19,6 +19,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleTurretSelectionWidget();
 
+	UFUNCTION(BlueprintCallable)
+	bool GetIsTurretSelectionMenuVisable();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -83,7 +86,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Widgets - Game Menu")
 	UHUDTurretSelectionMenu* turretSelectionMenu;
-
 
 	//Menu Widgets-----------------------------------------------------------
 	UPROPERTY(VisibleAnywhere, Category = "Widgets - Menus")

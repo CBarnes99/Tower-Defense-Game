@@ -1,16 +1,11 @@
 #include "Core_PlayerController.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
-#include "EnhancedInputSubsystems.h"
-#include "EngineUtils.h" 
-#include "Core_GameMode.h"
+#include <EnhancedInputSubsystems.h>
 #include "Core_HUD.h"
-#include "ProjectileBase.h"
-#include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Core_GameState.h"
 #include "PlayerCharacter.h"
-#include "TurretStatic.h"
 
 void ACore_PlayerController::BeginPlay()
 {
@@ -20,17 +15,24 @@ void ACore_PlayerController::BeginPlay()
 
 	HaveMappingContextsBeenAsigned();
 
-	//Set defualt mapping context
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+	enhancedInputSubSystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	if (enhancedInputSubSystem)
 	{
 		if (defaultMappingContext)
 		{
-			Subsystem->AddMappingContext(defaultMappingContext, 0);
-			Subsystem->AddMappingContext(combatMappingContext, 1);
+			enhancedInputSubSystem->AddMappingContext(defaultMappingContext, 0);
+		}
+		if (combatMappingContext)
+		{
+			enhancedInputSubSystem->AddMappingContext(combatMappingContext, 1);
 		}
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("ENHANCED INPUT SUBSYSTEM WAS NOT ASSIGNED CORRECTLY!!!!"));
+	}
 
-	if (!turretDataTable)
+	/*if (!turretDataTable)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Data Table Assigned in Player Controller"));
 	}
@@ -39,15 +41,34 @@ void ACore_PlayerController::BeginPlay()
 		TArray<FName> rowNames = turretDataTable->GetRowNames();
 		dataTableSize = rowNames.Num();
 		UE_LOG(LogTemp, Display, TEXT("Amount Of Turrets In DataTable = %d"), dataTableSize);
-	}
+	}*/
+
 
 	AGameStateBase* gameState = UGameplayStatics::GetGameState(GetWorld());
-
 	coreGameState = Cast<ACore_GameState>(gameState);
 	if (!coreGameState)
 		UE_LOG(LogTemp, Error, TEXT("NO GAME STATE FOUND IN PLAYER CONTROLLER!!!"));
-	hotbarSelectionIndex = 0;
 
+	hotbarSelectionIndex = 0;
+	previousHotbarSelectionIndex = 0;
+}
+
+void ACore_PlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	//Sets myPlayerCharacter to the possesed player
+	myPlayerCharacter = Cast<APlayerCharacter>(InPawn);
+	if (!myPlayerCharacter)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Player Character Not Assigned In Player Controller!"));
+	}
+
+	coreHUD = Cast<ACore_HUD>(GetHUD());
+	if (!coreHUD)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Core Hud Not Assigned In Player Controller!"));
+	}
 }
 
 void ACore_PlayerController::SetupInputComponent()
@@ -82,23 +103,6 @@ void ACore_PlayerController::SetupInputComponent()
 	}
 }
 
-void ACore_PlayerController::OnPossess(APawn* InPawn)
-{
-	Super::OnPossess(InPawn);
-	myPlayerCharacter = Cast<APlayerCharacter>(InPawn);
-
-	if (!myPlayerCharacter)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Player Character Not Assigned In Player Controller!"));
-	}
-
-	coreHUD = Cast<class ACore_HUD>(GetHUD());
-	if (!coreHUD)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Core Hud Not Assigned In Player Controller!"));
-	}
-}
-
 void ACore_PlayerController::MovementAction(const FInputActionValue& Value)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("WSAD"));
@@ -119,24 +123,21 @@ void ACore_PlayerController::MouseLookAction(const FInputActionValue& Value)
 	myPlayerCharacter->AddControllerPitchInput(LookAxisVector.Y);
 	myPlayerCharacter->AddControllerYawInput(LookAxisVector.X);
 
-	if (turretManager && turretManager->IsPlacingTurret())
+	if (enhancedInputSubSystem->HasMappingContext(turretPlacingMappingContext))
 	{
 		turretManager->UpdateTurretPlacementLocation(myPlayerCharacter->GetCameraLocation(), myPlayerCharacter->GetCameraForwardVector());
 	}
-	//UpdateHotbarSelection();
 }
 
 void ACore_PlayerController::RunningAction()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
-
 	myPlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = myPlayerCharacter->GetRunSpeed();
 }
 
 void ACore_PlayerController::RunningActionStop()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Shift"));
-
 	myPlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = myPlayerCharacter->GetMovementSpeed();
 }
 
@@ -153,29 +154,37 @@ void ACore_PlayerController::StopJumpingAction()
 void ACore_PlayerController::AttackAction()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Left Mouse Click"));
-
-	myPlayerCharacter->equippedWeapon->spawnProjectileComponent->FireProjectile
+	myPlayerCharacter->AttackAction();
+	/*myPlayerCharacter->equippedWeapon->spawnProjectileComponent->FireProjectile
 	(
 		myPlayerCharacter->GetCameraLocation(),
 		myPlayerCharacter->equippedWeapon->GetWeaponMuzzleLocation(),
 		myPlayerCharacter->GetCameraForwardVector(),
 		myPlayerCharacter->equippedWeapon->GetDamageDelt(),
 		myPlayerCharacter->equippedWeapon->GetProjectileSpeed()	
-	);	
-
+	);*/
 }
 
 void ACore_PlayerController::CallGameModeToStartSpawningEnemies()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, TEXT("ENTER PRESSED"));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, TEXT("ENTER PRESSED"));
+	UE_LOG(LogTemp, Display, TEXT("ENTER PRESSED"));
 
 	StartWaveEvent.Broadcast();
 };
 
 void ACore_PlayerController::OpenTurretSelectionMenu()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OpenTurretButtonPressed"));
+	UE_LOG(LogTemp, Display, TEXT("OpenTurretButtonPressed"));
 	coreHUD->ToggleTurretSelectionWidget();
+	if (coreHUD->GetIsTurretSelectionMenuVisable())
+	{
+		UpdateMappingContext(combatMappingContext, false, 0);
+	}
+	else
+	{
+		UpdateMappingContext(combatMappingContext, true, 0);
+	}
 }
 
 void ACore_PlayerController::ScrollWheelSelectionAction(const FInputActionValue& Value)
@@ -184,8 +193,6 @@ void ACore_PlayerController::ScrollWheelSelectionAction(const FInputActionValue&
 
 	if (Value.Get<float>() > 0)
 	{
-		
-		//myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex + 1, 0, coreGameState->GetCurrentListSizeInWeaponTurretHud());
 		hotbarSelectionIndex = FMath::Clamp(hotbarSelectionIndex + 1, 0, coreGameState->GetCurrentListSizeInWeaponTurretHud());
 
 
@@ -194,18 +201,13 @@ void ACore_PlayerController::ScrollWheelSelectionAction(const FInputActionValue&
 	}
 	else
 	{
-
-		//myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex - 1, 0, coreGameState->GetCurrentListSizeInWeaponTurretHud());
 		hotbarSelectionIndex = FMath::Clamp(hotbarSelectionIndex - 1, 0, coreGameState->GetCurrentListSizeInWeaponTurretHud());
 
 		//UE_LOG(LogTemp, Warning, TEXT("Scroll Down %s"), *Value.ToString());
 		//myPlayerCharacter->hotbarSelectionIndex = FMath::Clamp(myPlayerCharacter->hotbarSelectionIndex - 1, 1, dataTableSize + 1);
 
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Hotbar Index is %d"), myPlayerCharacter->hotbarSelectionIndex);
-	UE_LOG(LogTemp, Warning, TEXT("Hotbar Index is %d"), hotbarSelectionIndex);
 
-	
 	UpdateHotbarSelection();
 
 }
@@ -246,12 +248,13 @@ void ACore_PlayerController::UpdateHotbarSelection()
 		}
 	}
 
-		/*if (turretManager->IsPlacingTurret())
-		{
-		}*/
-	if (/*!turretManager->IsPlacingTurret() || */hotbarSelectionIndex > 0 && hotbarSelectionIndex != previousHotbarSelectionIndex && GetTurretClassEvent.IsBound())
+	UE_LOG(LogTemp, Warning, TEXT("Hotbar Index is %d"), hotbarSelectionIndex);
+
+
+	if (hotbarSelectionIndex > 0 && hotbarSelectionIndex != previousHotbarSelectionIndex && GetTurretClassEvent.IsBound())
 	{
-		UseCombatMappingContext(false);
+		UpdateMappingContext(combatMappingContext, false, 0);
+		UpdateMappingContext(turretPlacingMappingContext, true, 1);
 
 		previousHotbarSelectionIndex = hotbarSelectionIndex;
 
@@ -261,27 +264,24 @@ void ACore_PlayerController::UpdateHotbarSelection()
 		turretManager->UpdateTurretPlacementLocation(myPlayerCharacter->GetCameraLocation(), myPlayerCharacter->GetCameraForwardVector());
 
 	}
-	else if (turretManager->IsPlacingTurret())
+	else if (hotbarSelectionIndex == 0 && turretManager->IsPlacingTurret())
 	{
 		turretManager->CancelTurretPlacement();
-		UseCombatMappingContext(true);
+		UpdateMappingContext(combatMappingContext, true, 1);
+		UpdateMappingContext(turretPlacingMappingContext, false, 0);
 
-
-		/*if (turretManager->IsPlacingTurret())
-		{
-			turretManager->CancelTurretPlacement();
-		}*/
+		previousHotbarSelectionIndex = 0;
 	}
 
 
 	/*if (myPlayerCharacter->hotbarSelectionIndex > 0)
 	{
-		UseCombatMappingContext(false);
+		UpdateMappingContext(false);
 		myPlayerCharacter->UpdateTurretPlacement();
 	}
 	else
 	{
-		UseCombatMappingContext(true);
+		UpdateMappingContext(true);
 
 
 		if (!myPlayerCharacter->turretManager)
@@ -295,24 +295,36 @@ void ACore_PlayerController::UpdateHotbarSelection()
 		}
 	}*/
 }
-void ACore_PlayerController::UseCombatMappingContext(bool confirm)
+void ACore_PlayerController::UpdateMappingContext(UInputMappingContext* mappingContext, bool addContext, int priority)
 {
-	UEnhancedInputLocalPlayerSubsystem* inputSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	if (confirm)
+	if (addContext && !enhancedInputSubSystem->HasMappingContext(mappingContext))
 	{
-		if (!inputSubsystem->HasMappingContext(combatMappingContext) && inputSubsystem->HasMappingContext(turretPlacingMappingContext))
-		{
-			inputSubsystem->RemoveMappingContext(turretPlacingMappingContext);
-			inputSubsystem->AddMappingContext(combatMappingContext, 1);
-			return;
-		}
-	}
-	else if (!inputSubsystem->HasMappingContext(turretPlacingMappingContext) && inputSubsystem->HasMappingContext(combatMappingContext))
-	{
-		inputSubsystem->RemoveMappingContext(combatMappingContext);
-		inputSubsystem->AddMappingContext(turretPlacingMappingContext, 1);
+		enhancedInputSubSystem->AddMappingContext(mappingContext, priority);
 		return;
 	}
+	else if (!addContext && enhancedInputSubSystem->HasMappingContext(mappingContext))
+	{
+		enhancedInputSubSystem->RemoveMappingContext(mappingContext);
+		return;
+	}
+
+
+	//UEnhancedInputLocalPlayerSubsystem* inputSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	//if (confirm)
+	//{
+	//	if (!inputSubsystem->HasMappingContext(combatMappingContext) && inputSubsystem->HasMappingContext(turretPlacingMappingContext))
+	//	{
+	//		inputSubsystem->RemoveMappingContext(turretPlacingMappingContext);
+	//		inputSubsystem->AddMappingContext(combatMappingContext, 1);
+	//		return;
+	//	}
+	//}
+	//else if (!inputSubsystem->HasMappingContext(turretPlacingMappingContext) && inputSubsystem->HasMappingContext(combatMappingContext))
+	//{
+	//	inputSubsystem->RemoveMappingContext(combatMappingContext);
+	//	inputSubsystem->AddMappingContext(turretPlacingMappingContext, 1);
+	//	return;
+	//}
 }
 void ACore_PlayerController::HaveMappingContextsBeenAsigned()
 {

@@ -79,6 +79,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	class UAC_Mana* manaComponent;
 
+	UFUNCTION(BlueprintCallable)
+	void AttackAction();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
