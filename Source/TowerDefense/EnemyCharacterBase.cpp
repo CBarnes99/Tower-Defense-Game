@@ -3,6 +3,8 @@
 #include "Math/UnrealMathUtility.h"
 #include "EnemyDrop.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Core_GameState.h"
 
 AEnemyCharacterBase::AEnemyCharacterBase()
 {
@@ -49,6 +51,19 @@ void AEnemyCharacterBase::OnDeath()
 	OnEnemyDeathEvent.Broadcast(this);
 
 	SpawnDrop();
+
+	AGameStateBase* gameState = UGameplayStatics::GetGameState(GetWorld());
+	ACore_GameState* coreGameState = Cast<ACore_GameState>(gameState);
+	if (coreGameState)
+	{
+		UE_LOG(LogTemp, Display, TEXT("The amount of currency addded should be - %f"), enemyInfo->currencyOnDeath);
+		coreGameState->UpdatePlayerCurrencyAmount(true, enemyInfo->currencyOnDeath);
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("CORE GMAE STATE NOT CASTED CORRECTLY WITHIN - %s"), *this->GetName());
+	}
 
 	Destroy();
 	/*

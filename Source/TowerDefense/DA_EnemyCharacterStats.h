@@ -11,28 +11,23 @@ class TOWERDEFENSE_API UDA_EnemyCharacterStats : public UDataAsset
 	
 public:
 
-	/**
-	* @brief The name of the enemy character
-	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	/** The name of the enemy character */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
 	FString name;
 
-	/**
-	* @brief The amount of health you want the enemy character to have
-	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	/** The amount of health you want the enemy character to have */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
 	float health;
 
-	/**
-	* @brief The amount of damage you want the enemy to deal to the player character
-	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	/** The amount of damage you want the enemy to deal to the player character */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
 	float damageDelt;
 
-	/**
-	* @brief How fast you want the enemy character to be
-	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	/** How fast you want the enemy character to be */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
 	float movementSpeed;
 
+	/** The amount of currency the player will get when the enemy is defeated */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
+	float currencyOnDeath;
 };

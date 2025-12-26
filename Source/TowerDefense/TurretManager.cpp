@@ -177,7 +177,7 @@ void ATurretManager::ConfirmTurretPlacement()
 
 	if (IsAbleToPlaceTurret())
 	{
-		coreGameState->SetPlayerCurrencyAmount(false, currentTurretInfo->cost);
+		coreGameState->UpdatePlayerCurrencyAmount(false, currentTurretInfo->cost);
 		UE_LOG(LogTemp, Warning, TEXT("Spawned Turret! - New Player Currency = %f, Turret Cost = %d"), coreGameState->GetPlayerCurrencyAmount(), currentTurretInfo->cost);
 		placeActorComponent->ConfirmPlacement();
 	}

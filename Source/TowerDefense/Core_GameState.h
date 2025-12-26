@@ -22,7 +22,7 @@ public:
 	float GetPlayerCurrencyAmount();
 	
 	UFUNCTION(BlueprintCallable)
-	void SetPlayerCurrencyAmount(bool addCurrency, float amount);
+	void UpdatePlayerCurrencyAmount(bool addCurrency, float amount);
 
 	UFUNCTION(BlueprintCallable)
 	int GetMaxListSizeInWeaponTurretHud();
