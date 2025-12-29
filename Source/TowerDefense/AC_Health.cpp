@@ -22,6 +22,11 @@ void UAC_Health::SetHealth(float healthAmount)
 	maxHealth = healthAmount;
 }
 
+void UAC_Health::ResetHealth()
+{
+	health = maxHealth;
+}
+
 void UAC_Health::RecieveDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	FString eventInstigatorString = EventInstigator ? EventInstigator->GetName() : "No Instigator";

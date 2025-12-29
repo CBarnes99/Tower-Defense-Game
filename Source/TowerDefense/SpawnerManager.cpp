@@ -13,20 +13,19 @@ void ASpawnerManager::BeginPlay()
 
 	waveActive = false;
 	amountOfEnemysInRound = 0;
-}
 
-bool ASpawnerManager::IsWaveActive()
-{
-	return waveActive;
+	SetAllSpawners();
+	//PoolEnemies();
+
 }
 
 void ASpawnerManager::StartSpawningEnemies(int currentWave)
 {
 	//if the spawners haven't been set, set the spawners
-	if (!enemySpawners.IsValidIndex(0))
+	/*if (!enemySpawners.IsValidIndex(0))
 	{
 		SetAllSpawners();
-	}
+	}*/
 
 	//If there is a wave currently active, prevent spawning from another wave
 	if (waveActive)
@@ -62,7 +61,7 @@ void ASpawnerManager::SetAllSpawners()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawner::StaticClass(), foundActors);
 
 	enemySpawners.Empty();
-	for (auto elements : foundActors)
+	for (AActor* elements : foundActors)
 	{
 		if (AEnemySpawner* spawner = Cast<AEnemySpawner>(elements))
 		{
@@ -70,7 +69,7 @@ void ASpawnerManager::SetAllSpawners()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("Cast to Enemy Spawner Failed!"));
+			UE_LOG(LogTemp, Error, TEXT("Cast to Enemy Spawner Failed within - %s!"), *this->GetName());
 		}
 	}
 
@@ -84,6 +83,7 @@ void ASpawnerManager::SetAllSpawners()
 	UE_LOG(LogTemp, Warning, TEXT("Found %d actors from class AEnemySpawner"), enemySpawners.Num());
 }
 
+//Called Within Game Mode
 int ASpawnerManager::CalculateLastWave()
 {
 	int maxWave = 0;
@@ -103,15 +103,25 @@ int ASpawnerManager::CalculateLastWave()
 	return maxWave;
 }
 
+bool ASpawnerManager::IsWaveActive()
+{
+	return waveActive;
+}
+
 //Bind the enemy spawned so that when it is destoryed, it reduces the count for amount of enemies in the round
 void ASpawnerManager::BindDelegateOnEnemy(AEnemyCharacterBase* enemy)
 {
-	if (enemy)
+	if (enemy && !enemy->OnEnemyDeathEvent.IsBound())
 	{
 		enemy->OnEnemyDeathEvent.AddDynamic(this, &ASpawnerManager::EnemyHasDied);
-		//UE_LOG(LogTemp, Warning, TEXT("%s Delegate has been bound in Spawner Manager"), *enemy->GetName());
+		UE_LOG(LogTemp, Display, TEXT("%s Delegate has been bound in Spawner Manager"), *enemy->GetName());
 	}
-	else 
+	else if(enemy->OnEnemyDeathEvent.IsBound())
+	{
+		UE_LOG(LogTemp, Display, TEXT("Enemy OnEnemyDeathEvent delegate is already bound to - %s"), *this->GetName());
+
+	}
+	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Binding Delegate to spawner manager not bound correctly"));
 	}

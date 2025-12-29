@@ -1,14 +1,21 @@
 #pragma once
 
-#include "EnemyAIController.h"
+//#include "EnemyAIController.h"
 #include "CoreMinimal.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "BehaviorTree/BehaviorTree.h"
+//#include "BehaviorTree/BehaviorTree.h"
 #include "GameFramework/Character.h"
-#include "DA_EnemyCharacterStats.h"
-#include "AC_Health.h"
+//#include "DA_EnemyCharacterStats.h"
+//#include "AC_Health.h"
 #include "E_EnemyDrop.h"
 #include "EnemyCharacterBase.generated.h"
+
+class UBehaviourTree;
+//class AEnemyAIController;
+class UDA_EnemyCharacterStats;
+class UAC_Health;
+//class EE_EnemyDrop;
+class AAIController;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, AEnemyCharacterBase*, Enemy);
 
@@ -25,22 +32,18 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//Bound in the Spawner manager to keep track of how many enemies are left in the round
+	/** Bound in the Spawner manager to keep track of how many enemies are left in the round */
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnEnemyDeathSignature OnEnemyDeathEvent;
 
-	/**
-	* @brief Sets the Path Node Locations
-	* @param nodeLocations The Locations of the path nodes you want the enemy to follow, as a TArray<FVector>
-	*/
+	/** Sets the Path Node Locations
+	* @param nodeLocations The Locations of the path nodes you want the enemy to follow, as a TArray<FVector> */
 	UFUNCTION(BlueprintCallable)
 	void SetPathNodeLocations(TArray<FVector> nodeLocations);
 
-	/**
-	* @brief Gets the Path Node Locations
-	* @return Gets a Path Node Location, as a FVector
+	/** Gets the Path Node Locations
 	* @param index The index
-	*/
+	* @return Gets a Path Node Location, as a FVector */
 	UFUNCTION(BlueprintCallable)
 	FVector GetNextPathNodeLocation();
 
@@ -48,42 +51,51 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnDeath();
 
+	/** Disables the enemy ready to be pooled */
+	UFUNCTION(BlueprintCallable)
+	void DisableEnemy();
+
+	/** Enables the enemy and removes from the pool ready to be used */
+	UFUNCTION(BlueprintCallable)
+	void EnableEnemy();
+
+	/** Gets if the enemy has been disabled or not 
+	* @return bIsDisabled, as a bool */
+	UFUNCTION(BlueprintCallable)
+	bool GetIsEnemyDisabled();
+
 protected:
 	virtual void BeginPlay() override;
 
-	/**
-	* @brief A pointer to the the Behaviour Tree assigned in the editor
-	*/
+	/** A pointer to the the Behaviour Tree assigned in the editor */
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* enemyBehaviorTree;
 
-	/**
-	* @brief An array of vectors that is the location for the paths nodes for the AI to follow
-	*/
+	/** The enemy AI Controller */
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+	AAIController* enemyAIController;
+
+	/** An array of vectors that is the location for the paths nodes for the AI to follow */
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	TArray<FVector> pathNodeLocations;
 
-	/**
-	* @brief An index of what node the ai is moving towards
-	*/
+	/** An index of what node the ai is moving towards */
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	int pathNodeIndex;
 
-	/**
-	* @brief Increaces the Path Node Index
-	*/
+	/** Increaces the Path Node Index */
 	UFUNCTION(BlueprintCallable)
 	void IncreasePathNodeIndex();
 
-	/**
-	* @brief The health component so the enemies can reduce in health when damaged
-	*/
+	/** The health component so the enemies can reduce in health when damaged */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	class UAC_Health* healthComponent;
+	UAC_Health* healthComponent;
 
-	/**
-	* @brief Assign a Data Asset in Blueprints for each of the enemys information
-	*/
+	/** A check to see if the enemy is disabled and in the pool within the enemy spawner */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bIsDisabled;
+
+	/** Assign a Data Asset in Blueprints for each of the enemys information */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
 	TObjectPtr<UDA_EnemyCharacterStats> enemyInfo;
 
@@ -91,15 +103,11 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	/**
-	* @brief On death, check to see if they will drop the item
-	*/
+	/** On death, check to see if they will drop the item */
 	UFUNCTION(BlueprintCallable, Category = "Drop")
 	void SpawnDrop();
 
-	/**
-	* @brief A TMap of all the enums and the value you give it within the editor to determin the drop weight
-	*/
+	/** A TMap of all the enums and the value you give it within the editor to determin the drop weight */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Drop")
 	TMap<EEnemyDrop, float> dropWeight;
 };

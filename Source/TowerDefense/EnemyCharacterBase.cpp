@@ -5,6 +5,11 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Core_GameState.h"
+#include "DA_EnemyCharacterStats.h"
+#include "AC_Health.h"
+#include "E_EnemyDrop.h"
+//#include "BehaviorTree/BehaviorTree.h"
+#include "EnemyAIController.h"
 
 AEnemyCharacterBase::AEnemyCharacterBase()
 {
@@ -12,9 +17,11 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 
 	healthComponent = CreateDefaultSubobject<UAC_Health>(TEXT("Health Componenet"));
 	pathNodeIndex = -1;
+
+	AutoPossessAI = EAutoPossessAI::Disabled;
+	AIControllerClass = nullptr;
 }
 
-// Called when the game starts or when spawned
 void AEnemyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -22,13 +29,15 @@ void AEnemyCharacterBase::BeginPlay()
 	healthComponent->SetHealth(enemyInfo->health);
 
 	GetCharacterMovement()->MaxWalkSpeed = enemyInfo->movementSpeed;
+
+	enemyAIController = GetWorld()->SpawnActor<AAIController>(enemyInfo->AIControllerClass);
 }
 
 UBehaviorTree* AEnemyCharacterBase::GetBehaviourTree() const
 {
 	return enemyBehaviorTree;
 }
-// Called to bind functionality to input
+
 void AEnemyCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -69,12 +78,67 @@ void AEnemyCharacterBase::OnDeath()
 		}
 	}
 
-	Destroy();
+	DisableEnemy();
+	//Destroy();
 	/*
 	UE_LOG(LogTemp, Warning, TEXT("Damage Amount = %f"), DamageAmount);
 	UE_LOG(LogTemp, Warning, TEXT("EventInstigator = %s"), *EventInstigator->GetName())
 	UE_LOG(LogTemp, Warning, TEXT("DamageCauser = %s"), *DamageCauser->GetName());
 	*/
+}
+
+void AEnemyCharacterBase::DisableEnemy()
+{
+	GetCharacterMovement()->Deactivate();
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	GetMesh()->Deactivate();
+
+	//AAIController* AIController = Cast<AAIController>(GetController());
+	//AIController->UnPossess();
+
+	if (GetController() && enemyAIController)
+	{
+		enemyAIController->UnPossess();
+	}
+
+	//SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
+
+	bIsDisabled = true;
+}
+
+void AEnemyCharacterBase::EnableEnemy()
+{
+	//GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+
+	GetCharacterMovement()->Activate();
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	GetMesh()->Activate();
+
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	SetActorTickEnabled(true);
+
+	healthComponent->ResetHealth();
+	pathNodeIndex = -1;
+
+	if (!GetController() && enemyAIController)
+	{
+		enemyAIController->Possess(this);
+		enemyAIController->RunBehaviorTree(enemyBehaviorTree);
+	}
+
+	bIsDisabled = false;
+
+}
+
+bool AEnemyCharacterBase::GetIsEnemyDisabled()
+{
+	return bIsDisabled;
 }
 
 void AEnemyCharacterBase::SpawnDrop()

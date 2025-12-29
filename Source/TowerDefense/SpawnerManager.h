@@ -61,10 +61,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int amountOfEnemysInRound;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool waveActive;
 
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<AEnemyCharacterBase*> enemyPool;
+
+	UFUNCTION(BlueprintCallable)
+	void PoolEnemies();*/
 };

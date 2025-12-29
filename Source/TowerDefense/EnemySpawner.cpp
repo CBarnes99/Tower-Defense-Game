@@ -1,8 +1,8 @@
 #include "EnemySpawner.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
 #include "Components/SphereComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "EnemyPathSpline.h"
+#include "EnemyPathSpline.h"
 
 AEnemySpawner::AEnemySpawner()
 {
@@ -24,15 +24,17 @@ void AEnemySpawner::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("THERE IS NOT ANY ENEMY PATH SPLINES ATTACHED TO THIS SPAWNER - %s"), *this->GetName());
 	}
+
+	PoolEnemies();
 }
 
 bool AEnemySpawner::IsThereEnemyPathSplines()
 {
-	if (enemyPathSplines.Num() == 0)
+	if (enemyPathSplines[0] != nullptr)
 	{
-		return false;
+		return true;
 	}
-	return true;
+	return false;
 }
 
 AEnemyPathSpline* AEnemySpawner::GetRandomEnemyPath()
@@ -85,6 +87,58 @@ bool AEnemySpawner::IsEnemyCollisionOverlap()
 	return false;
 }
 
+void AEnemySpawner::PoolEnemies()
+{
+	TMap<TSubclassOf<AEnemyCharacterBase>, int> amountOfEachEnemyClass;
+
+
+	for (TPair<int, FAmountOfEnemysSpawning> element : waveAndEnemyQueue)
+	{
+		TMap<TSubclassOf<AEnemyCharacterBase>, int> tempMaxCountMap;
+
+		for (TSubclassOf<AEnemyCharacterBase> enemyClass : element.Value.enemyTypeArray)
+		{
+			if (int* valuePtr = tempMaxCountMap.Find(enemyClass))
+			{
+				++(*valuePtr);
+			}
+			else
+			{
+				tempMaxCountMap.Add(enemyClass, 1);
+			}
+		}
+
+		for (TPair<TSubclassOf<AEnemyCharacterBase>, int>& tempPair : tempMaxCountMap)
+		{
+
+			int* valuePtr = amountOfEachEnemyClass.Find(tempPair.Key);
+
+			if (!valuePtr || *valuePtr < tempPair.Value)
+			{
+				amountOfEachEnemyClass.Add(tempPair.Key, tempPair.Value);
+			}
+		}
+	}
+
+	TArray<TSubclassOf<AEnemyCharacterBase>> enemyClasses;
+	amountOfEachEnemyClass.GetKeys(enemyClasses);
+
+	for (TSubclassOf<AEnemyCharacterBase> enemyClass : enemyClasses)
+	{
+		int* amountToSpawnPtr = amountOfEachEnemyClass.Find(enemyClass);
+
+		FActorSpawnParameters spawnParams;
+		spawnParams.Instigator = GetInstigator();
+
+		for (int i = 0; i < *amountToSpawnPtr; i++)
+		{
+			AEnemyCharacterBase* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyClass, this->GetActorLocation(), this->GetActorRotation(), spawnParams);
+			spawnedEnemy->DisableEnemy();
+			enemyPool.Add(spawnedEnemy);
+		}
+	}
+}
+
 int AEnemySpawner::CalculateAmountOfEnemiesInWave()
 {
 	if (FAmountOfEnemysSpawning* enemyStruct = waveAndEnemyQueue.Find(currentWaveBeingSpawned))
@@ -113,14 +167,35 @@ AEnemyCharacterBase* AEnemySpawner::SpawnEnemyActor()
 		if (enemyStruct->enemyTypeArray.IsValidIndex(0)) {
 			amountOfEnemiesSpawned++;
 			//UE_LOG(LogTemp, Display, TEXT("Valid Index 0 In %s"), *this->GetName());
-			FActorSpawnParameters spawnParams;
+
+			//AEnemyCharacterBase* enemy;
+
+			for (AEnemyCharacterBase* pooledEnemy : enemyPool)
+			{
+				if (pooledEnemy->GetIsEnemyDisabled() && pooledEnemy->IsA(enemyStruct->enemyTypeArray[0]))
+				{
+					//enemy = pooledEnemy;
+					pooledEnemy->SetPathNodeLocations(GetRandomEnemyPath()->GetSplinePointLocations());
+					enemyStruct->enemyTypeArray.RemoveAt(0);
+					OnEnemySpawnedEvent.Broadcast(pooledEnemy);
+					pooledEnemy->SetActorLocation(this->GetActorLocation());
+					pooledEnemy->EnableEnemy();
+					return pooledEnemy;
+				}
+			}
+
+			
+
+
+
+			/*FActorSpawnParameters spawnParams;
 			spawnParams.Instigator = GetInstigator();
 
 			AEnemyCharacterBase* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
 			spawnedEnemy->SetPathNodeLocations(GetRandomEnemyPath()->GetSplinePointLocations());
 			enemyStruct->enemyTypeArray.RemoveAt(0);
 			OnEnemySpawnedEvent.Broadcast(spawnedEnemy);
-			return spawnedEnemy;
+			return spawnedEnemy;*/
 		}
 		else
 		{
@@ -137,6 +212,8 @@ AEnemyCharacterBase* AEnemySpawner::SpawnEnemyActor()
 		StopSpawning();
 		return NULL;
 	}
+
+	return NULL;
 }
 
 

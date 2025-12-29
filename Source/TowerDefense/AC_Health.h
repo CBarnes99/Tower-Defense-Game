@@ -12,45 +12,36 @@ class TOWERDEFENSE_API UAC_Health : public UActorComponent
 
 public:	
 	UAC_Health();
-	/**
-	* @brief Returns the health of the parent actor
-	*/
+	/** Returns the health of the parent actor */
 	UFUNCTION(BlueprintCallable)
 	float GetHealth();
 
-	/**
-	* @brief Sets the health for the parent actor
-	* @param healthAmount The amount of health you want your actor to have, as a float
-	*/
+	/** Sets the health for the parent actor
+	* @param healthAmount The amount of health you want your actor to have, as a float */
 	UFUNCTION(BlueprintCallable)
 	void SetHealth(float healthAmount);
 
-	/**
-	* Uses the built in Apply Damage function parameters to deal damage to the actor
-	*/
+	/** Sets the health value back to the max */
+	UFUNCTION(BlueprintCallable)
+	void ResetHealth();
+
+	/** Uses the built in Apply Damage function parameters to deal damage to the actor */
 	UFUNCTION(BlueprintCallable)
 	void RecieveDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
-	/**
-	* @brief Updates the health of the player when it is healed
-	* @param healAmount How much you want to heal your actor, as a float
-	*/
+	/** Updates the health of the player when it is healed
+	* @param healAmount How much you want to heal your actor, as a float */
 	UFUNCTION(BlueprintCallable)
 	void RecieveHealing(float healAmount);
-
 
 protected:
 	virtual void BeginPlay() override;
 
-	/**
-	* @brief The amount of health the parent actor has, as a float
-	*/
+	/** The amount of health the parent actor has, as a float */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	float health;
 
-	/**
-	* @brief The max health the parent actor has, as a float
-	*/
+	/** The max health the parent actor has, as a float */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	float maxHealth;
 
