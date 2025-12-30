@@ -49,10 +49,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector GetCameraLocation();
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Turret")
-	int hotbarSelectionIndex;
+	/*UPROPERTY(VisibleDefaultsOnly, Category = "Turret")
+	int hotbarSelectionIndex;*/
 
-	UFUNCTION(BlueprintCallable)
+	/*UFUNCTION(BlueprintCallable)
 	void UpdateTurretPlacement();
 
 	UFUNCTION(BlueprintCallable)
@@ -65,7 +65,7 @@ public:
 	void RotateTurret(float dir);
 
 	UFUNCTION(BlueprintCallable)
-	void SetTurretManager();
+	void SetTurretManager();*/
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	class UDataTable* turretDataTableClass;

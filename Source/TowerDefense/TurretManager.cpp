@@ -16,7 +16,7 @@ void ATurretManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (turretDataTable) 
+	/*if (turretDataTable) 
 	{
 		dataTableRowNames = turretDataTable->GetRowNames();
 
@@ -30,53 +30,53 @@ void ATurretManager::BeginPlay()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Data Table Within - %s"), *this->GetName());
-	}
+	}*/
 
 	//placeActorComponent->IsAbleToPlaceActorEvent.BindUObject(this, &ATurretManager::IsAbleToPlaceTurret);
 
-	PoolAllPreivewTurrets();
-	
-	currentPreviewTurretIndex = -1;
-	//previousPreviewTurretSelection = -1;
-	isPreviewTurretActive = false;
+	//PoolAllPreivewTurrets();
+	//
+	//currentPreviewTurretIndex = -1;
+	////previousPreviewTurretSelection = -1;
+	//isPreviewTurretActive = false;
 
 	/*AActor* playerClass = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass());
 	myPlayerCharacter = Cast<APlayerCharacter>(playerClass);*/
 }
 
-void ATurretManager::PoolAllPreivewTurrets()
-{
-	for (FName indexName : dataTableRowNames)
-	{
-		F_TurretObjectPath* turretPtr = turretDataTable->FindRow<F_TurretObjectPath>(indexName, TEXT("Pooling the Preview Turrets"));
-		UClass* turretClass = turretPtr->turretClass.LoadSynchronous();
-		FActorSpawnParameters spawnParams;
-		ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
-		spawnedTurret->SetPreviewMaterial(true);
-		FString turretNameString = FString::Printf(TEXT("Pooled Preview Turret - %s"), *indexName.ToString());
-		//spawnedTurret->SetActorLabel(turretNameString);
-		pooledPreviewTurrets.Add(spawnedTurret);
-		DisablePreviewTurret(spawnedTurret);
-	}
-}
+//void ATurretManager::PoolAllPreivewTurrets()
+//{
+//	for (FName indexName : dataTableRowNames)
+//	{
+//		F_TurretObjectPath* turretPtr = turretDataTable->FindRow<F_TurretObjectPath>(indexName, TEXT("Pooling the Preview Turrets"));
+//		UClass* turretClass = turretPtr->turretClass.LoadSynchronous();
+//		FActorSpawnParameters spawnParams;
+//		ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
+//		spawnedTurret->SetPreviewMaterial(true);
+//		FString turretNameString = FString::Printf(TEXT("Pooled Preview Turret - %s"), *indexName.ToString());
+//		//spawnedTurret->SetActorLabel(turretNameString);
+//		pooledPreviewTurrets.Add(spawnedTurret);
+//		DisablePreviewTurret(spawnedTurret);
+//	}
+//}
 
-void ATurretManager::UpdatePreviewTurretLocation(FVector placeTurretLoc, int turretIndex)
-{
-	//if (!lineTraceComponent->HasImpactPoint(myPlayerCharacter->GetCameraLocation(), myPlayerCharacter->GetCameraForwardVector(), 2000.f)) return;
-
-	if (currentPreviewTurretIndex != turretIndex)
-	{
-		currentPreviewTurretIndex = turretIndex;
-		for (auto turret : pooledPreviewTurrets)
-		{
-			if (!turret->IsHidden())
-			{
-				DisablePreviewTurret(turret);
-			}
-		}
-		EnablePreviewTurret(pooledPreviewTurrets[currentPreviewTurretIndex]);
-		isPreviewTurretActive = true;
-	}
+//void ATurretManager::UpdatePreviewTurretLocation(FVector placeTurretLoc, int turretIndex)
+//{
+//	//if (!lineTraceComponent->HasImpactPoint(myPlayerCharacter->GetCameraLocation(), myPlayerCharacter->GetCameraForwardVector(), 2000.f)) return;
+//
+//	if (currentPreviewTurretIndex != turretIndex)
+//	{
+//		currentPreviewTurretIndex = turretIndex;
+//		for (auto turret : pooledPreviewTurrets)
+//		{
+//			if (!turret->IsHidden())
+//			{
+//				DisablePreviewTurret(turret);
+//			}
+//		}
+//		EnablePreviewTurret(pooledPreviewTurrets[currentPreviewTurretIndex]);
+//		isPreviewTurretActive = true;
+//	}
 	
 	//if (previousPreviewTurretSelection != currentPreviewTurretIndex)
 	//{
@@ -102,7 +102,7 @@ void ATurretManager::UpdatePreviewTurretLocation(FVector placeTurretLoc, int tur
 	/*if (pooledPreviewTurrets[currentPreviewTurretIndex]->IsHidden()) 
 		EnablePreviewTurret(pooledPreviewTurrets[currentPreviewTurretIndex]);*/
 
-	pooledPreviewTurrets[currentPreviewTurretIndex]->SetActorLocation(placeTurretLoc);
+	/*pooledPreviewTurrets[currentPreviewTurretIndex]->SetActorLocation(placeTurretLoc);*/
 	
 
 
@@ -117,48 +117,48 @@ void ATurretManager::UpdatePreviewTurretLocation(FVector placeTurretLoc, int tur
 	//	lineTraceComponent->SetIgnoredActor(previewTurretActor);
 	//	previewTurretActor->SetActorLocation(placeTurretPos);
 	//}
-}
+//}
 
 
-void ATurretManager::DisablePreviewTurret(ATurretStatic* turret)
-{
-	turret->SetActorHiddenInGame(true);
-	turret->SetActorEnableCollision(false);
-	turret->SetActorTickEnabled(false);
-	turret->SetActorRotation(FRotator::ZeroRotator);
-}
+//void ATurretManager::DisablePreviewTurret(ATurretStatic* turret)
+//{
+//	turret->SetActorHiddenInGame(true);
+//	turret->SetActorEnableCollision(false);
+//	turret->SetActorTickEnabled(false);
+//	turret->SetActorRotation(FRotator::ZeroRotator);
+//}
+//
+//void ATurretManager::EnablePreviewTurret(ATurretStatic* turret)
+//{
+//	turret->SetActorHiddenInGame(false);
+//	//turret->SetActorEnableCollision(true);
+//	//turret->SetActorTickEnabled(true);
+//}
+//
+//void ATurretManager::NoLongerPlacingTurrets()
+//{
+//	DisablePreviewTurret(pooledPreviewTurrets[currentPreviewTurretIndex]);
+//	currentPreviewTurretIndex = -1;
+//	//previousPreviewTurretSelection = -1;
+//	isPreviewTurretActive = false;
+//}
+//
+//bool ATurretManager::GetisPreviewTurretActive()
+//{
+//	return isPreviewTurretActive;
+//}
 
-void ATurretManager::EnablePreviewTurret(ATurretStatic* turret)
-{
-	turret->SetActorHiddenInGame(false);
-	//turret->SetActorEnableCollision(true);
-	//turret->SetActorTickEnabled(true);
-}
-
-void ATurretManager::NoLongerPlacingTurrets()
-{
-	DisablePreviewTurret(pooledPreviewTurrets[currentPreviewTurretIndex]);
-	currentPreviewTurretIndex = -1;
-	//previousPreviewTurretSelection = -1;
-	isPreviewTurretActive = false;
-}
-
-bool ATurretManager::GetisPreviewTurretActive()
-{
-	return isPreviewTurretActive;
-}
-
-void ATurretManager::RotatePreviewTurret(float dir)
-{
-	if (!isPreviewTurretActive) return;
-	FRotator rotation = pooledPreviewTurrets[currentPreviewTurretIndex]->GetActorRotation();
-	//UE_LOG(LogTemp, Warning, TEXT("Current Rotation is = %s"), *rotation.ToString());
-
-	rotation.Yaw += (45.f * dir);
-	UE_LOG(LogTemp, Warning, TEXT("New Rotation is is = %s"), *rotation.ToString());
-
-	pooledPreviewTurrets[currentPreviewTurretIndex]->SetActorRotation(rotation);
-}
+//void ATurretManager::RotatePreviewTurret(float dir)
+//{
+//	if (!isPreviewTurretActive) return;
+//	FRotator rotation = pooledPreviewTurrets[currentPreviewTurretIndex]->GetActorRotation();
+//	//UE_LOG(LogTemp, Warning, TEXT("Current Rotation is = %s"), *rotation.ToString());
+//
+//	rotation.Yaw += (45.f * dir);
+//	UE_LOG(LogTemp, Warning, TEXT("New Rotation is is = %s"), *rotation.ToString());
+//
+//	pooledPreviewTurrets[currentPreviewTurretIndex]->SetActorRotation(rotation);
+//}
 
 void ATurretManager::StartTurretPlacement(UDA_TurretInfo* turretInfo)
 {
@@ -234,31 +234,26 @@ void ATurretManager::UpdateTurretPlacementLocation(FVector traceStartLocation, F
 }
 
 
-
-
-
-
-
-ATurretStatic* ATurretManager::SpawnTurretByRow(int rowIndex)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Row Index from SpawnTurretByRow Function within %s = %d"), *this->GetName(), rowIndex);
-	int index = rowIndex;
-	if (!dataTableRowNames.IsValidIndex(index))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Index %d out of range (0 to %d)"), rowIndex, dataTableRowNames.Num() - 1);
-		return nullptr;
-	}
-	FName rowName = dataTableRowNames[index];
-
-	F_TurretObjectPath* rowData = turretDataTable->FindRow<F_TurretObjectPath>(rowName, TEXT("Getting Turret from Data Table"));
-
-	UClass* turretClass = rowData->turretClass.LoadSynchronous();
-
-	FActorSpawnParameters spawnParams;
-
-	ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, pooledPreviewTurrets[currentPreviewTurretIndex]->GetActorLocation(), pooledPreviewTurrets[currentPreviewTurretIndex]->GetActorRotation(), spawnParams);
-	spawnedTurret->SetPreviewMaterial(false);
-
-	NoLongerPlacingTurrets();
-	return spawnedTurret;
-}
+//ATurretStatic* ATurretManager::SpawnTurretByRow(int rowIndex)
+//{
+//	UE_LOG(LogTemp, Warning, TEXT("Row Index from SpawnTurretByRow Function within %s = %d"), *this->GetName(), rowIndex);
+//	int index = rowIndex;
+//	if (!dataTableRowNames.IsValidIndex(index))
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("Index %d out of range (0 to %d)"), rowIndex, dataTableRowNames.Num() - 1);
+//		return nullptr;
+//	}
+//	FName rowName = dataTableRowNames[index];
+//
+//	F_TurretObjectPath* rowData = turretDataTable->FindRow<F_TurretObjectPath>(rowName, TEXT("Getting Turret from Data Table"));
+//
+//	UClass* turretClass = rowData->turretClass.LoadSynchronous();
+//
+//	FActorSpawnParameters spawnParams;
+//
+//	ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, pooledPreviewTurrets[currentPreviewTurretIndex]->GetActorLocation(), pooledPreviewTurrets[currentPreviewTurretIndex]->GetActorRotation(), spawnParams);
+//	spawnedTurret->SetPreviewMaterial(false);
+//
+//	NoLongerPlacingTurrets();
+//	return spawnedTurret;
+//}

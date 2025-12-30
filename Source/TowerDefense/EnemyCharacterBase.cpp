@@ -8,12 +8,15 @@
 #include "DA_EnemyCharacterStats.h"
 #include "AC_Health.h"
 #include "E_EnemyDrop.h"
-//#include "BehaviorTree/BehaviorTree.h"
 #include "EnemyAIController.h"
 
 AEnemyCharacterBase::AEnemyCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	bUseControllerRotationYaw = false;
+
 
 	healthComponent = CreateDefaultSubobject<UAC_Health>(TEXT("Health Componenet"));
 	pathNodeIndex = -1;
