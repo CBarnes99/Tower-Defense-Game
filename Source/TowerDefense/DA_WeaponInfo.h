@@ -37,6 +37,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float projectileSpeed;
 
+	/** How many projectiles can you fire per second, 15 = 15 shots per second */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float fireRate;
+
+	/** How long can the projectile be in the air without colliding before its deactivated */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float lifetime;
+
 	/** Ensure this is the name of the socket that is attached to the mesh of your weapon and that it is where you want the projectile to spawn */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName muzzleName;

@@ -2,15 +2,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "DA_PlayerCharacterStats.h"
-#include "Components/StaticMeshComponent.h"
-#include "WeaponBase.h"
-#include "AC_Health.h"
-#include "AC_Mana.h"
-#include "AC_LineTrace.h"
-#include "TurretManager.h"
+//#include "Components/StaticMeshComponent.h"
+
+//#include "AC_LineTrace.h"
+//#include "TurretManager.h"
 #include "PlayerCharacter.generated.h"
+
+class UDA_PlayerCharacterStats;
+class AWeaponBase;
+class UAC_Health;
+class UAC_Mana;
+class UCameraComponent;
+class USpringArmComponent;
+class AWeaponBase;
 
 UCLASS()
 class TOWERDEFENSE_API APlayerCharacter : public ACharacter
@@ -18,16 +22,11 @@ class TOWERDEFENSE_API APlayerCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	APlayerCharacter();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//Player Stats, Edit in Blueprints Data Asset
+	/** Player information from a data asset */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TObjectPtr<UDA_PlayerCharacterStats> DA_playerInfo;
 
@@ -67,60 +66,64 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTurretManager();*/
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	class UDataTable* turretDataTableClass;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	class ATurretManager* turretManager;
+	class ATurretManager* turretManager;*/
 
+	/** An Actor Component that controlls the health of the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	class UAC_Health* healthComponent;
+	UAC_Health* healthComponent;
 
+	/** An Actor Component that controlls the mana of the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	class UAC_Mana* manaComponent;
+	UAC_Mana* manaComponent;
 
+	/** When the attack action is called by the Core_PlayerController, it fires a projectile from the weapon */
 	UFUNCTION(BlueprintCallable)
 	void AttackAction();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//Components added to player
+	/** Camera Component */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCameraComponent* camera;
+	UCameraComponent* camera;
 
+	/** Spring Arm Component */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USpringArmComponent* springArm;
+	USpringArmComponent* springArm;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UAC_LineTrace* lineTraceComponent;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UAC_LineTrace* lineTraceComponent;*/
 
-	//This is the socket name on the skeleton, if the socket name changes, can be edited in the editor
+	/** This is the socket name on the skeleton, this is where the weapon will attach to on the skeleton */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName weaponSocket;
 
-	//These properties are assigned in the begin play by referencing the DA_playerInfo Data Asset
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	FString name;
+	////These properties are assigned in the begin play by referencing the DA_playerInfo Data Asset
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	//FString name;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	float jumpHeight;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	//float jumpHeight;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	float movementSpeed;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	//float movementSpeed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	float runSpeed;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	//float runSpeed;
 
-	//Set the class of the weapon in the BP Editor
+	/** The weapons class the character holds and fires */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	class TSubclassOf<AWeaponBase> weaponClass;
+	TSubclassOf<AWeaponBase> weaponClass;
 
-	//On begin play, this function spawns the weapon above and equips it to the right hand socket of the skeleton
+	/** On begin play, this function spawns the weapon above and equips it to the socket of the skeleton that has the name of weaponSocket */
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void EquipWeapon();
 
+	/** The defualt takeDamage function */
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };

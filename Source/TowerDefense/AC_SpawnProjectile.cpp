@@ -5,7 +5,7 @@ UAC_SpawnProjectile::UAC_SpawnProjectile()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-	poolSize = 20;
+	poolSize = 5;
 }
 
 void UAC_SpawnProjectile::BeginPlay()
@@ -13,32 +13,23 @@ void UAC_SpawnProjectile::BeginPlay()
 	Super::BeginPlay();
 	amountInPool = 0;
 
-	InitializePool();
+	//InitializePool();
 }
 
-void UAC_SpawnProjectile::InitializePool()
+void UAC_SpawnProjectile::InitializePool(float fireRate, float lifetime)
 {
 	if (!projectile)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Projectile Class Within - %s"), *this->GetOwner()->GetName());
+		return;
 	}
+
+	poolSize = fireRate * lifetime;
+	//UE_LOG(LogTemp, Display, TEXT("poolsize = %f"), poolsize);
 
 	for (int i = 0; i < poolSize; i++)
 	{
-	/*	FActorSpawnParameters spawnParams;
-		spawnParams.Owner = GetOwner();
-		spawnParams.Instigator = GetOwner()->GetInstigator();
-		AProjectileBase* pooledProjectile = GetWorld()->SpawnActor<AProjectileBase>(projectile, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
-
-		FString lable = FString::Printf(TEXT("%s - %d"), *projectile->GetName(), i + 1);
-		pooledProjectile->SetActorLabel(lable);
-		projectilePool.Add(pooledProjectile);
-
-		amountInPool++;*/
-
 		spawnProjectile();
-
-		//UE_LOG(LogTemp, Error, TEXT("%s owner = %s"), *this->GetName(), *this->GetOwner()->GetName());
 	}
 	UE_LOG(LogTemp, Warning, TEXT("There are %d projectiles pooled"), amountInPool);
 
@@ -46,19 +37,18 @@ void UAC_SpawnProjectile::InitializePool()
 
 void UAC_SpawnProjectile::spawnProjectile()
 {
+	amountInPool++;
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = GetOwner();
 	spawnParams.Instigator = GetOwner()->GetInstigator();
 	AProjectileBase* pooledProjectile = GetWorld()->SpawnActor<AProjectileBase>(projectile, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
 
-	FString lable = FString::Printf(TEXT("%s - %d"), *projectile->GetName(), amountInPool + 1);
-	//pooledProjectile->SetActorLabel(lable);
+	FString lable = FString::Printf(TEXT("%s - %d"), *projectile->GetName(), amountInPool);
 	projectilePool.Add(pooledProjectile);
 
-	amountInPool++;
 }
 
-void UAC_SpawnProjectile::FireProjectile(FVector traceStartLocation, FVector weaponMuzzleLocation, FVector actorForwardVector, float damageDelt, float projectileSpeed)
+void UAC_SpawnProjectile::FireProjectile(FVector traceStartLocation, FVector weaponMuzzleLocation, FVector actorForwardVector, float damageDelt, float projectileSpeed, float projectileLifetime)
 {
 	if (!projectile)
 	{
@@ -90,18 +80,16 @@ void UAC_SpawnProjectile::FireProjectile(FVector traceStartLocation, FVector wea
 		spawnProjectile();
 		currentProjectile = GetInactiveProjectile();
 		poolSize++;
-		UE_LOG(LogTemp, Warning, TEXT("Added another projectile to the pool for - %s. There are %d projectiles within the pool"), *GetOwner()->GetName(), poolSize);
+		UE_LOG(LogTemp, Warning, TEXT("Added another projectile to the pool for - %s. There are %f projectiles within the pool"), *GetOwner()->GetName(), poolSize);
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Using - %s"), *currentProjectile->GetName());
 
 	currentProjectile->SetActorLocation(spawnLocation);
 	currentProjectile->SetActorRotation(spawnRotation);
 
-	if (!currentProjectile->hasDefaultsBeenSet)
+	if (!currentProjectile->GetDefualtsBeenSet())
 	{
-		currentProjectile->SetDamage(damageDelt);
-		currentProjectile->SetProjectileSpeed(projectileSpeed);
-		currentProjectile->hasDefaultsBeenSet = true;
+		currentProjectile->SetProjectileDefaults(damageDelt, projectileSpeed, projectileLifetime);
 	}
 	currentProjectile->FireInDirection(shootDirection);
 	currentProjectile->ActivateProjectile();

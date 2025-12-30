@@ -3,10 +3,14 @@
 #include "PlayerCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h" 
-
 #include "Kismet/GameplayStatics.h"
-
 #include "UObject/ConstructorHelpers.h"
+#include "DA_PlayerCharacterStats.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "AC_Health.h"
+#include "AC_Mana.h"
+#include "WeaponBase.h"
+
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -41,7 +45,7 @@ APlayerCharacter::APlayerCharacter()
 
 	healthComponent = CreateDefaultSubobject<UAC_Health>(TEXT("Health Component"));
 	manaComponent = CreateDefaultSubobject<UAC_Mana>(TEXT("Mana Component"));
-	lineTraceComponent = CreateDefaultSubobject<UAC_LineTrace>(TEXT("Line Trace Component"));
+	//lineTraceComponent = CreateDefaultSubobject<UAC_LineTrace>(TEXT("Line Trace Component"));
 
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
@@ -54,28 +58,22 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	name = DA_playerInfo->name;
+	//name = DA_playerInfo->name;
 	healthComponent->SetHealth(DA_playerInfo->health);
 	manaComponent->SetMana(DA_playerInfo->mana);
-	movementSpeed = DA_playerInfo->movementSpeed;
-	runSpeed = DA_playerInfo->runSpeed;
-	jumpHeight = DA_playerInfo->jumpHeight;
+	//movementSpeed = DA_playerInfo->movementSpeed;
+	//runSpeed = DA_playerInfo->runSpeed;
+	//jumpHeight = DA_playerInfo->jumpHeight;
 
 	//hotbarSelectionIndex = 1;
 	//hotbarSelectionIndex = 0;
 
-	GetCharacterMovement()->MaxWalkSpeed = movementSpeed;
-	GetCharacterMovement()->JumpZVelocity = jumpHeight;
+	GetCharacterMovement()->MaxWalkSpeed = DA_playerInfo->movementSpeed;
+	GetCharacterMovement()->JumpZVelocity = DA_playerInfo->jumpHeight;
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s, Health: %f, Mana: %f, Movement Speed: %f, Run Speed: %f, Jump Height: %f"),
-		*name, healthComponent->GetHealth(), manaComponent->GetMana(), movementSpeed, runSpeed, jumpHeight);
+		*DA_playerInfo->name, healthComponent->GetHealth(), manaComponent->GetMana(), DA_playerInfo->movementSpeed, DA_playerInfo->runSpeed, DA_playerInfo->jumpHeight);
 	
 	EquipWeapon();
-}
-
-
-void APlayerCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -98,11 +96,11 @@ void APlayerCharacter::EquipWeapon()
 	spawnParams.Instigator = this;
 
 	equippedWeapon = GetWorld()->SpawnActor<AWeaponBase>(weaponClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
-	equippedWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket);
-	equippedWeapon->SetOwner(this);
 
 	if (equippedWeapon)
 	{
+		equippedWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket);
+		equippedWeapon->SetOwner(this);
 		UE_LOG(LogTemp, Display, TEXT("Weapon Equipped Successfully!!"));
 	}
 	else
@@ -130,12 +128,12 @@ FVector APlayerCharacter::GetCameraLocation()
 
 float& APlayerCharacter::GetMovementSpeed()
 {
-	return movementSpeed;
+	return DA_playerInfo->movementSpeed;
 }
 
 float& APlayerCharacter::GetRunSpeed()
 {
-	return runSpeed;
+	return DA_playerInfo->runSpeed;
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -235,12 +233,14 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 void APlayerCharacter::AttackAction()
 {
-	equippedWeapon->spawnProjectileComponent->FireProjectile
+	equippedWeapon->FireProjectile(GetCameraLocation(), GetCameraForwardVector());
+
+	/*equippedWeapon->spawnProjectileComponent->FireProjectile
 	(
 		GetCameraLocation(),
 		equippedWeapon->GetWeaponMuzzleLocation(),
 		GetCameraForwardVector(),
 		equippedWeapon->GetDamageDelt(),
 		equippedWeapon->GetProjectileSpeed()
-	);
+	);*/
 }

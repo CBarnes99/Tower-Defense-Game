@@ -2,11 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "DA_WeaponInfo.h"
-#include "ProjectileBase.h"
 #include "Camera/CameraComponent.h"
-#include "AC_SpawnProjectile.h"
 #include "WeaponBase.generated.h"
+
+class UAC_SpawnProjectile;
+class UStaticMeshComponent;
+class UDA_WeaponInfo;
 
 UCLASS()
 class TOWERDEFENSE_API AWeaponBase : public AActor
@@ -16,75 +17,77 @@ class TOWERDEFENSE_API AWeaponBase : public AActor
 public:	
 	AWeaponBase();
 
-	/**
-	* @brief Actor Component that handles spawning the projectile
-	*/
+	/** Actor Component that handles spawning the projectile */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
 	UAC_SpawnProjectile* spawnProjectileComponent;
 
-	/**
-	* @brief Gets the weapons muzzle location for where to spawn the projectile
-	* @return The location of the muzzle, as a FVector
-	*/
+	/** Gets the weapons muzzle location for where to spawn the projectile
+	* @return The location of the muzzle, as a FVector */
 	UFUNCTION(BlueprintCallable)
 	FVector GetWeaponMuzzleLocation();
 
-	/**
-	* @brief Gets the damage delt from the weapon
-	* @return The damage delt, as a float
-	*/
+	/** Gets the damage delt from the weapon
+	* @return The damage delt, as a float */
 	UFUNCTION(BlueprintCallable)
 	float GetDamageDelt();
 
-	/**
-	* @brief Gets the speed of the projectile
-	* @return The speed of the projectile, as a float
-	*/
+	/** Gets the speed of the projectile
+	* @return The speed of the projectile, as a float */
 	UFUNCTION(BlueprintCallable)
 	float GetProjectileSpeed();
+
+	/** Gets the lifetime of the projectile
+	* @return The lifetime of the projectile, as a float */
+	UFUNCTION(BlueprintCallable)
+	float GetProjectileLifetime();
+
+	/** Called from the player character to fire the projectile */
+	UFUNCTION(BlueprintCallable)
+	void FireProjectile(FVector fireStartLoc, FVector forwardVector);
 
 protected:
 	virtual void BeginPlay() override;
 
-	/**
-	* @brief The mesh for the weapon
-	*/
+	/** The mesh for the weapon */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UStaticMeshComponent* weaponMesh;
+	UStaticMeshComponent* weaponMesh;
 
-	/**
-	* @brief A Data Asset that holds the default values for the weapon
-	*/
+	/** A Data Asset that holds the default values for the weapon */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDA_WeaponInfo* weaponStats;
 
-	/**
-	* @brief The name of the muzzle that is within the mesh
-	*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FName weaponMuzzleName;
+	///** The name of the muzzle that is within the mesh */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//FName weaponMuzzleName;
 
-	/**
-	* @brief how much damage the projectile this weapon spawns deals
-	*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float damageDelt;
+	///** How much damage the projectile this weapon spawns deals */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//float damageDelt;
 
-	/**
-	* @brief The amount of ammo the weapon currently has
-	*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int currentAmmo;
+	///** The amount of ammo the weapon currently has */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//int currentAmmo;
 
-	/**
-	* @brief The amount of ammo the weapon can hold
-	*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int maxAmmo;
+	///** The amount of ammo the weapon can hold */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//int maxAmmo;
 
-	/**
-	* @brief How fast you want the projectile to move
-	*/
+	///** How fast you want the projectile to move */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//float projectileSpeed;
+
+	/** A Check to see if the weapon can fire, based of the weapons fire rate */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float projectileSpeed;
+	bool bCanFire;
+
+	UFUNCTION(BlueprintCallable)
+	void StartWeaponFireRateCooldown();
+
+	FTimerHandle fireRateHandle;
+
+	UFUNCTION(BlueprintCallable)
+	void EnableCanFire();
+
+	UFUNCTION(BlueprintCallable)
+	void DisableCanFire();
 };

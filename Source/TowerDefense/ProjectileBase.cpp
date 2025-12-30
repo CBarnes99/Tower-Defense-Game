@@ -1,5 +1,7 @@
 #include "ProjectileBase.h"
 #include <Kismet/GameplayStatics.h>
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Components/SphereComponent.h"
 
 AProjectileBase::AProjectileBase()
 {
@@ -33,27 +35,40 @@ void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();	
 
-	//isActive = false;
 	hasDefaultsBeenSet = false;
-
 	DeactivateProjectile();
 }
 
-void AProjectileBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-void AProjectileBase::SetDamage(float damageAmount)
+void AProjectileBase::SetProjectileDefaults(float damageAmount, float speed, float projectileLifetime)
 {
 	damageDelt = damageAmount;
-}
-
-void AProjectileBase::SetProjectileSpeed(float speed)
-{
 	projectileMovementComponent->InitialSpeed = speed;
 	projectileMovementComponent->MaxSpeed = speed;
+	lifeTime = projectileLifetime;
+
+	hasDefaultsBeenSet = true;
 }
+
+bool AProjectileBase::GetDefualtsBeenSet()
+{
+	return hasDefaultsBeenSet;
+}
+
+//void AProjectileBase::SetDamage(float damageAmount)
+//{
+//	damageDelt = damageAmount;
+//}
+//
+//void AProjectileBase::SetProjectileSpeed(float speed)
+//{
+//	projectileMovementComponent->InitialSpeed = speed;
+//	projectileMovementComponent->MaxSpeed = speed;
+//}
+//
+//void AProjectileBase::SetProjectileLifetime(float projectileLifetime)
+//{
+//	lifeTime = projectileLifetime;
+//}
 
 bool AProjectileBase::IsProjectileActive()
 {
