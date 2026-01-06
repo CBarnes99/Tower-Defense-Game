@@ -22,10 +22,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UBehaviorTree* behaviorTree;
+	UBehaviorTree* cachedBehaviorTree;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UBlackboardComponent* AIBlackboard;
+	UBlackboardComponent* cachedAIBlackboard;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UAIPerceptionComponent* AIPerceptionComponent;

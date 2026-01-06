@@ -49,5 +49,5 @@ EBTNodeResult::Type UBTTask_SetPathNodeLocation::ExecuteTask(UBehaviorTreeCompon
 		return EBTNodeResult::Succeeded;
 	}
 
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::Failed;
 }

@@ -15,16 +15,14 @@
 AEnemyCharacterBase::AEnemyCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
 
-	StimuliSourceComponent = CreateEditorOnlyDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("Stimuli Source Component"));
+	StimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("Stimuli Source Component"));
 	StimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
 	StimuliSourceComponent->RegisterWithPerceptionSystem();
 
 	healthComponent = CreateDefaultSubobject<UAC_Health>(TEXT("Health Componenet"));
-	pathNodeIndex = -1;
 
 	AutoPossessAI = EAutoPossessAI::Disabled;
 	AIControllerClass = nullptr;
@@ -33,11 +31,13 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 void AEnemyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	healthComponent->SetHealth(enemyInfo->health);
 
+	pathNodeIndex = -1;
+
+	healthComponent->SetHealth(enemyInfo->health);
 	GetCharacterMovement()->MaxWalkSpeed = enemyInfo->movementSpeed;
 
+	//Spawns An AIController and uses this to possess and unposesss the actor when they are disabled and moved to the pool
 	enemyAIController = GetWorld()->SpawnActor<AAIController>(enemyInfo->AIControllerClass);
 }
 
@@ -102,6 +102,9 @@ void AEnemyCharacterBase::DisableEnemy()
 
 	GetMesh()->Deactivate();
 
+	StimuliSourceComponent->Deactivate();
+	StimuliSourceComponent->UnregisterFromPerceptionSystem();
+
 	//AAIController* AIController = Cast<AAIController>(GetController());
 	//AIController->UnPossess();
 
@@ -126,7 +129,10 @@ void AEnemyCharacterBase::EnableEnemy()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
-	GetMesh()->Activate();
+	GetMesh()->Activate(true);
+
+	StimuliSourceComponent->Activate();
+	StimuliSourceComponent->RegisterWithPerceptionSystem();
 
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);

@@ -28,10 +28,6 @@ class TOWERDEFENSE_API AEnemyCharacterBase : public ACharacter
 
 public:
 	AEnemyCharacterBase();
-
-	UFUNCTION(BlueprintCallable)
-	UBehaviorTree* GetBehaviourTree() const;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/** Bound in the Spawner manager to keep track of how many enemies are left in the round */
@@ -50,6 +46,11 @@ public:
 	* @return Gets a Path Node Location, as a FVector */
 	UFUNCTION(BlueprintCallable)
 	FVector GetNextPathNodeLocation();
+
+	/** Gets the behaviour tree that is assined to this actor 
+	* @return Returns the Behaviour Tree, as a UBehaviorTree* */
+	UFUNCTION(BlueprintCallable)
+	UBehaviorTree* GetBehaviourTree() const;
 
 	/** When the enemy loses all their health or has reached the defending base, on death is called */
 	UFUNCTION(BlueprintCallable)
