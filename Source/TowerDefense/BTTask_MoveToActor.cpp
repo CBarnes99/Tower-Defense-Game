@@ -85,12 +85,13 @@ void UBTTask_MoveToActor::UpdateMove()
 	if (distanceFromActor <= adjustedAcceptanceRadius)
 	{
 		FinishLatentTask(*cachedOwnerComp, EBTNodeResult::Succeeded);
-
+		StopMovingTowardsActor();
 		//cachedAIController->StopMovement();
 		//// Reached target, stop timer and finish task successfully
 		//cachedControlledPawn->GetWorldTimerManager().ClearTimer(MoveUpdateTimerHandle);
 		//FinishLatentTask(*cachedOwnerComp, EBTNodeResult::Succeeded);
-		cachedOwnerComp = nullptr;
+	
+		//cachedOwnerComp = nullptr;
 	}
 }
 

@@ -17,6 +17,7 @@ class UAC_Health;
 //class EE_EnemyDrop;
 class AAIController;
 class UAIPerceptionStimuliSourceComponent;
+class UAnimMontage;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, AEnemyCharacterBase*, Enemy);
 DECLARE_DELEGATE(FOnDisableSignature);
