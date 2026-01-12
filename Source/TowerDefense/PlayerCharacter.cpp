@@ -57,17 +57,11 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Tag for the enemy ai perception to differentiate whos the player and who isn't
 	Tags.Add(FName("Player"));
 
-	//name = DA_playerInfo->name;
 	healthComponent->SetHealth(DA_playerInfo->health);
 	manaComponent->SetMana(DA_playerInfo->mana);
-	//movementSpeed = DA_playerInfo->movementSpeed;
-	//runSpeed = DA_playerInfo->runSpeed;
-	//jumpHeight = DA_playerInfo->jumpHeight;
-
-	//hotbarSelectionIndex = 1;
-	//hotbarSelectionIndex = 0;
 
 	GetCharacterMovement()->MaxWalkSpeed = DA_playerInfo->movementSpeed;
 	GetCharacterMovement()->JumpZVelocity = DA_playerInfo->jumpHeight;
@@ -149,99 +143,7 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	return DamageAmount;
 }
 
-//void APlayerCharacter::UpdateTurretPlacement()
-//{
-//
-//	if (!lineTraceComponent->HasImpactPoint(GetCameraLocation(), GetCameraForwardVector(), 2000.f)) return;
-//
-//	FVector placeTurretPos = lineTraceComponent->GetTraceTargetLocation(GetCameraLocation(), GetCameraForwardVector(), 2000.f);
-//
-//	//turretManager->UpdatePreviewTurretLocation(placeTurretPos, hotbarSelectionIndex - 2);
-//	turretManager->UpdatePreviewTurretLocation(placeTurretPos, hotbarSelectionIndex - 1);
-//
-//
-//	/*if (!previewTurretActor && turretClass)
-//	{
-//		previewTurretActor = GetWorld()->SpawnActor<ATurretStatic>(turretClass, placeTurretPos, FRotator::ZeroRotator);
-//		previewTurretActor->SetPreviewMaterial(true);
-//		previewTurretActor->SetActorEnableCollision(false);
-//		previewTurretActor->SetActorTickEnabled(false);
-//	}
-//	else if (previewTurretActor)
-//	{
-//		lineTraceComponent->SetIgnoredActor(previewTurretActor);
-//		previewTurretActor->SetActorLocation(placeTurretPos);
-//	}*/
-//}
-
-//void APlayerCharacter::DestroyTurretPlacement()
-//{
-//	hotbarSelectionIndex = 1;
-//
-//	turretManager->NoLongerPlacingTurrets();
-//
-//
-//	/*previewTurretActor->Destroy();
-//	previewTurretActor = nullptr;*/
-//}
-
-//void APlayerCharacter::PlaceTurret()
-//{
-//	if (!turretManager->GetisPreviewTurretActive()) return;
-//
-//	turretManager->SpawnTurretByRow(hotbarSelectionIndex - 2);
-//	hotbarSelectionIndex = 1;
-//	/*FVector spawnLoc = previewTurretActor->GetActorLocation();
-//	FRotator spawnRot = previewTurretActor->GetActorRotation();
-//	DestroyTurretPlacement();
-//	
-//	ATurretStatic* spawnedTurret = GetWorld()->SpawnActor<ATurretStatic>(turretClass, spawnLoc, spawnRot);
-//	spawnedTurret->SetPreviewMaterial(false);*/
-//}
-
-//void APlayerCharacter::RotateTurret(float dir)
-//{
-//	turretManager->RotatePreviewTurret(dir);
-//
-//	/*if (!previewTurretActor) return;	
-//
-//	FRotator rotation = previewTurretActor->GetActorRotation();
-//	UE_LOG(LogTemp, Warning, TEXT("Current Rotation is = %s"), *rotation.ToString());
-//
-//	rotation.Yaw += (45.f * dir);
-//	UE_LOG(LogTemp, Warning, TEXT("New Rotation is is = %s"), *rotation.ToString());
-//
-//	previewTurretActor->SetActorRotation(rotation);*/
-//
-//
-//}
-
-//void APlayerCharacter::SetTurretManager()
-//{
-//	AActor* actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATurretManager::StaticClass());
-//
-//	if (!actor)
-//	{
-//		UE_LOG(LogTemp, Error, TEXT("Couldn't find turret manager"));
-//		return;
-//	}
-//	turretManager = Cast<ATurretManager>(actor);
-//	if (!turretManager)
-//	{
-//		UE_LOG(LogTemp, Error, TEXT("Cast Failed for turret manager in player character!"));
-//	}
-//}
-
 void APlayerCharacter::AttackAction()
 {
 	equippedWeapon->FireProjectile(GetCameraLocation(), GetCameraForwardVector());
-
-	/*equippedWeapon->spawnProjectileComponent->FireProjectile
-	(
-		GetCameraLocation(),
-		equippedWeapon->GetWeaponMuzzleLocation(),
-		GetCameraForwardVector(),
-		equippedWeapon->GetDamageDelt(),
-		equippedWeapon->GetProjectileSpeed()
-	);*/
 }

@@ -1,8 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-//#include "DA_TurretInfo.h"
-//#include "AC_PreviewMesh.h"
 #include "TurretStatic.generated.h"
 
 class UDA_TurretInfo;
@@ -16,10 +14,6 @@ class TOWERDEFENSE_API ATurretStatic : public AActor
 	
 public:	
 	ATurretStatic();
-
-	///** Sets the preview material for the turret, only used for the pooled turrets by the manager */
-	//UFUNCTION(BlueprintCallable)
-	//void SetPreviewMaterial(bool isPreview);
 
 protected:
 	virtual void BeginPlay() override;
@@ -50,26 +44,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	UDA_TurretInfo* turretStats;
 
-	///** Actor Component that holds the preview material and Defualt material for the turret */
-	//UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Turret")
-	//UAC_PreviewMesh* previewMeshComponent;
-
-	///** The amount of damage the turret deals, as a float */
-	//UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Turret")
-	//float damageAmount;
-
-	///** How long the turret is active before it has to recharge, as a float */
-	//UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Turret")
-	//float activeTime;
-
-	///** How long it takes the turret to recharge after it is active, as a float */
-	//UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Turret")
-	//float rechargeTime;
-
-	///** The amount it costs to spawn the turret, as an int */
-	//UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Turret")
-	//int cost;
-
 	/** The timer handle for the active and recharge times */
 	UPROPERTY(EditAnywhere)
 	FTimerHandle activeAndRechargeTimerHandle;
@@ -93,10 +67,6 @@ protected:
 	/** When the turret damages an enemy, it puts a reference to it here so that it can only damage it once per active cycle */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSet<AActor*> damagedActors;
-
-	//Will set up damage types later on
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-	TSubclassOf<UDamageType> damageType;*/
 
 	/** Built in overlap function */
 	UFUNCTION(BlueprintCallable)

@@ -48,14 +48,10 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 		//if (UBehaviorTree* const Tree = Enemy->GetBehaviourTree())
 		if (cachedBehaviorTree)
 		{
-			//UBlackboardComponent* b;
-			//UseBlackboard(Tree->BlackboardAsset, cachedAIBlackboard);
-			//UseBlackboard(cachedBehaviorTree->BlackboardAsset, cachedAIBlackboard);
 			bool bUseBBSuccess = UseBlackboard(cachedBehaviorTree->BlackboardAsset, cachedAIBlackboard);
 			if (bUseBBSuccess && cachedAIBlackboard)
 			{
 				Blackboard = cachedAIBlackboard;
-				//RunBehaviorTree(Tree);
 				RunBehaviorTree(cachedBehaviorTree);
 			}
 		}
@@ -81,39 +77,37 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* actor, FAIStimulus st
 
 	if (!cachedAIBlackboard || !Blackboard)
 	{
-		UE_LOG(LogTemp, Error, TEXT("OnTargetPerceptionUpdated: cachedAIBlackboard = %s"), cachedAIBlackboard ? TEXT("Valid") : TEXT("nullptr"));
+		/*UE_LOG(LogTemp, Error, TEXT("OnTargetPerceptionUpdated: cachedAIBlackboard = %s"), cachedAIBlackboard ? TEXT("Valid") : TEXT("nullptr"));
 		UE_LOG(LogTemp, Error, TEXT("OnTargetPerceptionUpdated: Blackboard = %s"), Blackboard ? TEXT("Valid") : TEXT("nullptr"));
-		UE_LOG(LogTemp, Error, TEXT("OnTargetPerceptionUpdated: actor = %s"), *actor->GetName());
+		UE_LOG(LogTemp, Error, TEXT("OnTargetPerceptionUpdated: actor = %s"), *actor->GetName());*/
 
 		return;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Display, TEXT("OnTargetPerceptionUpdated: cachedAIBlackboard = %s"), cachedAIBlackboard ? TEXT("Valid") : TEXT("nullptr"));
+	/*	UE_LOG(LogTemp, Display, TEXT("OnTargetPerceptionUpdated: cachedAIBlackboard = %s"), cachedAIBlackboard ? TEXT("Valid") : TEXT("nullptr"));
 		UE_LOG(LogTemp, Display, TEXT("OnTargetPerceptionUpdated: Blackboard = %s"), Blackboard ? TEXT("Valid") : TEXT("nullptr"));
-		UE_LOG(LogTemp, Display, TEXT("OnTargetPerceptionUpdated: actor = %s"), *actor->GetName());
+		UE_LOG(LogTemp, Display, TEXT("OnTargetPerceptionUpdated: actor = %s"), *actor->GetName());*/
 	}
 
 	if (stimulus.WasSuccessfullySensed())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Actor Sensed = %s"), *actor->GetName());
 
+		//Set the player actor var in the blackboard to the player
 		if (!cachedAIBlackboard->GetValueAsObject("PlayerActor"))
 		{
 			cachedAIBlackboard->SetValueAsObject("PlayerActor", actor);
-			//player = actor;
-			//bPlayerActorSet = true;
 		}
 
+		//Update blackboard to register that the enemy can see the player
 		cachedAIBlackboard->SetValueAsBool("bCanSeePlayer", true);
 	}
 	else
 	{
+		//Update blackboard to register that the enemy can no longer see the player
 		UE_LOG(LogTemp, Warning, TEXT("No longer Sense - %s"), *actor->GetName());
 		cachedAIBlackboard->SetValueAsBool("bCanSeePlayer", false);
-		cachedAIBlackboard->SetValueAsObject("PlayerActor", nullptr);
-		//GetWorldTimerManager().ClearTimer(UpdatePlayerLocationHandle);
-		//player = nullptr;
 	}
 }
 
@@ -125,9 +119,8 @@ void AEnemyAIController::DisableAIController()
 			UBehaviorTreeComponent* BehaviorComp = Cast<UBehaviorTreeComponent>(BrainComp);
 			if (BehaviorComp)
 			{
-				BehaviorComp->StopTree(EBTStopMode::Forced);  // Stop the behavior tree safely
 				BehaviorComp->StopLogic("Enemy Is Disabled");
-				BehaviorComp->Cleanup(); // Clean up the behavior tree component
+				BehaviorComp->Cleanup();
 				cachedAIBlackboard->SetValueAsBool("bHasReachedNode", true);
 			}
 		}

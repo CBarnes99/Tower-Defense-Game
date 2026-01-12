@@ -54,6 +54,7 @@ void ACore_HUD::SetFocusToWidget()
 	localCorePlayerController->SetInputMode(inputModeGameAndUI);
 	localCorePlayerController->SetShowMouseCursor(true);
 
+	//Sets Mouse Location to the Centre of hte screen.
 	FVector2D viewportSize;
 	GEngine->GameViewport->GetViewportSize(viewportSize);
 	localCorePlayerController->SetMouseLocation((viewportSize.X / 2), (viewportSize.Y / 2));
@@ -65,9 +66,6 @@ void ACore_HUD::SetUpInGameWidgetList()
 
 	playerHud = CreateWidget<UHUDPlayerHud>(localCorePlayerController, playerHudClass);
 	inGameWidgetList.Add(playerHud);
-
-	/*healthAndMana = CreateWidget<UHUDHealthAndMana>(localCorePlayerController, healthAndManaClass);
-	inGameWidgetList.Add(healthAndMana);*/
 
 	for (UUserWidget* widget : inGameWidgetList)
 	{

@@ -15,18 +15,38 @@ void ASpawnerManager::BeginPlay()
 	amountOfEnemysInRound = 0;
 
 	SetAllSpawners();
-	//PoolEnemies();
+}
 
+void ASpawnerManager::SetAllSpawners()
+{
+	TArray<AActor*> foundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawner::StaticClass(), foundActors);
+
+	enemySpawners.Empty();
+	for (AActor* elements : foundActors)
+	{
+		if (AEnemySpawner* spawner = Cast<AEnemySpawner>(elements))
+		{
+			enemySpawners.Add(spawner);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("SetAllSpawners: Cast to Enemy Spawner Failed within - %s!"), *this->GetName());
+		}
+	}
+
+	//Bind the spawners OnEnemySpawnedEvent Delegate for when an enemy is spawned within the spawner, then this can set the delegate within the enemy spawned
+	for (AEnemySpawner* elememt : enemySpawners)
+	{
+		elememt->OnEnemySpawnedEvent.AddDynamic(this, &ASpawnerManager::BindDelegateOnEnemy);
+		UE_LOG(LogTemp, Display, TEXT("SetAllSpawners: %s spawning delegate has been bound in the spawner manager"), *elememt->GetName());
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("SetAllSpawners: Found %d actors from class AEnemySpawner"), enemySpawners.Num());
 }
 
 void ASpawnerManager::StartSpawningEnemies(int currentWave)
 {
-	//if the spawners haven't been set, set the spawners
-	/*if (!enemySpawners.IsValidIndex(0))
-	{
-		SetAllSpawners();
-	}*/
-
 	//If there is a wave currently active, prevent spawning from another wave
 	if (waveActive)
 	{
@@ -54,34 +74,6 @@ void ASpawnerManager::StartSpawningEnemies(int currentWave)
 	}
 	UE_LOG(LogTemp, Warning, TEXT("There are %d enemies this round"), amountOfEnemysInRound);
 };
-
-void ASpawnerManager::SetAllSpawners()
-{
-	TArray<AActor*> foundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawner::StaticClass(), foundActors);
-
-	enemySpawners.Empty();
-	for (AActor* elements : foundActors)
-	{
-		if (AEnemySpawner* spawner = Cast<AEnemySpawner>(elements))
-		{
-			enemySpawners.Add(spawner);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("Cast to Enemy Spawner Failed within - %s!"), *this->GetName());
-		}
-	}
-
-	//Bind the spawners OnEnemySpawnedEvent Delegate for when an enemy is spawned within the spawner, then this can set the delegate within the enemy spawned
-	for (AEnemySpawner* elememt : enemySpawners)
-	{
-		elememt->OnEnemySpawnedEvent.AddDynamic(this, &ASpawnerManager::BindDelegateOnEnemy);
-		UE_LOG(LogTemp, Warning, TEXT("%s spawning delegate has been bound in the spawner manager"), *elememt->GetName());
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Found %d actors from class AEnemySpawner"), enemySpawners.Num());
-}
 
 //Called Within Game Mode
 int ASpawnerManager::CalculateLastWave()
@@ -119,7 +111,6 @@ void ASpawnerManager::BindDelegateOnEnemy(AEnemyCharacterBase* enemy)
 	else if(enemy->OnEnemyDeathEvent.IsBound())
 	{
 		UE_LOG(LogTemp, Display, TEXT("Enemy OnEnemyDeathEvent delegate is already bound to - %s"), *this->GetName());
-
 	}
 	else
 	{
@@ -137,4 +128,5 @@ void ASpawnerManager::EnemyHasDied(AEnemyCharacterBase* enemy)
 		WaveEndedEvent.Broadcast();
 		waveActive = false;
 	}
+
 }

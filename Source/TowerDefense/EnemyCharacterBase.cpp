@@ -66,11 +66,16 @@ float AEnemyCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	return DamageAmount;
 }
 
+float AEnemyCharacterBase::GetEnemyDamageAmount()
+{
+	return enemyInfo->damageDelt;
+}
+
 void AEnemyCharacterBase::OnDeath()
 {
 	OnEnemyDeathEvent.Broadcast(this);
 
-	//If enemy was defeated
+	//If enemy was defeated and not just reached the end of the level
 	if (healthComponent->GetHealth() <= 0)
 	{
 		SpawnDrop();
@@ -90,12 +95,6 @@ void AEnemyCharacterBase::OnDeath()
 	}
 
 	DisableEnemy();
-	//Destroy();
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("Damage Amount = %f"), DamageAmount);
-	UE_LOG(LogTemp, Warning, TEXT("EventInstigator = %s"), *EventInstigator->GetName())
-	UE_LOG(LogTemp, Warning, TEXT("DamageCauser = %s"), *DamageCauser->GetName());
-	*/
 }
 
 void AEnemyCharacterBase::DisableEnemy()
@@ -107,9 +106,6 @@ void AEnemyCharacterBase::DisableEnemy()
 
 	StimuliSourceComponent->Deactivate();
 	StimuliSourceComponent->UnregisterFromPerceptionSystem();
-
-	//AAIController* AIController = Cast<AAIController>(GetController());
-	//AIController->UnPossess();
 
 	if (GetController() && enemyAIController)
 	{
@@ -126,8 +122,6 @@ void AEnemyCharacterBase::DisableEnemy()
 
 void AEnemyCharacterBase::EnableEnemy()
 {
-	//GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-
 	GetCharacterMovement()->Activate();
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -211,14 +205,14 @@ FVector AEnemyCharacterBase::GetNextPathNodeLocation()
 
 FVector AEnemyCharacterBase::GetClosestPathNodeLocation()
 {
-	float distanceFromPlayer = - 1.f;
+	float distanceFromClosestNode = -1.f;
 	FVector closestPathNode = FVector::ZeroVector;
-	int nodeIndex = - 1;
+	int nodeIndex = -1;
 	for (int i = 0; i < pathNodeLocations.Num() - 1; i++)
 	{
-		if (FVector::Dist(GetActorLocation(), pathNodeLocations[i]) < distanceFromPlayer || distanceFromPlayer < 0)
+		if (FVector::Dist(GetActorLocation(), pathNodeLocations[i]) < distanceFromClosestNode || distanceFromClosestNode < 0)
 		{
-			distanceFromPlayer = FVector::Dist(GetActorLocation(), pathNodeLocations[i]);
+			distanceFromClosestNode = FVector::Dist(GetActorLocation(), pathNodeLocations[i]);
 			closestPathNode = pathNodeLocations[i];
 			nodeIndex = i;
 		}
@@ -227,11 +221,6 @@ FVector AEnemyCharacterBase::GetClosestPathNodeLocation()
 	UE_LOG(LogTemp, Display, TEXT("New closest node is - %d, within - %s"), pathNodeIndex, *this->GetName());
 	return closestPathNode;
 }
-
-//int AEnemyCharacterBase::GetPathNodeIndex()
-//{
-//	return pathNodeIndex;
-//}
 
 void AEnemyCharacterBase::IncreasePathNodeIndex()
 {

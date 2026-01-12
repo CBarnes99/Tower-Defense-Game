@@ -6,7 +6,7 @@
 
 UBTTask_EnemyAttack::UBTTask_EnemyAttack()
 {
-	NodeName = "Enemy Attack Montage";
+	NodeName = TEXT("Enemy Attack Montage");
 	bCreateNodeInstance = true;
 
 }

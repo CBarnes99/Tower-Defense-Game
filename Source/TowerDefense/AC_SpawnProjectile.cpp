@@ -45,6 +45,7 @@ void UAC_SpawnProjectile::InitializePool(float fireRate, float lifetime)
 
 void UAC_SpawnProjectile::spawnProjectile()
 {
+	TRACE_BOOKMARK(TEXT("SpawnedProjectile"));
 	amountInPool++;
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = GetOwner();
@@ -58,6 +59,7 @@ void UAC_SpawnProjectile::spawnProjectile()
 
 void UAC_SpawnProjectile::FireProjectile(FVector traceStartLocation, FVector weaponMuzzleLocation, FVector actorForwardVector, float damageDelt, float projectileSpeed, float projectileLifetime)
 {
+	TRACE_BOOKMARK(TEXT("FiredProjectile"));
 	if (!projectile)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Projectile class is not set in AC_SpawnProjectile within %s!"), *GetOwner()->GetName());
@@ -83,13 +85,12 @@ void UAC_SpawnProjectile::FireProjectile(FVector traceStartLocation, FVector wea
 
 	if (!currentProjectile)
 	{
-		TRACE_BOOKMARK(TEXT("SpawnedProjectile"));
 		spawnProjectile();
 		currentProjectile = GetInactiveProjectile();
 		poolSize++;
 		UE_LOG(LogTemp, Error, TEXT("Added another projectile to the pool for - %s. There are %f projectiles within the pool"), *GetOwner()->GetName(), poolSize);
 	}
-	
+
 	//UE_LOG(LogTemp, Warning, TEXT("Using - %s"), *currentProjectile->GetName());
 	currentProjectile->SetActorLocation(spawnLocation);
 	currentProjectile->SetActorRotation(spawnRotation);

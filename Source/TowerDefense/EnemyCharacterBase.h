@@ -1,20 +1,14 @@
 #pragma once
 
-//#include "EnemyAIController.h"
 #include "CoreMinimal.h"
 #include "GameFramework/CharacterMovementComponent.h"
-//#include "BehaviorTree/BehaviorTree.h"
 #include "GameFramework/Character.h"
-//#include "DA_EnemyCharacterStats.h"
-//#include "AC_Health.h"
 #include "E_EnemyDrop.h"
 #include "EnemyCharacterBase.generated.h"
 
 class UBehaviourTree;
-//class AEnemyAIController;
 class UDA_EnemyCharacterStats;
 class UAC_Health;
-//class EE_EnemyDrop;
 class AAIController;
 class UAIPerceptionStimuliSourceComponent;
 class UAnimMontage;
@@ -74,6 +68,11 @@ public:
 	* @return bIsDisabled, as a bool */
 	UFUNCTION(BlueprintCallable)
 	bool GetIsEnemyDisabled();
+
+	/** Gets the amount of damage the enemy will deal to the player
+	* @return A damage value, as a float */
+	UFUNCTION(BlueprintCallable)
+	float GetEnemyDamageAmount();
 
 protected:
 	virtual void BeginPlay() override;

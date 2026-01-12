@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "DA_TurretInfo.h"
 #include "HUDTurretInfo.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCheckboxStateChangedSignature, bool, bIsChecked, UDA_TurretInfo*, turretInformation);
@@ -12,11 +11,8 @@ class UTextBlock;
 class UImage;
 class UCheckBox;
 class UTextBlock;
-
 class ACore_GameState;
-
 class UDA_TurretInfo;
-//class ATurretStatic;
 
 UCLASS(Abstract)
 class TOWERDEFENSE_API UHUDTurretInfo : public UUserWidget
@@ -42,9 +38,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	UTextBlock* IsTurretSelectedText;
-
-	//UPROPERTY(EditDefaultsOnly)
-	//TSubclassOf<ATurretStatic> turretClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	UDA_TurretInfo* turretInfo;

@@ -90,13 +90,15 @@ bool AEnemySpawner::IsEnemyCollisionOverlap()
 
 void AEnemySpawner::PoolEnemies()
 {
+	// A count of the max amount of enemies per type that can spawn in a level
 	TMap<TSubclassOf<AEnemyCharacterBase>, int> amountOfEachEnemyClass;
-
 
 	for (TPair<int, FAmountOfEnemysSpawning> element : waveAndEnemyQueue)
 	{
+		//The max count of enemies in a single wave
 		TMap<TSubclassOf<AEnemyCharacterBase>, int> tempMaxCountMap;
 
+		// Counting how many enemies of each type is in a wave
 		for (TSubclassOf<AEnemyCharacterBase> enemyClass : element.Value.enemyTypeArray)
 		{
 			if (int* valuePtr = tempMaxCountMap.Find(enemyClass))
@@ -109,9 +111,10 @@ void AEnemySpawner::PoolEnemies()
 			}
 		}
 
+		// Checks amountOfEachEnemyClass to see if the amount of enemies in round is greater than what is already stored
+		// if so, replace the old value with the new value
 		for (TPair<TSubclassOf<AEnemyCharacterBase>, int>& tempPair : tempMaxCountMap)
 		{
-
 			int* valuePtr = amountOfEachEnemyClass.Find(tempPair.Key);
 
 			if (!valuePtr || *valuePtr < tempPair.Value)
@@ -124,6 +127,7 @@ void AEnemySpawner::PoolEnemies()
 	TArray<TSubclassOf<AEnemyCharacterBase>> enemyClasses;
 	amountOfEachEnemyClass.GetKeys(enemyClasses);
 
+	// Spawns and pools the amount of enemies the spawner needs for the level
 	for (TSubclassOf<AEnemyCharacterBase> enemyClass : enemyClasses)
 	{
 		int* amountToSpawnPtr = amountOfEachEnemyClass.Find(enemyClass);
@@ -169,13 +173,10 @@ AEnemyCharacterBase* AEnemySpawner::SpawnEnemyActor()
 			amountOfEnemiesSpawned++;
 			//UE_LOG(LogTemp, Display, TEXT("Valid Index 0 In %s"), *this->GetName());
 
-			//AEnemyCharacterBase* enemy;
-
 			for (AEnemyCharacterBase* pooledEnemy : enemyPool)
 			{
 				if (pooledEnemy->GetIsEnemyDisabled() && pooledEnemy->IsA(enemyStruct->enemyTypeArray[0]))
 				{
-					//enemy = pooledEnemy;
 					pooledEnemy->SetPathNodeLocations(GetRandomEnemyPath()->GetSplinePointLocations());
 					enemyStruct->enemyTypeArray.RemoveAt(0);
 					OnEnemySpawnedEvent.Broadcast(pooledEnemy);
@@ -184,36 +185,20 @@ AEnemyCharacterBase* AEnemySpawner::SpawnEnemyActor()
 					return pooledEnemy;
 				}
 			}
-
-			
-
-
-
-			/*FActorSpawnParameters spawnParams;
-			spawnParams.Instigator = GetInstigator();
-
-			AEnemyCharacterBase* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyStruct->enemyTypeArray[0].Get(), this->GetActorLocation(), this->GetActorRotation(), spawnParams);
-			spawnedEnemy->SetPathNodeLocations(GetRandomEnemyPath()->GetSplinePointLocations());
-			enemyStruct->enemyTypeArray.RemoveAt(0);
-			OnEnemySpawnedEvent.Broadcast(spawnedEnemy);
-			return spawnedEnemy;*/
 		}
 		else
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("NO Valid Index In %s"), *this->GetName());
 			UE_LOG(LogTemp, Warning, TEXT("Amount Of Enemies in %s is %d, Amount Spawned = %d"), *this->GetName(), amountOfEnemiesInWave, amountOfEnemiesSpawned);
 			StopSpawning();
 			return NULL;
 		}
 	}
-
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("No enemies spawning in %s for wave %d"), *this->GetName(), currentWaveBeingSpawned);
 		StopSpawning();
 		return NULL;
 	}
-
 	return NULL;
 }
 

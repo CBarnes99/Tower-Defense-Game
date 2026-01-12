@@ -3,6 +3,7 @@
 #include "GameFramework/Actor.h"
 #include "PlayerCharacter.h"
 #include "Core_PlayerController.h"
+#include "SpawnerManager.h"
 #include "Kismet/GameplayStatics.h"
 
 ACore_GameMode::ACore_GameMode()
@@ -53,9 +54,6 @@ ACore_GameMode::ACore_GameMode()
 	{
 		UE_LOG(LogTemp, Error, TEXT("GameState class NOT found in Game Mode!"))
 	}
-
-
-	
 }
 
 void ACore_GameMode::BeginPlay()

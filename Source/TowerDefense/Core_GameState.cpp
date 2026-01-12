@@ -56,7 +56,7 @@ int ACore_GameState::GetCurrentListSizeInWeaponTurretHud()
 	return currentListSizeInWeaponTurretHud;
 }
 
-void ACore_GameState::IncreaseCurrentListSizeInWeaponTurretHud(bool addSize)
+void ACore_GameState::UpdateCurrentListSizeInWeaponTurretHud(bool addSize)
 {
 	if (addSize)
 	{
@@ -83,14 +83,4 @@ void ACore_GameState::IncreaseCurrentListSizeInWeaponTurretHud(bool addSize)
 bool ACore_GameState::IsCurrentListSizeLessThanMax()
 {
 	return currentListSizeInWeaponTurretHud < maxListSizeInWeaponTurretHud;
-}
-
-void ACore_GameState::SetCurrentTurretClass(TSubclassOf<ATurretStatic> turretClass)
-{
-	currentTurretClass = turretClass;
-}
-
-TSubclassOf<ATurretStatic> ACore_GameState::GetCurrentTurretClass()
-{
-	return currentTurretClass;
 }

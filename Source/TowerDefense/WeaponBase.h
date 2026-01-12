@@ -56,26 +56,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDA_WeaponInfo* weaponStats;
 
-	///** The name of the muzzle that is within the mesh */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//FName weaponMuzzleName;
-
-	///** How much damage the projectile this weapon spawns deals */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//float damageDelt;
-
-	///** The amount of ammo the weapon currently has */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//int currentAmmo;
-
-	///** The amount of ammo the weapon can hold */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//int maxAmmo;
-
-	///** How fast you want the projectile to move */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//float projectileSpeed;
-
 	/** A Check to see if the weapon can fire, based of the weapons fire rate */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bCanFire;

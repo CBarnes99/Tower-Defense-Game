@@ -10,40 +10,27 @@ class TOWERDEFENSE_API UDA_PlayerCharacterStats : public UDataAsset
 	GENERATED_BODY()
 	
 public:
-	/**
-	* @brief The name of your player character
-	*/
+	/** The name of your player character */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	FString name;
 
-	/**
-	* @brief The health of your player character
-	*/
+	/** The health of your player character */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float health;
 
-	/**
-	* @brief The amount of mana your player character has
-	*/
+	/** The amount of mana your player character has */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float mana;
 
-	/**
-	* @brief How fast you want the base movement speed of your player character to be
-	*/
+	/** How fast you want the base movement speed of your player character to be */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float movementSpeed;
 
-	/**
-	* @brief How fast you want the player character to move when running
-	*/
+	/** How fast you want the player character to move when running */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float runSpeed;
 
-	/**
-	* @brief How high you want the player character to jump
-	*/
+	/** How high you want the player character to jump */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float jumpHeight;
-	
 };

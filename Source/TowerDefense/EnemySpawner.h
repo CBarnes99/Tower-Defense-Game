@@ -94,10 +94,11 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	int amountOfEnemiesSpawned;
 
-	
+	/** An array of the enemies within the pool */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<AEnemyCharacterBase*> enemyPool;
 
+	/** The function that is called on begin play to pool the enemies that are going to be spawning at this spawner */
 	UFUNCTION(BlueprintCallable)
 	void PoolEnemies();
 

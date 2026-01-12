@@ -44,30 +44,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector GetCameraLocation();
 
-	/*UPROPERTY(VisibleDefaultsOnly, Category = "Turret")
-	int hotbarSelectionIndex;*/
-
-	/*UFUNCTION(BlueprintCallable)
-	void UpdateTurretPlacement();
-
-	UFUNCTION(BlueprintCallable)
-	void DestroyTurretPlacement();
-
-	UFUNCTION(BlueprintCallable)
-	void PlaceTurret();
-
-	UFUNCTION(BlueprintCallable)
-	void RotateTurret(float dir);
-
-	UFUNCTION(BlueprintCallable)
-	void SetTurretManager();*/
-
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
-	class UDataTable* turretDataTableClass;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	class ATurretManager* turretManager;*/
-
 	/** An Actor Component that controlls the health of the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	UAC_Health* healthComponent;
@@ -91,25 +67,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USpringArmComponent* springArm;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UAC_LineTrace* lineTraceComponent;*/
-
 	/** This is the socket name on the skeleton, this is where the weapon will attach to on the skeleton */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName weaponSocket;
-
-	////These properties are assigned in the begin play by referencing the DA_playerInfo Data Asset
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	//FString name;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	//float jumpHeight;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	//float movementSpeed;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	//float runSpeed;
 
 	/** The weapons class the character holds and fires */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")

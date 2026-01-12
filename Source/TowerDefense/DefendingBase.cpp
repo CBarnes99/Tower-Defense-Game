@@ -41,7 +41,6 @@ void ADefendingBase::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* Othe
 	{
 		BaseHealthReachedZeroEvent.ExecuteIfBound();
 		UE_LOG(LogTemp, Warning, TEXT("Base Health Has Reached 0!!"));
-
 	}
 }
 

@@ -55,12 +55,6 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	bool bInGameWidgetsEnabled;
 
-	/*UPROPERTY(EditDefaultsOnly, Category = "Widgets - In Game")
-	TSubclassOf<UHUDHealthAndMana> healthAndManaClass;
-
-	UPROPERTY(VisibleAnywhere, Category = "Widgets - In Game")
-	UHUDHealthAndMana* healthAndMana;*/
-
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets - In Game")
 	TSubclassOf<UHUDPlayerHud> playerHudClass;
 

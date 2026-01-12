@@ -2,9 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "SpawnerManager.h"
-#include "Core_PlayerController.h"
 #include "Core_GameMode.generated.h"
+
+class ASpawnerManager;
+class ACore_PlayerController;
 
 UCLASS()
 class TOWERDEFENSE_API ACore_GameMode : public AGameModeBase
@@ -15,42 +16,31 @@ public:
 	
 	ACore_GameMode();
 
+protected:
+
 	virtual void BeginPlay() override;
 
-protected:
-	/**
-	* @brief The spawner manager in the level
-	*/
+	/** The spawner manager in the level */
 	UPROPERTY(VisibleAnywhere)
 	ASpawnerManager* spawnerManager;
 
-	/**
-	* @brief The current wave the level is on, starts at 0 on begin play
-	*/
+	/** The current wave the level is on, starts at 0 on begin play */
 	UPROPERTY(VisibleAnywhere)
 	int currentWave;
 
-	/**
-	* @brief This is called when the player calls to start the next wave
-	*/
+	/** This is called when the player calls to start the next */
 	UFUNCTION(BlueprintCallable)
 	void StartEnemyWave();
 
-	/**
-	* @brief The final wave in the level, is set in StartEnemyWave()
-	*/
+	/** The final wave in the level, is set in StartEnemyWave() */
 	UPROPERTY(VisibleAnywhere)
 	int lastWave;
 
-	/**
-	* @brief The player controller used during combat
-	*/
+	/** The player controller used during combat */
 	UPROPERTY(VisibleAnywhere)
 	ACore_PlayerController* corePlayerController;
 
-	/**
-	* @brief Checks if theres a new wave or if you've finished the last wave
-	*/
+	/** Checks if theres a new wave or if you've finished the last wave */
 	UFUNCTION(BlueprintCallable)
 	void PrepareNewWave();
 };

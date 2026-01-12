@@ -72,17 +72,18 @@ void UAC_PlaceActor::CancelPlacement()
 	actorClassToSpawn = NULL;
 }
 
-void UAC_PlaceActor::RotatePlacement(float directon)
+void UAC_PlaceActor::RotatePlacement(float direction)
 {
 	if (currentPreviewActor == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Within RotatePlacement in AC_PlaceActor, either PreviewActor is nullptr!"));
 		return;
 	}
+	UE_LOG(LogTemp, Error, TEXT("test %f"), direction);
 
 	float actorCurrentYawRotation = currentPreviewActor->GetActorRotation().Yaw;
 	
-	float newYawRotation = ((directon * rotationDegrees) + actorCurrentYawRotation);
+	float newYawRotation = ((direction * rotationDegrees) + actorCurrentYawRotation);
 
 	FRotator newRotation = FRotator(currentPreviewActor->GetActorRotation().Pitch, newYawRotation, currentPreviewActor->GetActorRotation().Roll);
 

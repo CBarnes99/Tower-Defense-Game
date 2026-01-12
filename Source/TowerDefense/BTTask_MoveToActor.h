@@ -18,11 +18,11 @@ public:
 
 	/** When you reached that target actor, what is the acceptance radius from that actor */
 	UPROPERTY(EditAnywhere, Category = "Move")
-	float acceptanceRadius = 150.f;
+	float acceptanceRadius;
 
 	/** How often you want the timer to update the target actors location */
 	UPROPERTY(EditAnywhere, Category = "Move")
-	float UpdateInterval = 0.2f;
+	float UpdateInterval;
 
 protected:
 

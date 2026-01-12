@@ -39,4 +39,3 @@ void UAC_Health::RecieveHealing(float healAmount)
 	health = FMath::Clamp(health + healAmount, 0, maxHealth);
 	UE_LOG(LogTemp, Display, TEXT("%s health = %f"), *GetOwner()->GetName(), health);
 }
-

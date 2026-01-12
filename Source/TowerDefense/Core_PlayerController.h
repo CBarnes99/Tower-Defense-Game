@@ -46,16 +46,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ACore_HUD* coreHUD;
 
+	/** A pointer to the coreGameState */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ACore_GameState* coreGameState;
-
-
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	//class UDataTable* turretDataTable;
-
-
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int dataTableSize;*/
 
 	/** The index value to get the turret the player wants to select, 0 is the weapon 1+ is the turrets. Use -1 when getting turrets from an array */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

@@ -20,7 +20,6 @@ EBTNodeResult::Type UBTTask_MoveToActor::ExecuteTask(UBehaviorTreeComponent& Own
 		return EBTNodeResult::Failed;
 	}
 
-	//AActor* cachedTargetActor = Cast<AActor>(blackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
 	cachedTargetActor = Cast<AActor>(blackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
 	if (!cachedTargetActor)
 	{
@@ -28,7 +27,6 @@ EBTNodeResult::Type UBTTask_MoveToActor::ExecuteTask(UBehaviorTreeComponent& Own
 		return EBTNodeResult::Failed;
 	}
 
-	//AAIController* cachedAIController = OwnerComp.GetAIOwner();
 	cachedAIController = OwnerComp.GetAIOwner();
 	if (!cachedAIController)
 	{
@@ -36,7 +34,6 @@ EBTNodeResult::Type UBTTask_MoveToActor::ExecuteTask(UBehaviorTreeComponent& Own
 		return EBTNodeResult::Failed;
 	}
 
-	//APawn* cachedControlledPawn = cachedAIController->GetPawn();
 	cachedControlledPawn = cachedAIController->GetPawn();
 	if (!cachedControlledPawn)
 	{
@@ -86,12 +83,6 @@ void UBTTask_MoveToActor::UpdateMove()
 	{
 		FinishLatentTask(*cachedOwnerComp, EBTNodeResult::Succeeded);
 		StopMovingTowardsActor();
-		//cachedAIController->StopMovement();
-		//// Reached target, stop timer and finish task successfully
-		//cachedControlledPawn->GetWorldTimerManager().ClearTimer(MoveUpdateTimerHandle);
-		//FinishLatentTask(*cachedOwnerComp, EBTNodeResult::Succeeded);
-	
-		//cachedOwnerComp = nullptr;
 	}
 }
 

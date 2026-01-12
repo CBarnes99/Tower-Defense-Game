@@ -7,7 +7,7 @@
 class UAnimMontage;
 class UBehaviorTreeComponent;
 
-DECLARE_DELEGATE_TwoParams(FOnMontageEndedSigniture, UAnimMontage*, bool);
+DECLARE_DELEGATE_TwoParams(FOnMontageEndedSigniture, UAnimMontage* /**/, bool);
 
 UCLASS()
 class TOWERDEFENSE_API UBTTask_EnemyAttack : public UBTTaskNode

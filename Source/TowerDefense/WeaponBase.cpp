@@ -2,7 +2,6 @@
 #include "DrawDebugHelpers.h"
 #include "DA_WeaponInfo.h"
 #include "AC_SpawnProjectile.h"
-//#include "ProjectileBase.h"
 
 AWeaponBase::AWeaponBase()
 {

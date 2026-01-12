@@ -29,17 +29,11 @@ ATurretStatic::ATurretStatic()
 
     collisionBox->SetupAttachment(RootComponent);
 	collisionMesh->SetupAttachment(collisionBox);
-	//previewMeshComponent = CreateDefaultSubobject<UAC_PreviewMesh>(TEXT("Preview Mesh Component"));
 }
 
 void ATurretStatic::BeginPlay()
 {
 	Super::BeginPlay();
-
-	/*damageAmount = turretStats->damageAmount;
-	activeTime = turretStats->activeTime;
-	rechargeTime = turretStats->rechargeTime;
-	cost = turretStats->cost;*/
 
 	turretActive = true;
 	turretRecharging = false;
@@ -86,16 +80,3 @@ void ATurretStatic::enableTurret()
 	turretRecharging = false;
 	turretActive = true;
 }
-
-//void ATurretStatic::SetPreviewMaterial(bool isPreview)
-//{
-//	if (isPreview)
-//	{
-//		turretMesh->SetMaterial(0, previewMeshComponent->outlineMaterial);
-//	}
-//	else
-//	{
-//		turretMesh->SetMaterial(0, previewMeshComponent->normalMaterial);
-//	}
-//}
-
