@@ -96,22 +96,22 @@ void AEnemyDrop::OnPickUp(UPrimitiveComponent* OverlappedComp, AActor* OtherActo
 	switch (dropType)
 	{
 	case EEnemyDrop::HEALTH:
-		UE_LOG(LogTemp, Display, TEXT("Gain Health!"));
+		//UE_LOG(LogTemp, Display, TEXT("Gain Health!"));
 		player->ReceiveHealing(healthPotionHealAmount);
 		break;
 
 	case EEnemyDrop::MANA:
-		UE_LOG(LogTemp, Display, TEXT("Gain Mana!"));
+		//UE_LOG(LogTemp, Display, TEXT("Gain Mana!"));
 		player->ReceiveMana(manaPotionGainAmount);
 		break;
 
 	case EEnemyDrop::SMALL_CURRENCY:
-		UE_LOG(LogTemp, Display, TEXT("Gain Small Currency!"));
+		//UE_LOG(LogTemp, Display, TEXT("Gain Small Currency!"));
 		gameState->UpdatePlayerCurrencyAmount(true, smallCurrencyGainAmount);
 		break;
 
 	case EEnemyDrop::LARGE_CURRENCY:
-		UE_LOG(LogTemp, Display, TEXT("Gain Large Currency!"));
+		//UE_LOG(LogTemp, Display, TEXT("Gain Large Currency!"));
 		gameState->UpdatePlayerCurrencyAmount(true, largeCurrencyGainAmount);
 		break;
 

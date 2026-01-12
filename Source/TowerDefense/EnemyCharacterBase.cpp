@@ -84,9 +84,8 @@ void AEnemyCharacterBase::OnDeath()
 		ACore_GameState* coreGameState = Cast<ACore_GameState>(gameState);
 		if (coreGameState)
 		{
-			UE_LOG(LogTemp, Display, TEXT("The amount of currency addded should be - %d"), enemyInfo->currencyOnDeath);
+			//UE_LOG(LogTemp, Display, TEXT("Currency Added - %d"), enemyInfo->currencyOnDeath);
 			coreGameState->UpdatePlayerCurrencyAmount(true, enemyInfo->currencyOnDeath);
-
 		}
 		else
 		{
