@@ -12,6 +12,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class AWeaponBase;
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnDamageTakenSigniture, float, /*Curent health*/ float /*Max Health*/)
+
 UCLASS()
 class TOWERDEFENSE_API APlayerCharacter : public ACharacter
 {
@@ -55,6 +57,8 @@ public:
 	/** When the attack action is called by the Core_PlayerController, it fires a projectile from the weapon */
 	UFUNCTION(BlueprintCallable)
 	void AttackAction();
+
+	FOnDamageTakenSigniture OnDamageTakenEvent;
 
 protected:
 	virtual void BeginPlay() override;

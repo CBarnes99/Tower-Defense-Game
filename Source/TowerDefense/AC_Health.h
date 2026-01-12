@@ -11,9 +11,13 @@ class TOWERDEFENSE_API UAC_Health : public UActorComponent
 
 public:	
 	UAC_Health();
-	/** Returns the health of the parent actor */
+	/** Returns the current health of the parent actor */
 	UFUNCTION(BlueprintCallable)
-	float GetHealth();
+	float GetCurrentHealth();
+
+	/** Returns the Max health of the parent actor */
+	UFUNCTION(BlueprintCallable)
+	float GetMaxHealth();
 
 	/** Sets the health for the parent actor
 	* @param healthAmount The amount of health you want your actor to have, as a float */
@@ -38,7 +42,7 @@ protected:
 
 	/** The amount of health the parent actor has, as a float */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	float health;
+	float currentHealth;
 
 	/** The max health the parent actor has, as a float */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")

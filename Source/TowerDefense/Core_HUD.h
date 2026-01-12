@@ -41,7 +41,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void BindDelegates();
 
-
 	//In Game Widgets------------------------------------------------------------
 	UPROPERTY(VisibleAnywhere, Category = "Widgets - In Game")
 	TArray<UUserWidget*> inGameWidgetList;

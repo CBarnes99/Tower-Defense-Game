@@ -59,7 +59,7 @@ float AEnemyCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	
 	healthComponent->RecieveDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	if (healthComponent->GetHealth() <= 0)
+	if (healthComponent->GetCurrentHealth() <= 0)
 	{
 		OnDeath();
 	}
@@ -76,7 +76,7 @@ void AEnemyCharacterBase::OnDeath()
 	OnEnemyDeathEvent.Broadcast(this);
 
 	//If enemy was defeated and not just reached the end of the level
-	if (healthComponent->GetHealth() <= 0)
+	if (healthComponent->GetCurrentHealth() <= 0)
 	{
 		SpawnDrop();
 

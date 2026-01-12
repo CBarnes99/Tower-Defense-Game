@@ -66,7 +66,7 @@ void APlayerCharacter::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = DA_playerInfo->movementSpeed;
 	GetCharacterMovement()->JumpZVelocity = DA_playerInfo->jumpHeight;
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s, Health: %f, Mana: %f, Movement Speed: %f, Run Speed: %f, Jump Height: %f"),
-		*DA_playerInfo->name, healthComponent->GetHealth(), manaComponent->GetMana(), DA_playerInfo->movementSpeed, DA_playerInfo->runSpeed, DA_playerInfo->jumpHeight);
+		*DA_playerInfo->name, healthComponent->GetCurrentHealth(), manaComponent->GetMana(), DA_playerInfo->movementSpeed, DA_playerInfo->runSpeed, DA_playerInfo->jumpHeight);
 	
 	EquipWeapon();
 }
@@ -134,8 +134,9 @@ float& APlayerCharacter::GetRunSpeed()
 float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	healthComponent->RecieveDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	OnDamageTakenEvent.Broadcast(healthComponent->GetCurrentHealth(), healthComponent->GetMaxHealth());
 
-	if (healthComponent->GetHealth() <= 0)
+	if (healthComponent->GetCurrentHealth() <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player Health is less than 0! Player Dead!"))
 		//Do Death function here

@@ -17,7 +17,7 @@ class UInputAction;
 class UDA_TurretInfo;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartWaveSigniture);
-DECLARE_DELEGATE_RetVal_OneParam(UDA_TurretInfo*, FGetTurretDASigniture, int)
+DECLARE_DELEGATE_RetVal_OneParam(UDA_TurretInfo* /*Turret Info To Place Turret*/, FGetTurretDASigniture, int /*Index for Array within UHUDWeaponTurretSelector*/)
 
 UCLASS()
 class TOWERDEFENSE_API ACore_PlayerController : public APlayerController

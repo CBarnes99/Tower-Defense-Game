@@ -5,6 +5,7 @@
 #include "DA_TurretInfo.h"
 #include "Core_PlayerController.h"
 #include "HUDWeaponTurretSelector.h"
+#include "PlayerCharacter.h"
 
 void ACore_HUD::BeginPlay()
 {
@@ -184,7 +185,13 @@ void ACore_HUD::ToggleTurretSelectionWidget()
 void ACore_HUD::BindDelegates()
 {
 	turretSelectionMenu->OnMenuSelectionEvent.AddDynamic(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::GetInfoFromTurretMenu);
-	//localCorePlayerController->GetTurretClassEvent.BindUObject(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::GetTurretClassFromArray);
+	APlayerCharacter* player = Cast<APlayerCharacter>(localCorePlayerController->GetPawn());
+	if (!player)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BindDelegates: PLAYER NOT CASTED CORRECTLY WITHIN - %s"), *this->GetName());
+		return;
+	}
+	player->OnDamageTakenEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateHealthBar);
 }
 
 bool ACore_HUD::GetIsTurretSelectionMenuVisable()

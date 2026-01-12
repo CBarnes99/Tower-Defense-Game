@@ -11,31 +11,36 @@ void UAC_Health::BeginPlay()
 	Super::BeginPlay();
 }
 
-float UAC_Health::GetHealth()
+float UAC_Health::GetCurrentHealth()
 {
-	return health;
+	return currentHealth;
+}
+
+float UAC_Health::GetMaxHealth()
+{
+	return maxHealth;
 }
 
 void UAC_Health::SetHealth(float healthAmount)
 {
-	health = healthAmount;
+	currentHealth = healthAmount;
 	maxHealth = healthAmount;
 }
 
 void UAC_Health::ResetHealth()
 {
-	health = maxHealth;
+	currentHealth = maxHealth;
 }
 
 void UAC_Health::RecieveDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	FString eventInstigatorString = EventInstigator ? EventInstigator->GetName() : "No Instigator";
-	health = FMath::Clamp(health - DamageAmount, 0, maxHealth);
-	UE_LOG(LogTemp, Display, TEXT("%s health = %f, Damaged By = %s"), *GetOwner()->GetName(), health, *eventInstigatorString);
+	currentHealth = FMath::Clamp(currentHealth - DamageAmount, 0, maxHealth);
+	UE_LOG(LogTemp, Display, TEXT("%s currentHealth = %f, Damaged By = %s"), *GetOwner()->GetName(), currentHealth, *eventInstigatorString);
 }
 
 void UAC_Health::RecieveHealing(float healAmount)
 {
-	health = FMath::Clamp(health + healAmount, 0, maxHealth);
-	UE_LOG(LogTemp, Display, TEXT("%s health = %f"), *GetOwner()->GetName(), health);
+	currentHealth = FMath::Clamp(currentHealth + healAmount, 0, maxHealth);
+	UE_LOG(LogTemp, Display, TEXT("%s currentHealth = %f"), *GetOwner()->GetName(), currentHealth);
 }

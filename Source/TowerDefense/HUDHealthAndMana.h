@@ -21,7 +21,7 @@ public:
 
 protected:
 
-	//virtual void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	UProgressBar* HealthBar;
