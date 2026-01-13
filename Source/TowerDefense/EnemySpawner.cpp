@@ -2,7 +2,7 @@
 #include "Components/SphereComponent.h"
 #include "Math/UnrealMathUtility.h"
 #include "EnemyPathSpline.h"
-#include "EnemyPathSpline.h"
+#include "Components/StaticMeshComponent.h"
 
 AEnemySpawner::AEnemySpawner()
 {
@@ -11,6 +11,11 @@ AEnemySpawner::AEnemySpawner()
 	spawnCollision = CreateDefaultSubobject<USphereComponent>(TEXT("Spawn Collision"));
 	spawnCollision->SetSphereRadius(150.f);
 
+	spawnerIdentifier = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Spawner Identifier"));
+
+	RootComponent = spawnCollision;
+	spawnerIdentifier->SetupAttachment(RootComponent);
+
 	spawnInterval = 0.5f; //Spawns every 0.5 seconds
 }
 
@@ -18,11 +23,15 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
+	spawnerIdentifier->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	spawnerIdentifier->SetVisibility(false);
+	spawnerIdentifier->SetComponentTickEnabled(false);
+
 	isSpawning = false;
 
 	if (!IsThereEnemyPathSplines()) 
 	{
-		UE_LOG(LogTemp, Error, TEXT("THERE IS NOT ANY ENEMY PATH SPLINES ATTACHED TO THIS SPAWNER - %s"), *this->GetName());
+		UE_LOG(LogTemp, Fatal, TEXT("THERE IS NOT ANY ENEMY PATH SPLINES ATTACHED TO THIS SPAWNER - %s"), *this->GetName());
 	}
 
 	PoolEnemies();

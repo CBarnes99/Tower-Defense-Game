@@ -8,6 +8,7 @@
 class AEnemyCharacterBase;
 class USphereComponent;
 class AEnemyPathSpline;
+class UStaticMeshComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemySpawnedSigniture, AEnemyCharacterBase*, enemy);
 
@@ -53,6 +54,10 @@ protected:
 	/** A collision compoenent to be able to check if theres space to spawn the enemy */
 	UPROPERTY(VisibleDefaultsOnly)
 	USphereComponent* spawnCollision;
+
+	/** A Mesh to make the spawner clearer, it will be disabled when game begins*/
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* spawnerIdentifier;
 
 	/** An array of splines that gets randomly selected for the enemy that is spawned to follow */
 	UPROPERTY(EditAnywhere)
