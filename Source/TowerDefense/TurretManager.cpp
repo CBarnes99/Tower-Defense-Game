@@ -1,5 +1,4 @@
 #include "TurretManager.h"
-//#include "F_TurretObjectPath.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacter.h"
 #include "AC_PlaceActor.h"
@@ -27,7 +26,7 @@ void ATurretManager::StartTurretPlacement(UDA_TurretInfo* turretInfo)
 	}
 	currentTurretInfo = turretInfo;
 
-	placeActorComponent->StartPlacement(currentTurretInfo->turretClass);
+	placeActorComponent->StartPlacement(TSubclassOf<AActor>(*currentTurretInfo->turretClass));
 }
 
 void ATurretManager::ConfirmTurretPlacement()
