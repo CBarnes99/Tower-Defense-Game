@@ -6,6 +6,7 @@ UAC_PlaceActor::UAC_PlaceActor()
 
 	traceDistance = 1000.f;
 	rotationDegrees = 45.f;
+	bAlignActorToSurface = false;
 }
 
 void UAC_PlaceActor::BeginPlay()
@@ -39,10 +40,16 @@ void UAC_PlaceActor::UpdatePlacementLocation(FVector traceStartLocation, FVector
 		return;
 	}
 
-	FVector traceHitLocation = GetTraceTargetLocation(traceStartLocation, forwardVector);
-
-	currentPreviewActor->SetActorLocation(traceHitLocation);
-
+	if (bAlignActorToSurface)
+	{
+		FTransform actorPlaceLocationAndRotation = GetTraceTargetLocationAndRotation(traceStartLocation, forwardVector);
+		currentPreviewActor->SetActorLocationAndRotation(actorPlaceLocationAndRotation.GetLocation(), actorPlaceLocationAndRotation.GetRotation());
+	}
+	else
+	{
+		FVector traceHitLocation = GetTraceTargetLocation(traceStartLocation, forwardVector);
+		currentPreviewActor->SetActorLocation(traceHitLocation);
+	}
 }
 
 void UAC_PlaceActor::ConfirmPlacement()
@@ -150,7 +157,6 @@ FVector UAC_PlaceActor::GetTraceTargetLocation(FVector traceStartLocation, FVect
 	params.AddIgnoredActors(actorsToIgnore);
 
 	GetWorld()->LineTraceMultiByChannel(hits, traceStartLocation, traceEnd, ECC_Visibility, params);
-
 	DrawDebugLine(GetWorld(), traceStartLocation, traceEnd, FColor::Red, false, 1.f, 1.f);
 
 	for (const FHitResult& Hit : hits)
@@ -161,6 +167,42 @@ FVector UAC_PlaceActor::GetTraceTargetLocation(FVector traceStartLocation, FVect
 		}
 	}
 	return traceEnd;
+};
+
+FTransform UAC_PlaceActor::GetTraceTargetLocationAndRotation(FVector traceStartLocation, FVector actorForwardVector)
+{
+	FTransform transform;
+	FVector traceEnd = traceStartLocation + actorForwardVector * traceDistance;
+
+	FVector targetPos = FVector::ZeroVector;
+	TArray<FHitResult> hits;
+
+	params.AddIgnoredActor(GetOwner());
+	params.AddIgnoredActors(actorsToIgnore);
+
+	bool bHit = GetWorld()->LineTraceMultiByChannel(hits, traceStartLocation, traceEnd, ECC_Visibility, params);
+	DrawDebugLine(GetWorld(), traceStartLocation, traceEnd, FColor::Red, false, 1.f, 1.f);
+
+	if (bHit)
+	{
+		for (const FHitResult& Hit : hits)
+		{
+			if (Hit.GetActor() && !Hit.GetActor()->IsA(ignoredActorClass))
+			{
+				FVector HitNormal = Hit.ImpactNormal;
+
+				// Create rotation aligning local Z+ to the surface normal
+				FRotator AlignRotation = FRotationMatrix::MakeFromZ(HitNormal).Rotator();
+
+				// Construct transform with location + aligned rotation
+				transform.SetLocation(Hit.ImpactPoint);
+				transform.SetRotation(AlignRotation.Quaternion());
+
+				return transform;
+			}
+		}
+	}
+	return transform; // returns identity transform if no suitable hit found
 };
 
 void UAC_PlaceActor::SetIgnoredActors(TArray<AActor*> ignoredActors)

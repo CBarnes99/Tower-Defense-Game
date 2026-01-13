@@ -46,6 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateIgnoreActors(AActor* actor, bool addToArray);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bAlignActorToSurface;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -91,9 +94,15 @@ protected:
 	/** Gets the target location at the end of a line trace
 	* @param traceStartLocation The starting location for the line trace
 	* @param actorForwardVector The forward vector of the actor you want to trace from
-	* @return Returns the location of impact or the end distance if no collision, as FVector */
+	* @return Returns the location of impact or the end line trace if no collision, as FVector */
 	UFUNCTION(BlueprintCallable)
 	FVector GetTraceTargetLocation(FVector traceStartLocation, FVector actorForwardVector);
+
+	/** Gets the target location at the end of a line trace and alignes the actor to the surface
+	* @param traceStartLocation The starting location for the line trace
+	* @param actorForwardVector The forward vector of the actor you want to trace from
+	* @return Returns the location and rotation of impact or the end line trace if no collision, as FTransform */
+	FTransform GetTraceTargetLocationAndRotation(FVector traceStartLocation, FVector actorForwardVector);
 
 	/** Set the actors you want the line trace to ignore before calling GetTraceTargetLocation
 	* @param ignoredActors An array of AActor* to ignore, as an TArray<AActor*> */
