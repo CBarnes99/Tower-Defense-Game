@@ -155,6 +155,10 @@ void ACore_PlayerController::CallGameModeToStartSpawningEnemies()
 void ACore_PlayerController::OpenTurretSelectionMenu()
 {
 	UE_LOG(LogTemp, Display, TEXT("OpenTurretButtonPressed"));
+
+	hotbarSelectionIndex = 0;
+	UpdateHotbarSelection();
+
 	coreHUD->ToggleTurretSelectionWidget();
 	if (coreHUD->GetIsTurretSelectionMenuVisable())
 	{
