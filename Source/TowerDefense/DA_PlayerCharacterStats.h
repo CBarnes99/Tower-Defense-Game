@@ -18,9 +18,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float health;
 
-	/** The amount of mana your player character has */
+	/** The amount of shooting resource your player character has max */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
-	float mana;
+	float resource;
+
+	/** How long it takes for your shooting resource to fully recharge in seconds */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	float resourceChargeTime;
 
 	/** How fast you want the base movement speed of your player character to be */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")

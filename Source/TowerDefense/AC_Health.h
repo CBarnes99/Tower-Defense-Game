@@ -4,6 +4,8 @@
 #include "Components/ActorComponent.h"
 #include "AC_Health.generated.h"
 
+DECLARE_DELEGATE_TwoParams(FHealthUpdatedSigniture, float /* Current Health */, float /* Max Health */);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TOWERDEFENSE_API UAC_Health : public UActorComponent
 {
@@ -11,6 +13,9 @@ class TOWERDEFENSE_API UAC_Health : public UActorComponent
 
 public:	
 	UAC_Health();
+
+	FHealthUpdatedSigniture HealthUpdatedEvent;
+
 	/** Returns the current health of the parent actor */
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentHealth();

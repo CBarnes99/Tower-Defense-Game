@@ -192,6 +192,7 @@ void ACore_HUD::BindDelegates()
 		return;
 	}
 	player->OnHealthUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateHealthBar);
+	player->OnManaUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateManaBar);
 }
 
 bool ACore_HUD::GetIsTurretSelectionMenuVisable()

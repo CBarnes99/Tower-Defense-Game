@@ -41,6 +41,11 @@ float AWeaponBase::GetProjectileLifetime()
 	return weaponStats->lifetime;
 }
 
+float AWeaponBase::GetResourceCost()
+{
+	return weaponStats->resourceCostMax;
+}
+
 void AWeaponBase::FireProjectile(FVector fireStartLoc, FVector forwardVector)
 {
 	if (!bCanFire)
@@ -59,6 +64,11 @@ void AWeaponBase::FireProjectile(FVector fireStartLoc, FVector forwardVector)
 	);
 	StartWeaponFireRateCooldown();
 	DisableCanFire();
+}
+
+bool AWeaponBase::CanWeaponFire()
+{
+	return bCanFire;
 }
 
 void AWeaponBase::StartWeaponFireRateCooldown()

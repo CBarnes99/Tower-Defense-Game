@@ -29,9 +29,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float damageDelt;
 
-	/** The max ammo your weapon can hold */
+	/** The amount of projectiles you can fire before your resource meater runs out */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int ammoMax;
+	float resourceCostMax;
 
 	/** The speed of the projectile */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

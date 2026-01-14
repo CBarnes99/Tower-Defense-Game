@@ -44,7 +44,6 @@ APlayerCharacter::APlayerCharacter()
 
 	healthComponent = CreateDefaultSubobject<UAC_Health>(TEXT("Health Component"));
 	manaComponent = CreateDefaultSubobject<UAC_Mana>(TEXT("Mana Component"));
-	//lineTraceComponent = CreateDefaultSubobject<UAC_LineTrace>(TEXT("Line Trace Component"));
 
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
@@ -60,14 +59,20 @@ void APlayerCharacter::BeginPlay()
 	//Tag for the enemy ai perception to differentiate whos the player and who isn't
 	Tags.Add(FName("Player"));
 
+	//Setting defualts within the components
 	healthComponent->SetHealth(DA_playerInfo->health);
-	manaComponent->SetMana(DA_playerInfo->mana);
+	manaComponent->SetMana(DA_playerInfo->resource);
+	manaComponent->SetRechargeRate(DA_playerInfo->resourceChargeTime);
+
+	//Binding delegates for health and mana updates
+	healthComponent->HealthUpdatedEvent.BindUObject(this, &APlayerCharacter::ReceiveHealingDelegate);
+	manaComponent->ManaUpdatedEvent.BindUObject(this, &APlayerCharacter::ReceiveManaDelegate);
 
 	GetCharacterMovement()->MaxWalkSpeed = DA_playerInfo->movementSpeed;
 	GetCharacterMovement()->JumpZVelocity = DA_playerInfo->jumpHeight;
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s, Health: %f, Mana: %f, Movement Speed: %f, Run Speed: %f, Jump Height: %f"),
 		*DA_playerInfo->name, healthComponent->GetCurrentHealth(), manaComponent->GetMana(), DA_playerInfo->movementSpeed, DA_playerInfo->runSpeed, DA_playerInfo->jumpHeight);
-	
+
 	EquipWeapon();
 }
 
@@ -106,6 +111,20 @@ void APlayerCharacter::EquipWeapon()
 
 void APlayerCharacter::AttackAction()
 {
+	
+	if (!equippedWeapon->CanWeaponFire())
+		return;
+
+	float resourceCost = manaComponent->GetMaxMana() / equippedWeapon->GetResourceCost();
+
+	if (!manaComponent->HasEnoughMana(resourceCost))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AttackAction: Dont have enough resource. Current resource - %f, Resource Cost - %f"), manaComponent->GetMana(), resourceCost);
+		return;
+	}
+	
+	manaComponent->SpendMana(resourceCost);
+	OnManaUpdatedEvent.Broadcast(manaComponent->GetMana(), manaComponent->GetMaxMana());
 	equippedWeapon->FireProjectile(GetCameraLocation(), GetCameraForwardVector());
 }
 
@@ -152,11 +171,20 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 void APlayerCharacter::ReceiveHealing(float healAmount)
 {
 	healthComponent->RecieveHealing(healAmount);
+}
+
+void APlayerCharacter::ReceiveHealingDelegate(float currentHealth, float maxHealth)
+{
 	OnHealthUpdatedEvent.Broadcast(healthComponent->GetCurrentHealth(), healthComponent->GetMaxHealth());
 }
 
 void APlayerCharacter::ReceiveMana(float manaAmount)
 {
 	manaComponent->GainMana(manaAmount);
-	//DELEGATE HERE FOR UPDATED MANA
+	
+}
+
+void APlayerCharacter::ReceiveManaDelegate(float currentMana, float maxMana)
+{
+	OnManaUpdatedEvent.Broadcast(currentMana, maxMana);
 }

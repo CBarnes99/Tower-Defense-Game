@@ -41,9 +41,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetProjectileLifetime();
 
+	/** Gets the resource cost for the weapon 
+	* @return The resource cost, as an float */
+	UFUNCTION(BlueprintCallable)
+	float GetResourceCost();
+
 	/** Called from the player character to fire the projectile */
 	UFUNCTION(BlueprintCallable)
 	void FireProjectile(FVector fireStartLoc, FVector forwardVector);
+
+	/** A check to see if the weapon can fire */
+	UFUNCTION(BlueprintCallable)
+	bool CanWeaponFire();
 
 protected:
 	virtual void BeginPlay() override;

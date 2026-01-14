@@ -12,7 +12,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class AWeaponBase;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdatedSigniture, float, /*Curent health*/ float /*Max Health*/)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdatedSigniture, float, /*Curent Health*/ float /*Max Health*/)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnManaUpdatedSigniture, float, /*Curent Mana*/ float /*Max Mana*/)
 
 UCLASS()
 class TOWERDEFENSE_API APlayerCharacter : public ACharacter
@@ -25,6 +26,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FOnHealthUpdatedSigniture OnHealthUpdatedEvent;
+
+	FOnManaUpdatedSigniture OnManaUpdatedEvent;
 
 	/** Player information from a data asset */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -94,4 +97,12 @@ protected:
 	/** The defualt takeDamage function */
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	/** When the player recieves healing, broardcast healing recieved delegate */
+	UFUNCTION(BlueprintCallable)
+	void ReceiveHealingDelegate(float currentHealth, float maxHealth);
+
+	/** When the player recieves mana, broardcast mana recieved delegate */
+	UFUNCTION(BlueprintCallable)
+	void ReceiveManaDelegate(float currentMana, float maxMana);
 };
