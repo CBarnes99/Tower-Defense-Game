@@ -4,7 +4,7 @@ UAC_Mana::UAC_Mana()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-	rechargeFrequency = 3;
+	rechargeFrequency = 15;
 }
 
 void UAC_Mana::SetMana(float manaAmount)
@@ -40,11 +40,11 @@ float UAC_Mana::GetMaxMana()
 void UAC_Mana::GainMana(float gainAmount)
 {
 	currentMana = FMath::Clamp(currentMana + gainAmount, 0, maxMana);
-	UE_LOG(LogTemp, Display, TEXT("GainMana: Mana = %f"), currentMana);
+	//UE_LOG(LogTemp, Display, TEXT("GainMana: Mana = %f"), currentMana);
 	ManaUpdatedEvent.ExecuteIfBound(currentMana, maxMana);
 
 	float realTimeSeconds = GetWorld()->RealTimeSeconds;
-	UE_LOG(LogTemp, Display, TEXT("GainMana: Time = %f"), realTimeSeconds);
+	//UE_LOG(LogTemp, Display, TEXT("GainMana: Time = %f"), realTimeSeconds);
 
 	
 	if (currentMana == maxMana)
@@ -58,7 +58,7 @@ bool UAC_Mana::SpendMana(float manaCostAmount)
 	if (HasEnoughMana(manaCostAmount))
 	{
 		currentMana -= manaCostAmount;
-		UE_LOG(LogTemp, Display, TEXT("SpendMana: Mana = %f"), currentMana);
+		//UE_LOG(LogTemp, Display, TEXT("SpendMana: Mana = %f"), currentMana);
 		ManaUpdatedEvent.ExecuteIfBound(currentMana, maxMana);
 		RechargeManaTimer(true);
 		return true;
@@ -81,13 +81,13 @@ void UAC_Mana::RechargeManaTimer(bool bStartTimer)
 		FTimerDelegate RechargeTimerDelegate;
 		RechargeTimerDelegate.BindUObject(this, &UAC_Mana::GainMana, (60 / manaRechargeRate) / rechargeFrequency);
 		GetWorld()->GetTimerManager().SetTimer(RechargeTimerHandle, RechargeTimerDelegate, (1 / rechargeFrequency), true);
-		UE_LOG(LogTemp, Display, TEXT("RechargeManaTimer: Start Timer Called"));
+		//UE_LOG(LogTemp, Display, TEXT("RechargeManaTimer: Start Timer Called"));
 
 	}
 	else if (!bStartTimer && GetWorld()->GetTimerManager().IsTimerActive(RechargeTimerHandle))
 	{
 		GetWorld()->GetTimerManager().ClearTimer(RechargeTimerHandle);
-		UE_LOG(LogTemp, Display, TEXT("SpendMana: Clear Timer Called"));
+		//UE_LOG(LogTemp, Display, TEXT("SpendMana: Clear Timer Called"));
 
 	}
 	else if (manaRechargeRate < 0 || manaRechargeRate == NULL)
