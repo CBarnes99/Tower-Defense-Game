@@ -140,6 +140,12 @@ void AEnemySpawner::PoolEnemies()
 	// Spawns and pools the amount of enemies the spawner needs for the level
 	for (TSubclassOf<AEnemyCharacterBase> enemyClass : enemyClasses)
 	{
+		if (enemyClass == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("PoolEnemies: Enemy Class was Nullptr! Not all enemies were spawned!"));
+			break;
+		}
+
 		int* amountToSpawnPtr = amountOfEachEnemyClass.Find(enemyClass);
 
 		FActorSpawnParameters spawnParams;
@@ -147,6 +153,7 @@ void AEnemySpawner::PoolEnemies()
 
 		for (int i = 0; i < *amountToSpawnPtr; i++)
 		{
+			
 			AEnemyCharacterBase* spawnedEnemy = GetWorld()->SpawnActor<AEnemyCharacterBase>(enemyClass, this->GetActorLocation(), this->GetActorRotation(), spawnParams);
 			spawnedEnemy->DisableEnemy();
 			enemyPool.Add(spawnedEnemy);
@@ -180,6 +187,12 @@ AEnemyCharacterBase* AEnemySpawner::SpawnEnemyActor()
 	if (FAmountOfEnemysSpawning* enemyStruct = waveAndEnemyQueue.Find(currentWaveBeingSpawned))
 	{
 		if (enemyStruct->enemyTypeArray.IsValidIndex(0)) {
+
+			if (enemyStruct->enemyTypeArray[0] == nullptr)
+			{
+				UE_LOG(LogTemp, Error, TEXT("SpawnEnemyActor: Enemy within spawner is NullPtr, enemies haven't all spawned"));
+				return nullptr;
+			}
 			amountOfEnemiesSpawned++;
 			//UE_LOG(LogTemp, Display, TEXT("SpawnEnemyActor: Valid Index 0 In %s"), *this->GetName());
 

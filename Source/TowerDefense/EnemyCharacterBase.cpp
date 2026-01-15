@@ -29,6 +29,9 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 
 	GetCharacterMovement()->bUseRVOAvoidance = true;
 	GetCharacterMovement()->AvoidanceConsiderationRadius = 300.f;
+	GetCharacterMovement()->SetAvoidanceGroup(1 << 0);
+	GetCharacterMovement()->SetGroupsToAvoid(1 << 0);
+
 }
 
 void AEnemyCharacterBase::BeginPlay()
@@ -108,6 +111,7 @@ void AEnemyCharacterBase::OnDeathAnimationStarted()
 		enemyAIController->UnPossess();
 	}
 	SetActorEnableCollision(false);
+	GetCharacterMovement()->SetAvoidanceGroup(1 << 1);
 }
 void AEnemyCharacterBase::DisableEnemy()
 {
@@ -135,8 +139,9 @@ void AEnemyCharacterBase::DisableEnemy()
 
 void AEnemyCharacterBase::EnableEnemy()
 {
-	
+
 	GetCharacterMovement()->Activate();
+	GetCharacterMovement()->SetAvoidanceGroup(1 << 0);
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
