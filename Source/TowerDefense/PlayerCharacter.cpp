@@ -59,6 +59,8 @@ void APlayerCharacter::BeginPlay()
 	//Tag for the enemy ai perception to differentiate whos the player and who isn't
 	Tags.Add(FName("Player"));
 
+	bIsDead = false;
+
 	//Setting defualts within the components
 	healthComponent->SetHealth(DA_playerInfo->health);
 	manaComponent->SetMana(DA_playerInfo->resource);
@@ -162,8 +164,10 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 	if (healthComponent->GetCurrentHealth() <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("TakeDamage: Player Health is less than 0! Player Dead!"))
-		//Do Death function here
+		UE_LOG(LogTemp, Warning, TEXT("TakeDamage: Player Health is less than 0! Player Dead!"));
+		bIsDead = true;
+		OnPlayerDeathStateEvent.Broadcast(bIsDead);
+		
 	}
 	return DamageAmount;
 }
@@ -181,7 +185,6 @@ void APlayerCharacter::ReceiveHealingDelegate(float currentHealth, float maxHeal
 void APlayerCharacter::ReceiveMana(float manaAmount)
 {
 	manaComponent->GainMana(manaAmount);
-	
 }
 
 void APlayerCharacter::ReceiveManaDelegate(float currentMana, float maxMana)

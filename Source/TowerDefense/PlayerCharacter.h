@@ -15,6 +15,8 @@ class AWeaponBase;
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdatedSigniture, float, /*Curent Health*/ float /*Max Health*/)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnManaUpdatedSigniture, float, /*Curent Mana*/ float /*Max Mana*/)
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDeathStateSigniture, bool, bIsPlayerDead);
+
 UCLASS()
 class TOWERDEFENSE_API APlayerCharacter : public ACharacter
 {
@@ -28,6 +30,9 @@ public:
 	FOnHealthUpdatedSigniture OnHealthUpdatedEvent;
 
 	FOnManaUpdatedSigniture OnManaUpdatedEvent;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPlayerDeathStateSigniture OnPlayerDeathStateEvent;
 
 	/** Player information from a data asset */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -105,4 +110,7 @@ protected:
 	/** When the player recieves mana, broardcast mana recieved delegate */
 	UFUNCTION(BlueprintCallable)
 	void ReceiveManaDelegate(float currentMana, float maxMana);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsDead;
 };
