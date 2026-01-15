@@ -13,6 +13,11 @@ class TOWERDEFENSE_API AEnemyAIController : public AAIController
 {
 	GENERATED_BODY()
 
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void SetIfPawnCanPerceive(bool bCanPercieve);
+
 protected:
 
 	AEnemyAIController();

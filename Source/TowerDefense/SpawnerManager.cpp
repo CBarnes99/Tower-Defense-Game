@@ -171,3 +171,11 @@ void ASpawnerManager::SetEnemyDrop(EEnemyDrop dropType, FVector spawnLocation)
 		}
 	}
 }
+
+void ASpawnerManager::ShouldEnemiesPerceptPlayer(bool bIsPlayerDefeated)
+{
+	for (AEnemySpawner* spawners : enemySpawners)
+	{
+		spawners->UpdateEnemyPerception(bIsPlayerDefeated);
+	}
+}

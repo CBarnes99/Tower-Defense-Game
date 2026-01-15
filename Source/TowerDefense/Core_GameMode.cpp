@@ -1,6 +1,5 @@
 #include "Core_GameMode.h"
 #include "UObject/ConstructorHelpers.h"
-#include "GameFramework/Actor.h"
 #include "PlayerCharacter.h"
 #include "Core_PlayerController.h"
 #include "SpawnerManager.h"
@@ -63,7 +62,20 @@ void ACore_GameMode::BeginPlay()
 
 	currentWave = 0;
 	corePlayerController = Cast<ACore_PlayerController>(GetWorld()->GetFirstPlayerController());
+	if (!corePlayerController)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Begin Play: CAST TO PLAYER CONTROLLER FAILED IN CORE_GAMEMODE!"));
+		return;
+	}
 	corePlayerController->StartWaveEvent.AddDynamic(this, &ACore_GameMode::StartEnemyWave);
+
+	APlayerCharacter* player = Cast<APlayerCharacter>(corePlayerController->GetPawn());
+	if (!player)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Begin Play: PLAYER FAILED IN CORE_GAMEMODE!"));
+		return;
+	}
+	player->OnPlayerDeathStateEvent.AddUObject(this, &ACore_GameMode::OnPlayerDeathStateChange);
 }
 
 void ACore_GameMode::StartEnemyWave()
@@ -98,6 +110,7 @@ void ACore_GameMode::StartEnemyWave()
 		UE_LOG(LogTemp, Warning, TEXT("StartEnemyWave: Wave %d is now active!"), currentWave);
 
 		spawnerManager->StartSpawningEnemies(currentWave);
+
 	}
 	else
 	{
@@ -107,7 +120,6 @@ void ACore_GameMode::StartEnemyWave()
 
 void ACore_GameMode::PrepareNewWave()
 {
-	UE_LOG(LogTemp, Display, TEXT("PrepareNewWave: New Wave has been prepared"));
 	if (currentWave == lastWave)
 	{
 		UE_LOG(LogTemp, Display, TEXT("PrepareNewWave: Last Wave has been Defeated"));
@@ -116,6 +128,22 @@ void ACore_GameMode::PrepareNewWave()
 	}
 	else
 	{
+		UE_LOG(LogTemp, Display, TEXT("PrepareNewWave: New Wave has been prepared"));
 		//Do setup phase thing here
 	}
+}
+
+void ACore_GameMode::OnPlayerDeathStateChange(bool bPlayerDefeatedCheck)
+{
+	if (bPlayerDefeatedCheck)
+	{
+		corePlayerController->DisableInput(corePlayerController);
+	}
+	else
+	{
+		corePlayerController->EnableInput(corePlayerController);
+		RestartPlayer(corePlayerController);
+	}
+
+	spawnerManager->ShouldEnemiesPerceptPlayer(bPlayerDefeatedCheck);
 }

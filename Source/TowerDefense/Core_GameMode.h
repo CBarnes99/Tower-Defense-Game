@@ -18,6 +18,7 @@ public:
 	
 	ACore_GameMode();
 
+	/** When the level is completed, this is called within PrepareNewWave() */
 	FLevelCompleteSigniture LevelCompleteEvent;
 
 protected:
@@ -47,4 +48,9 @@ protected:
 	/** Checks if theres a new wave or if you've finished the last wave */
 	UFUNCTION(BlueprintCallable)
 	void PrepareNewWave();
+
+	/** Called when the player has been defeated or respawned
+	* @param bDefeatedState true = player is defeated, false = player has respawned */
+	UFUNCTION(BlueprintCallable)
+	void OnPlayerDeathStateChange(bool bDefeatedState);
 };

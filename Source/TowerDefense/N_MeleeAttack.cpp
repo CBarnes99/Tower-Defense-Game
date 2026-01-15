@@ -52,7 +52,7 @@ void UN_MeleeAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase*
 		if (player)
 		{
 			UGameplayStatics::ApplyDamage(player, enemy->GetEnemyDamageAmount(), enemy->GetController(), enemy, nullptr);
-			UE_LOG(LogTemp, Warning, TEXT("Notify: Enemy Has Attacked Player!!"));
+			//UE_LOG(LogTemp, Warning, TEXT("Notify: Enemy Has Attacked Player!!"));
 			return;
 		}
 	}

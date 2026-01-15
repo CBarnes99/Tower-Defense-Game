@@ -4,7 +4,7 @@
 #include "Engine/DataAsset.h"
 #include "DA_EnemyCharacterStats.generated.h"
 
-class AAIController;
+class AEnemyAIController;
 
 UCLASS(Blueprintable)
 class TOWERDEFENSE_API UDA_EnemyCharacterStats : public UDataAsset
@@ -35,5 +35,5 @@ public:
 
 	/** The AI Controller for the enemy */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
-	TSubclassOf<AAIController> AIControllerClass;
+	TSubclassOf<AEnemyAIController> AIControllerClass;
 };

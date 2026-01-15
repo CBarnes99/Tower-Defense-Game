@@ -15,7 +15,8 @@ class AWeaponBase;
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdatedSigniture, float, /*Curent Health*/ float /*Max Health*/)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnManaUpdatedSigniture, float, /*Curent Mana*/ float /*Max Mana*/)
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDeathStateSigniture, bool, bIsPlayerDead);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDeathStateBlueprintSigniture, bool, bIsPlayerDefeated);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerDeathStateSigniture, bool /*Is Player Defeated*/);
 
 UCLASS()
 class TOWERDEFENSE_API APlayerCharacter : public ACharacter
@@ -31,8 +32,10 @@ public:
 
 	FOnManaUpdatedSigniture OnManaUpdatedEvent;
 
-	UPROPERTY(BlueprintAssignable)
 	FOnPlayerDeathStateSigniture OnPlayerDeathStateEvent;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPlayerDeathStateBlueprintSigniture OnPlayerDeathStateBlueprintEvent;
 
 	/** Player information from a data asset */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -103,6 +106,29 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
+	/** When the players hp reaches 0, this is called from TakeDamage() */
+	UFUNCTION(BlueprintCallable)
+	void OnPlayerDefeated();
+
+	/** When the player has been defeated, this function is called from OnPlayerDefeated timer*/
+	UFUNCTION(BlueprintCallable)
+	void RespawnPlayer();
+
+	/** The timer handle for respawning, the time taken to respawn is set within the DA_PlayerCharacterStats */
+	FTimerHandle RespawnTimer;
+
+	/** The players respawn point when respawning, set at begin play */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FVector respawnPoint;
+
+	/** The players rotation when respawning, set at begin play */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FRotator respawnRotation;
+
+	/** A Check to see if the player has been defeated and currently respawning */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsDefeated;
+
 	/** When the player recieves healing, broardcast healing recieved delegate */
 	UFUNCTION(BlueprintCallable)
 	void ReceiveHealingDelegate(float currentHealth, float maxHealth);
@@ -111,6 +137,4 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ReceiveManaDelegate(float currentMana, float maxMana);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bIsDead;
 };

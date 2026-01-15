@@ -33,6 +33,7 @@ void UAC_Health::SetHealth(float healthAmount)
 void UAC_Health::ResetHealth()
 {
 	currentHealth = maxHealth;
+	HealthUpdatedEvent.ExecuteIfBound(currentHealth, maxHealth);
 }
 
 void UAC_Health::RecieveDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -40,12 +41,12 @@ void UAC_Health::RecieveDamage(float DamageAmount, FDamageEvent const& DamageEve
 	FString eventInstigatorString = EventInstigator ? EventInstigator->GetName() : "No Instigator";
 	currentHealth = FMath::Clamp(currentHealth - DamageAmount, 0, maxHealth);
 	HealthUpdatedEvent.ExecuteIfBound(currentHealth, maxHealth);
-	UE_LOG(LogTemp, Display, TEXT("RecieveDamage: DamageAmount - %f, New Health amount = %f, Damaged By = %s"), DamageAmount, currentHealth, *eventInstigatorString);
+	//UE_LOG(LogTemp, Display, TEXT("RecieveDamage: DamageAmount - %f, New Health amount = %f, Damaged By = %s"), DamageAmount, currentHealth, *eventInstigatorString);
 }
 
 void UAC_Health::RecieveHealing(float healAmount)
 {
 	currentHealth = FMath::Clamp(currentHealth + healAmount, 0, maxHealth);
 	HealthUpdatedEvent.ExecuteIfBound(currentHealth, maxHealth);
-	UE_LOG(LogTemp, Display, TEXT("RecieveHealing: Healthing Amount - %f, New health amount - %f"), healAmount, currentHealth);
+	//UE_LOG(LogTemp, Display, TEXT("RecieveHealing: Healthing Amount - %f, New health amount - %f"), healAmount, currentHealth);
 }

@@ -40,6 +40,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StartSpawning();
 
+	/** Enables or Disables the sensing for the enemies based of if the player is defeated or not 
+	* @param bCanSense true = Enables the enemies perception, false = Disables the enemies perception */
+	UFUNCTION(BlueprintCallable)
+	void UpdateEnemyPerception(bool bCanSense);
+
 	/** Calculate the amount of enemies in the wave, is called from the game mode so when an enemy is eleminated, deduct one from the total */
 	UFUNCTION(BlueprintCallable)
 	int CalculateAmountOfEnemiesInWave();
@@ -106,5 +111,4 @@ protected:
 	/** The function that is called on begin play to pool the enemies that are going to be spawning at this spawner */
 	UFUNCTION(BlueprintCallable)
 	void PoolEnemies();
-
 };

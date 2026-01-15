@@ -37,4 +37,8 @@ public:
 	/** How high you want the player character to jump */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float jumpHeight;
+
+	/** How Long it takes to respawn */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	float respawnTime;
 };

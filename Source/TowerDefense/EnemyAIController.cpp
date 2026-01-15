@@ -12,14 +12,16 @@ AEnemyAIController::AEnemyAIController()
 	senseSightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AI Sense Sight"));
 	senseSightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
-	senseSightConfig->SightRadius = 1500.f;
-	senseSightConfig->LoseSightRadius = 1750.f;
+	senseSightConfig->SightRadius = 1000;
+	senseSightConfig->LoseSightRadius = 1200.f;
+	senseSightConfig->SetMaxAge(1.f);
 	senseSightConfig->PeripheralVisionAngleDegrees = 90.f;
 	senseSightConfig->PointOfViewBackwardOffset = 300.f;
 	senseSightConfig->NearClippingRadius = 50.f;  
 
 	AIPerceptionComponent->ConfigureSense(*senseSightConfig);
 	AIPerceptionComponent->SetDominantSense(senseSightConfig->GetSenseImplementation());
+
 }
 
 void AEnemyAIController::BeginPlay()
@@ -62,8 +64,8 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 
 		Enemy->OnDisableAIControllerEvent.BindUObject(this, &AEnemyAIController::DisableAIController);
 	}
-	AIPerceptionComponent->Activate();
-	AIPerceptionComponent->SetSenseEnabled(UAISense_Sight::StaticClass(), true);
+
+	SetIfPawnCanPerceive(true);
 }
 
 void AEnemyAIController::OnTargetPerceptionUpdated(AActor* actor, FAIStimulus stimulus)
@@ -124,7 +126,23 @@ void AEnemyAIController::DisableAIController()
 				cachedAIBlackboard->SetValueAsBool("bHasReachedNode", true);
 			}
 		}
+		StopMovement();
+		SetIfPawnCanPerceive(false);
+}
 
+void AEnemyAIController::SetIfPawnCanPerceive(bool bCanPercieve)
+{
+	if (bCanPercieve)
+	{
+		AIPerceptionComponent->Activate();
+		AIPerceptionComponent->SetSenseEnabled(UAISense_Sight::StaticClass(), true);
+		UE_LOG(LogTemp, Warning, TEXT("SetIfPawnCanPerceive: AIPerceptionComponent is Enabled!"));
+	}
+	else
+	{
 		AIPerceptionComponent->Deactivate();
 		AIPerceptionComponent->SetSenseEnabled(UAISense_Sight::StaticClass(), false);
+		UE_LOG(LogTemp, Warning, TEXT("SetIfPawnCanPerceive: AIPerceptionComponent is Disabled!"));
+		cachedAIBlackboard->SetValueAsBool("bCanSeePlayer", false);
+	}
 }

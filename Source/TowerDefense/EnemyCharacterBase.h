@@ -9,7 +9,7 @@
 class UBehaviourTree;
 class UDA_EnemyCharacterStats;
 class UAC_Health;
-class AAIController;
+class AEnemyAIController;
 class UAIPerceptionStimuliSourceComponent;
 class UAnimMontage;
 
@@ -30,7 +30,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/** Bound in the Spawner manager to keep track of how many enemies are left in the round */
-	//UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnEnemyDeathSignature OnEnemyDeathEvent;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -78,9 +77,14 @@ public:
 	void EnableEnemy();
 
 	/** Gets if the enemy has been disabled or not 
-	* @return bIsDisabled, as a bool */
+	* @return bIsDisabled true = enemy is disabled, false = enemy is enabled, as a bool */
 	UFUNCTION(BlueprintCallable, Category = "Pooling")
 	bool GetIsEnemyDisabled();
+
+	/** Called to Enable or Disable the enemy perception component
+	* @param bDeativatePerception true = Deactivates perception, false = Activates perception */
+	UFUNCTION(BlueprintCallable)
+	void DisableOrEnablePerceptionComponent(bool bDeativatePerception);
 
 	/** Gets the amount of damage the enemy will deal to the player
 	* @return A damage value, as a float */
@@ -100,7 +104,7 @@ protected:
 
 	/** The enemy AI Controller */
 	UPROPERTY(VisibleAnywhere, Category = "AI")
-	AAIController* enemyAIController;
+	AEnemyAIController* enemyAIController;
 
 	/** AI Component so the enemy can use AIPerception from the AI Controller */
 	UPROPERTY(VisibleAnywhere, Category = "AI")

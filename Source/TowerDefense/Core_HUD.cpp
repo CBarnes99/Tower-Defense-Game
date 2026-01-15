@@ -219,6 +219,7 @@ void ACore_HUD::ToggleVictoryScreenWidget()
 void ACore_HUD::BindDelegates()
 {
 	turretSelectionMenu->OnMenuSelectionEvent.AddDynamic(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::GetInfoFromTurretMenu);
+	
 	APlayerCharacter* player = Cast<APlayerCharacter>(localCorePlayerController->GetPawn());
 	if (!player)
 	{
@@ -227,6 +228,8 @@ void ACore_HUD::BindDelegates()
 	}
 	player->OnHealthUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateHealthBar);
 	player->OnManaUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateManaBar);
+	////ADD NEW WIDGETS FOR PLAYER DEATH AND BIND THEM HERE!
+	//player->OnPlayerDeathStateEvent.AddUObject()
 }
 
 bool ACore_HUD::GetIsTurretSelectionMenuVisable()

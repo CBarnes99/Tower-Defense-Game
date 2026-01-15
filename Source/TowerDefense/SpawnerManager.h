@@ -18,6 +18,10 @@ class TOWERDEFENSE_API ASpawnerManager : public AActor
 public:	
 	ASpawnerManager();
 
+	/** A delegate that is called when all the enemies in the wave have been defeated */
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FWaveEndedSignature WaveEndedEvent;
+
 	/** An array of spawners for the manager to call from */
 	UPROPERTY(VisibleAnywhere)
 	TArray<AEnemySpawner*> enemySpawners;
@@ -40,9 +44,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsWaveActive();
 
-	/** A deleget that is called when all the enemies in the wave have been defeated */
-	UPROPERTY(BlueprintAssignable, Category = "Event")
-	FWaveEndedSignature WaveEndedEvent;
+	/** The ability to turn on and off the enemies perception when the player has been defeated or respawned 
+	* @param bIsPlayerDefeated true = Turns off the enemies perception, false = Enables the enemies perception */
+	UFUNCTION(BlueprintCallable)
+	void ShouldEnemiesPerceptPlayer(bool bIsPlayerDefeated);
 
 protected:
 	virtual void BeginPlay() override;
@@ -81,5 +86,4 @@ protected:
 	/** When Enemy deklegate OnSpawnEnemyDropEvent is called, this function is called to set up the drop to the correct type and location */
 	UFUNCTION(BlueprintCallable, Category = "DropPooling")
 	void SetEnemyDrop(EEnemyDrop dropType, FVector spawnLocation);
-
 };

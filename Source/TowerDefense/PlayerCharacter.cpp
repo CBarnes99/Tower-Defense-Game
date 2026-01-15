@@ -59,7 +59,10 @@ void APlayerCharacter::BeginPlay()
 	//Tag for the enemy ai perception to differentiate whos the player and who isn't
 	Tags.Add(FName("Player"));
 
-	bIsDead = false;
+	bIsDefeated = false;
+
+	respawnPoint = GetActorLocation();
+	respawnRotation = GetActorRotation();
 
 	//Setting defualts within the components
 	healthComponent->SetHealth(DA_playerInfo->health);
@@ -164,12 +167,36 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 	if (healthComponent->GetCurrentHealth() <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("TakeDamage: Player Health is less than 0! Player Dead!"));
-		bIsDead = true;
-		OnPlayerDeathStateEvent.Broadcast(bIsDead);
-		
+		OnPlayerDefeated();
 	}
 	return DamageAmount;
+}
+
+void APlayerCharacter::OnPlayerDefeated()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnPlayerDefeated: Player Health is less than 0! Player Dead!"));
+	bIsDefeated = true;
+	OnPlayerDeathStateBlueprintEvent.Broadcast(bIsDefeated);
+	OnPlayerDeathStateEvent.Broadcast(bIsDefeated);
+
+	SetActorEnableCollision(false);
+
+	GetWorld()->GetTimerManager().SetTimer(RespawnTimer, this, &APlayerCharacter::RespawnPlayer, DA_playerInfo->respawnTime, false);
+}
+
+void APlayerCharacter::RespawnPlayer()
+{
+	UE_LOG(LogTemp, Warning, TEXT("RespawnPlayer: Player Respawned!"));
+	bIsDefeated = false;
+	SetActorEnableCollision(true);
+	SetActorLocation(respawnPoint);
+	SetActorRotation(respawnRotation);
+
+	healthComponent->ResetHealth();
+
+	OnPlayerDeathStateBlueprintEvent.Broadcast(bIsDefeated);
+	OnPlayerDeathStateEvent.Broadcast(bIsDefeated);
+
 }
 
 void APlayerCharacter::ReceiveHealing(float healAmount)

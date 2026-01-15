@@ -161,6 +161,17 @@ void AEnemySpawner::PoolEnemies()
 	}
 }
 
+void AEnemySpawner::UpdateEnemyPerception(bool bIsPlayerDefeated)
+{
+	for (AEnemyCharacterBase* enemy : enemyPool)
+	{
+		if (!enemy->GetIsEnemyDisabled())
+		{
+			enemy->DisableOrEnablePerceptionComponent(bIsPlayerDefeated);
+		}
+	}
+}
+
 int AEnemySpawner::CalculateAmountOfEnemiesInWave()
 {
 	if (FAmountOfEnemysSpawning* enemyStruct = waveAndEnemyQueue.Find(currentWaveBeingSpawned))

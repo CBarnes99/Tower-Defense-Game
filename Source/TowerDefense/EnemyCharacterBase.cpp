@@ -44,7 +44,11 @@ void AEnemyCharacterBase::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = enemyInfo->movementSpeed;
 
 	//Spawns An AIController and uses this to possess and unposesss the actor when they are disabled and moved to the pool
-	enemyAIController = GetWorld()->SpawnActor<AAIController>(enemyInfo->AIControllerClass);
+	enemyAIController = GetWorld()->SpawnActor<AEnemyAIController>(enemyInfo->AIControllerClass);
+	if (!enemyAIController)
+	{
+		UE_LOG(LogTemp, Error, TEXT("BeginPlay: NO AI CLASS SET WITHIN - %s"), *this->GetName());
+	}
 }
 
 UBehaviorTree* AEnemyCharacterBase::GetBehaviourTree() const
@@ -113,6 +117,7 @@ void AEnemyCharacterBase::OnDeathAnimationStarted()
 	SetActorEnableCollision(false);
 	GetCharacterMovement()->SetAvoidanceGroup(1 << 1);
 }
+
 void AEnemyCharacterBase::DisableEnemy()
 {
 	GetCharacterMovement()->Deactivate();
@@ -170,6 +175,22 @@ void AEnemyCharacterBase::EnableEnemy()
 bool AEnemyCharacterBase::GetIsEnemyDisabled()
 {
 	return bIsDisabled;
+}
+
+void AEnemyCharacterBase::DisableOrEnablePerceptionComponent(bool bDeativatePerception)
+{
+	if (bDeativatePerception)
+	{
+		enemyAIController->SetIfPawnCanPerceive(false);
+		StimuliSourceComponent->Deactivate();
+		StimuliSourceComponent->UnregisterFromPerceptionSystem();
+	}
+	else
+	{
+		enemyAIController->SetIfPawnCanPerceive(true);
+		StimuliSourceComponent->Activate();
+		StimuliSourceComponent->RegisterWithPerceptionSystem();
+	}
 }
 
 void AEnemyCharacterBase::SpawnDrop()
