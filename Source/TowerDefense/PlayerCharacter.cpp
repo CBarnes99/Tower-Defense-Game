@@ -177,7 +177,7 @@ void APlayerCharacter::OnPlayerDefeated()
 	UE_LOG(LogTemp, Warning, TEXT("OnPlayerDefeated: Player Health is less than 0! Player Dead!"));
 	bIsDefeated = true;
 	OnPlayerDeathStateBlueprintEvent.Broadcast(bIsDefeated);
-	OnPlayerDeathStateEvent.Broadcast(bIsDefeated);
+	OnPlayerDeathStateEvent.Broadcast(bIsDefeated, DA_playerInfo->respawnTime);
 
 	SetActorEnableCollision(false);
 
@@ -195,7 +195,7 @@ void APlayerCharacter::RespawnPlayer()
 	healthComponent->ResetHealth();
 
 	OnPlayerDeathStateBlueprintEvent.Broadcast(bIsDefeated);
-	OnPlayerDeathStateEvent.Broadcast(bIsDefeated);
+	OnPlayerDeathStateEvent.Broadcast(bIsDefeated, DA_playerInfo->respawnTime);
 
 }
 

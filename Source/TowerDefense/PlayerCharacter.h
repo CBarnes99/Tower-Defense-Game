@@ -16,7 +16,7 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdatedSigniture, float, /*Curent 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnManaUpdatedSigniture, float, /*Curent Mana*/ float /*Max Mana*/)
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDeathStateBlueprintSigniture, bool, bIsPlayerDefeated);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerDeathStateSigniture, bool /*Is Player Defeated*/);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnPlayerDeathStateSigniture, bool /*Is Player Defeated*/, float /*Respawn Time*/);
 
 UCLASS()
 class TOWERDEFENSE_API APlayerCharacter : public ACharacter

@@ -52,5 +52,5 @@ protected:
 	/** Called when the player has been defeated or respawned
 	* @param bDefeatedState true = player is defeated, false = player has respawned */
 	UFUNCTION(BlueprintCallable)
-	void OnPlayerDeathStateChange(bool bDefeatedState);
+	void OnPlayerDeathStateChange(bool bDefeatedState, float playerRespawnTime);
 };

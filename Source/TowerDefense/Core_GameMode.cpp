@@ -133,7 +133,7 @@ void ACore_GameMode::PrepareNewWave()
 	}
 }
 
-void ACore_GameMode::OnPlayerDeathStateChange(bool bPlayerDefeatedCheck)
+void ACore_GameMode::OnPlayerDeathStateChange(bool bPlayerDefeatedCheck, float playerRespawnTime)
 {
 	if (bPlayerDefeatedCheck)
 	{

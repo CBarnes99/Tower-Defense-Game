@@ -6,6 +6,7 @@
 #include "HUDHealthAndMana.h"
 #include "HUDWeaponTurretSelector.h"
 #include "HUDVictoryScreen.h"
+#include "HUDPlayerDefeated.h"
 
 #include "DA_TurretInfo.h"
 #include "Core_PlayerController.h"
@@ -144,6 +145,12 @@ void ACore_HUD::SetUpGameMenusWidgetList()
 		gameMenusWidgetList.Add(victoryScreenMenu);
 	}
 
+	if (CheckVaildWidgetPointer(playerDefeatedClass))
+	{
+		playerDefeatedMenu = CreateWidget<UHUDPlayerDefeated>(localCorePlayerController, playerDefeatedClass);
+		gameMenusWidgetList.Add(playerDefeatedMenu);
+	}
+
 	for (UUserWidget* widget : gameMenusWidgetList)
 	{
 		widget->AddToViewport();
@@ -228,8 +235,22 @@ void ACore_HUD::BindDelegates()
 	}
 	player->OnHealthUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateHealthBar);
 	player->OnManaUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateManaBar);
-	////ADD NEW WIDGETS FOR PLAYER DEATH AND BIND THEM HERE!
-	//player->OnPlayerDeathStateEvent.AddUObject()
+	player->OnPlayerDeathStateEvent.AddUObject(this, &ACore_HUD::PlayerDefeatedState);
+
+}
+
+void ACore_HUD::PlayerDefeatedState(bool bIsPlayerDefeated, float respwanTime)
+{
+	if (bIsPlayerDefeated)
+	{
+		ToggleGameMenuWidgets(playerDefeatedMenu);
+		playerDefeatedMenu->StartCountdown(respwanTime);
+	}
+	else
+	{
+		playerDefeatedMenu->EndCountdown();
+		ToggleGameMenuWidgets(playerDefeatedMenu);
+	}
 }
 
 bool ACore_HUD::GetIsTurretSelectionMenuVisable()
