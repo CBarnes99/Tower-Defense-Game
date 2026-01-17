@@ -137,4 +137,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ReceiveManaDelegate(float currentMana, float maxMana);
 
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerLost();
+
+	UPROPERTY(VisibleAnywhere)
+	bool bHasPlayerLost;
+
 };

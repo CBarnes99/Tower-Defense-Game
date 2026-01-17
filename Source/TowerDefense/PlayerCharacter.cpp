@@ -10,6 +10,7 @@
 #include "AC_Health.h"
 #include "AC_Mana.h"
 #include "WeaponBase.h"
+#include "Core_GameState.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -60,6 +61,17 @@ void APlayerCharacter::BeginPlay()
 	Tags.Add(FName("Player"));
 
 	bIsDefeated = false;
+	bHasPlayerLost = false;
+
+	AGameStateBase* gameState = UGameplayStatics::GetGameState(GetWorld());
+	ACore_GameState* coreGameState = Cast<ACore_GameState>(gameState);
+	if (!coreGameState)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BindDelegates: CORE GAME STATE NOT CASTED CORRECTLY WITHIN - %s"), *this->GetName());
+		return;
+	}
+	coreGameState->OnPlayerLostEvent.AddUObject(this, &APlayerCharacter::SetPlayerLost);
+
 
 	respawnPoint = GetActorLocation();
 	respawnRotation = GetActorRotation();
@@ -174,6 +186,11 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 void APlayerCharacter::OnPlayerDefeated()
 {
+	if (bHasPlayerLost)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OnPlayerDefeated: Player has lost, break function!"));
+		return;
+	}
 	UE_LOG(LogTemp, Warning, TEXT("OnPlayerDefeated: Player Health is less than 0! Player Dead!"));
 	bIsDefeated = true;
 	OnPlayerDeathStateBlueprintEvent.Broadcast(bIsDefeated);
@@ -186,6 +203,11 @@ void APlayerCharacter::OnPlayerDefeated()
 
 void APlayerCharacter::RespawnPlayer()
 {
+	if (bHasPlayerLost)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OnPlayerDefeated: Player has lost, break function!"));
+		return;
+	}
 	UE_LOG(LogTemp, Warning, TEXT("RespawnPlayer: Player Respawned!"));
 	bIsDefeated = false;
 	SetActorEnableCollision(true);
@@ -217,4 +239,9 @@ void APlayerCharacter::ReceiveMana(float manaAmount)
 void APlayerCharacter::ReceiveManaDelegate(float currentMana, float maxMana)
 {
 	OnManaUpdatedEvent.Broadcast(currentMana, maxMana);
+}
+
+void APlayerCharacter::SetPlayerLost()
+{
+	bHasPlayerLost = true;
 }

@@ -10,6 +10,7 @@ class ACore_PlayerController;
 class UDA_TurretInfo;
 class UHUDVictoryScreen;
 class UHUDPlayerDefeated;
+class UHUDPlayerLost;
 
 UCLASS()
 class TOWERDEFENSE_API ACore_HUD : public AHUD
@@ -51,6 +52,12 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void PlayerDefeatedState(bool bIsPlayerDefeated, float respwanTime);
+
+	UFUNCTION(BlueprintCallable)
+	void PlayerLost();
+
+	UPROPERTY(VisibleAnywhere)
+	bool bPlayerHasLost;
 
 	//In Game Widgets------------------------------------------------------------
 	UPROPERTY(VisibleAnywhere, Category = "Widgets - In Game")
@@ -102,6 +109,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Widgets - Game Menu")
 	UHUDPlayerDefeated* playerDefeatedMenu;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets - Game Menu")
+	TSubclassOf<UHUDPlayerLost> playerLostClass;
+
+	UPROPERTY(VisibleAnywhere, Category = "Widgets - Game Menu")
+	UHUDPlayerLost* playerLostMenu;
+	
 	
 
 	//Menu Widgets-----------------------------------------------------------

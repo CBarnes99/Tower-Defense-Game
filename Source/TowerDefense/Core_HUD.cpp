@@ -7,11 +7,13 @@
 #include "HUDWeaponTurretSelector.h"
 #include "HUDVictoryScreen.h"
 #include "HUDPlayerDefeated.h"
+#include "HUDPlayerLost.h"
 
 #include "DA_TurretInfo.h"
 #include "Core_PlayerController.h"
 #include "PlayerCharacter.h"
 #include "Core_GameMode.h"
+#include "Core_GameState.h"
 
 void ACore_HUD::BeginPlay()
 {
@@ -24,10 +26,18 @@ void ACore_HUD::BeginPlay()
 	if (!localCorePlayerController)
 	{
 		UE_LOG(LogTemp, Error, TEXT("BeginPlay: PLAYER CONTROLLER WITHIN %s IS NOT SET CORRECTLY!!"), *this->GetName());
+		return;
 	}
 
 	ACore_GameMode* gameMode = Cast<ACore_GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (!gameMode)
+	{
+		UE_LOG(LogTemp, Error, TEXT("BeginPlay: CORE GAME MODE NOT CASTED CORRECTLY WITHIN - %s"), *this->GetName());
+		return;
+	}
 	gameMode->LevelCompleteEvent.AddUObject(this, &ACore_HUD::ToggleVictoryScreenWidget);
+
+	bPlayerHasLost = false;
 
 	SetUpInGameWidgetList();
 	
@@ -38,6 +48,31 @@ void ACore_HUD::BeginPlay()
 	BindDelegates();
 
 	SetFocusToGame();
+}
+
+void ACore_HUD::BindDelegates()
+{
+	turretSelectionMenu->OnMenuSelectionEvent.AddDynamic(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::GetInfoFromTurretMenu);
+
+	APlayerCharacter* player = Cast<APlayerCharacter>(localCorePlayerController->GetPawn());
+	if (!player)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BindDelegates: PLAYER NOT CASTED CORRECTLY WITHIN - %s"), *this->GetName());
+		return;
+	}
+	player->OnHealthUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateHealthBar);
+	player->OnManaUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateManaBar);
+	player->OnPlayerDeathStateEvent.AddUObject(this, &ACore_HUD::PlayerDefeatedState);
+
+
+	AGameStateBase* gameState = UGameplayStatics::GetGameState(GetWorld());
+	ACore_GameState* coreGameState = Cast<ACore_GameState>(gameState);
+	if (!coreGameState)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BindDelegates: CORE GAME STATE NOT CASTED CORRECTLY WITHIN - %s"), *this->GetName());
+		return;
+	}
+	coreGameState->OnPlayerLostEvent.AddUObject(this, &ACore_HUD::PlayerLost);
 }
 
 bool ACore_HUD::CheckVaildWidgetPointer(TSubclassOf<UUserWidget> widgetClass)
@@ -151,6 +186,12 @@ void ACore_HUD::SetUpGameMenusWidgetList()
 		gameMenusWidgetList.Add(playerDefeatedMenu);
 	}
 
+	if (CheckVaildWidgetPointer(playerLostClass))
+	{
+		playerLostMenu = CreateWidget<UHUDPlayerLost>(localCorePlayerController, playerLostClass);
+		gameMenusWidgetList.Add(playerLostMenu);
+	}
+
 	for (UUserWidget* widget : gameMenusWidgetList)
 	{
 		widget->AddToViewport();
@@ -185,6 +226,7 @@ void ACore_HUD::ToggleGameMenuWidgets(UUserWidget* widget)
 		UE_LOG(LogTemp, Error, TEXT("ToggleGameMenuWidgets: WIDGET IS RETURNING NULL WITHIN - %s"), *this->GetName());
 		return;
 	}
+
 	gameMenuWidgetToFocus = widget;
 		
 	for (UUserWidget* widgetInList : gameMenusWidgetList)
@@ -217,30 +259,21 @@ void ACore_HUD::ToggleTurretSelectionWidget()
 
 void ACore_HUD::ToggleVictoryScreenWidget()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ToggleVictoryScreenWidget: Toggle Victory Screen Widget"));
+	////A Check to see if the player has already lost. The last enemy in the level could be defeated by colliding with the defending base, thats why this check this check is here
+	if (bPlayerHasLost)
+	{
+		return;
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("ToggleVictoryScreenWidget: Toggle Victory Screen Widget"));
 	ToggleGameMenuWidgets(victoryScreenMenu);
 	victoryScreenMenu->PlayVictoryAnimation();
 	localCorePlayerController->DisableInput(localCorePlayerController);
 }
 
-void ACore_HUD::BindDelegates()
-{
-	turretSelectionMenu->OnMenuSelectionEvent.AddDynamic(playerHud->WeaponAndTurretSelector, &UHUDWeaponTurretSelector::GetInfoFromTurretMenu);
-	
-	APlayerCharacter* player = Cast<APlayerCharacter>(localCorePlayerController->GetPawn());
-	if (!player)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("BindDelegates: PLAYER NOT CASTED CORRECTLY WITHIN - %s"), *this->GetName());
-		return;
-	}
-	player->OnHealthUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateHealthBar);
-	player->OnManaUpdatedEvent.AddUObject(playerHud->HealthAndMana, &UHUDHealthAndMana::UpdateManaBar);
-	player->OnPlayerDeathStateEvent.AddUObject(this, &ACore_HUD::PlayerDefeatedState);
-
-}
-
 void ACore_HUD::PlayerDefeatedState(bool bIsPlayerDefeated, float respwanTime)
 {
+
 	if (bIsPlayerDefeated)
 	{
 		ToggleGameMenuWidgets(playerDefeatedMenu);
@@ -250,6 +283,18 @@ void ACore_HUD::PlayerDefeatedState(bool bIsPlayerDefeated, float respwanTime)
 	{
 		playerDefeatedMenu->EndCountdown();
 		ToggleGameMenuWidgets(playerDefeatedMenu);
+	}
+}
+
+void ACore_HUD::PlayerLost()
+{
+	UE_LOG(LogTemp, Warning, TEXT("PlayerLost: Player Lost Called"));
+	if (bPlayerHasLost == false)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerLost: Player Lost HUD Called"));
+		ToggleGameMenuWidgets(playerLostMenu);
+		playerLostMenu->PlayLostAnimation();
+		bPlayerHasLost = true;
 	}
 }
 

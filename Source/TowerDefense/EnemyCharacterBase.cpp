@@ -106,7 +106,7 @@ void AEnemyCharacterBase::OnDeath()
 	}
 }
 
-//This is called when the death animation has started playing so that you cant interupt the animation
+//This is called when the death animation has started playing so that you cant interupt the animation, called from the enemy death animation notify
 void AEnemyCharacterBase::OnDeathAnimationStarted()
 {
 	if (GetController() && enemyAIController)

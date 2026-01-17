@@ -50,6 +50,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ACore_GameState* coreGameState;
 
+	/** Called when the player has lost the level from a delegate from the game state */
+	UFUNCTION(BlueprintCallable)
+	void DisablePlayerActionInput();
+
 	/** The index value to get the turret the player wants to select, 0 is the weapon 1+ is the turrets. Use -1 when getting turrets from an array */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int hotbarSelectionIndex;

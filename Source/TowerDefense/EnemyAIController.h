@@ -18,6 +18,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIfPawnCanPerceive(bool bCanPercieve);
 
+	UFUNCTION(BlueprintCallable)
+	void UpdatePlayerLost();
+
 protected:
 
 	AEnemyAIController();
@@ -43,4 +46,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void DisableAIController();
+
+	UPROPERTY(VisibleAnywhere)
+	bool bHasPlayerLost;
 };

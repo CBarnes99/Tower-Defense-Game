@@ -35,6 +35,7 @@ void ACore_PlayerController::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("BeginPlay: NO GAME STATE FOUND IN PLAYER CONTROLLER!!!"));
 	}
+	coreGameState->OnPlayerLostEvent.AddUObject(this, &ACore_PlayerController::DisablePlayerActionInput);
 
 	hotbarSelectionIndex = 0;
 	previousHotbarSelectionIndex = 0;
@@ -56,6 +57,12 @@ void ACore_PlayerController::OnPossess(APawn* InPawn)
 	{
 		UE_LOG(LogTemp, Error, TEXT("OnPossess: Core Hud Not Assigned In Player Controller!"));
 	}
+}
+
+void ACore_PlayerController::DisablePlayerActionInput()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DisablePlayerActionInput: Disabled Player Input within - %s"), *this->GetName());
+	DisableInput(this);
 }
 
 void ACore_PlayerController::SetupInputComponent()

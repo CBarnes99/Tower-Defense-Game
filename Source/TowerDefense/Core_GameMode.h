@@ -50,7 +50,8 @@ protected:
 	void PrepareNewWave();
 
 	/** Called when the player has been defeated or respawned
-	* @param bDefeatedState true = player is defeated, false = player has respawned */
+	* @param bDefeatedState true = player is defeated, false = player has respawned 
+	* @param playerRespawnTime Unnecessary for this function, doesn't get used */
 	UFUNCTION(BlueprintCallable)
 	void OnPlayerDeathStateChange(bool bDefeatedState, float playerRespawnTime);
 };

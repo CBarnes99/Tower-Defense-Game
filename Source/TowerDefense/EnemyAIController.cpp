@@ -5,6 +5,8 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISense_Sight.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Core_GameState.h"
+#include "Kismet/GameplayStatics.h"
 
 AEnemyAIController::AEnemyAIController()
 {
@@ -27,6 +29,7 @@ AEnemyAIController::AEnemyAIController()
 void AEnemyAIController::BeginPlay()
 {
 	Super::BeginPlay();
+	bHasPlayerLost = false;
 
 	if (AIPerceptionComponent)
 	{
@@ -36,8 +39,16 @@ void AEnemyAIController::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("BeginPlay: AI Perception Component NOT SET UP CORRECTLY WITHIN - %s"), *this->GetName());
 	}
-}
 
+	AGameStateBase* gameState = UGameplayStatics::GetGameState(GetWorld());
+	ACore_GameState* coreGameState = Cast<ACore_GameState>(gameState);
+	if (!coreGameState)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: CORE GAME STATE NOT CASTED CORRECTLY WITHIN - %s"), *this->GetName());
+		return;
+	}
+	coreGameState->OnPlayerLostEvent.AddUObject(this, &AEnemyAIController::UpdatePlayerLost);
+}
 
 void AEnemyAIController::OnPossess(APawn* InPawn)
 {
@@ -132,17 +143,26 @@ void AEnemyAIController::DisableAIController()
 
 void AEnemyAIController::SetIfPawnCanPerceive(bool bCanPercieve)
 {
-	if (bCanPercieve)
+	if (bCanPercieve && !bHasPlayerLost)
 	{
 		AIPerceptionComponent->Activate();
 		AIPerceptionComponent->SetSenseEnabled(UAISense_Sight::StaticClass(), true);
-		UE_LOG(LogTemp, Warning, TEXT("SetIfPawnCanPerceive: AIPerceptionComponent is Enabled!"));
+		//UE_LOG(LogTemp, Warning, TEXT("SetIfPawnCanPerceive: AIPerceptionComponent is Enabled!"));
 	}
 	else
 	{
 		AIPerceptionComponent->Deactivate();
 		AIPerceptionComponent->SetSenseEnabled(UAISense_Sight::StaticClass(), false);
-		UE_LOG(LogTemp, Warning, TEXT("SetIfPawnCanPerceive: AIPerceptionComponent is Disabled!"));
-		cachedAIBlackboard->SetValueAsBool("bCanSeePlayer", false);
+		if (cachedAIBlackboard)
+		{
+			cachedAIBlackboard->SetValueAsBool("bCanSeePlayer", false);
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("SetIfPawnCanPerceive: AIPerceptionComponent is Disabled!"));
 	}
+}
+
+void AEnemyAIController::UpdatePlayerLost()
+{
+	bHasPlayerLost = true;
+	SetIfPawnCanPerceive(false);
 }
